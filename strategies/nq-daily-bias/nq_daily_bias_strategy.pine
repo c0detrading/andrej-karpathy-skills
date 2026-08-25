@@ -1,0 +1,110 @@
+//@version=5
+// NQ Daily Bias + Key Level Strategy
+// Rules implemented:
+//   1. Daily bias decides direction: bullish -> longs only, bearish -> shorts only.
+//   2. Entries only at key levels (PDH, PDL, PWH, PWL, daily open) - never at random prices.
+//   3. Fixed risk: 10 pt stop. TP1 +50 pts (1:5) closes 50%, TP2 +70 pts (1:7) closes the rest.
+//   4. Confirmation on candle close: signal candle must test the level and close through it
+//      in the trade direction. Orders are evaluated on bar close, filled next bar open.
+//   5. Optional confluences: EMA20 trend filter and recent Fair Value Gap (FVG) displacement.
+strategy("NQ Daily Bias S/R Strategy", overlay=true,
+     default_qty_type=strategy.fixed, default_qty_value=2,
+     initial_capital=100000, calc_on_every_tick=false,
+     calc_on_order_fills=true, process_orders_on_close=false)
+
+// ---------------- Inputs ----------------
+riskPoints = input.float(10.0, "Stop loss (points)", minval=1.0, group="Risk")
+tp1Points  = input.float(50.0, "TP1 - 50% off (points)", minval=1.0, group="Risk")
+tp2Points  = input.float(70.0, "TP2 - runner (points)", minval=1.0, group="Risk")
+
+biasMode = input.string("Both (stricter)", "Daily bias mode",
+     options=["Previous daily candle", "Price vs daily open", "Both (stricter)"], group="Bias")
+
+levelProx = input.float(15.0, "Level proximity (points)", minval=0.0, group="Key levels",
+     tooltip="Signal candle must trade within this many points of a key level and close back through it.")
+
+useEma  = input.bool(true, "Require EMA20 confluence", group="Confluences")
+emaLen  = input.int(20, "EMA length", minval=1, group="Confluences")
+useFvg  = input.bool(true, "Require recent FVG confluence", group="Confluences")
+fvgLookback = input.int(20, "FVG lookback (bars)", minval=1, group="Confluences",
+     tooltip="A same-direction Fair Value Gap must have printed within this many bars.")
+
+// ---------------- Higher-timeframe data (non-repainting) ----------------
+// [1] offset + lookahead_on returns the last COMPLETED day/week, stable all session.
+[pdHigh, pdLow, pdOpen, pdClose] = request.security(syminfo.tickerid, "D",
+     [high[1], low[1], open[1], close[1]], lookahead=barmerge.lookahead_on)
+[pwHigh, pwLow] = request.security(syminfo.tickerid, "W",
+     [high[1], low[1]], lookahead=barmerge.lookahead_on)
+// Today's daily open is fixed at the first bar of the day, so this does not repaint.
+dOpen = request.security(syminfo.tickerid, "D", open, lookahead=barmerge.lookahead_on)
+
+// ---------------- 1. Daily bias ----------------
+prevDayBull = pdClose > pdOpen
+prevDayBear = pdClose < pdOpen
+aboveDOpen  = close > dOpen
+belowDOpen  = close < dOpen
+
+biasBull = biasMode == "Previous daily candle" ? prevDayBull :
+     biasMode == "Price vs daily open" ? aboveDOpen :
+     prevDayBull and aboveDOpen
+biasBear = biasMode == "Previous daily candle" ? prevDayBear :
+     biasMode == "Price vs daily open" ? belowDOpen :
+     prevDayBear and belowDOpen
+
+// ---------------- 2. Key levels ----------------
+// Long: candle dips to within levelProx of a level and closes back above it (support rejection).
+// Short: candle spikes to within levelProx of a level and closes back below it (resistance rejection).
+longAtLevel  = false
+shortAtLevel = false
+float[] levels = array.from(pdHigh, pdLow, pwHigh, pwLow, dOpen)
+for i = 0 to array.size(levels) - 1
+    lv = array.get(levels, i)
+    if not na(lv)
+        if low <= lv + levelProx and close > lv
+            longAtLevel := true
+        if high >= lv - levelProx and close < lv
+            shortAtLevel := true
+
+// ---------------- 5. Confluences ----------------
+ema20 = ta.ema(close, emaLen)
+emaOkLong  = not useEma or close > ema20
+emaOkShort = not useEma or close < ema20
+
+bullFvg = low > high[2]
+bearFvg = high < low[2]
+fvgOkLong  = not useFvg or ta.barssince(bullFvg) <= fvgLookback
+fvgOkShort = not useFvg or ta.barssince(bearFvg) <= fvgLookback
+
+// ---------------- 4. Confirmation candle + entries ----------------
+confirmBull = close > open
+confirmBear = close < open
+
+longSetup  = biasBull and longAtLevel and confirmBull and emaOkLong and fvgOkLong
+shortSetup = biasBear and shortAtLevel and confirmBear and emaOkShort and fvgOkShort
+
+if longSetup and strategy.position_size == 0
+    strategy.entry("Long", strategy.long)
+if shortSetup and strategy.position_size == 0
+    strategy.entry("Short", strategy.short)
+
+// ---------------- 3. Exits: 10 pt stop, 50% at 1:5, 50% at 1:7 ----------------
+if strategy.position_size > 0
+    ep = strategy.position_avg_price
+    strategy.exit("L-TP1", from_entry="Long", qty_percent=50, limit=ep + tp1Points, stop=ep - riskPoints)
+    strategy.exit("L-TP2", from_entry="Long", qty_percent=50, limit=ep + tp2Points, stop=ep - riskPoints)
+if strategy.position_size < 0
+    ep = strategy.position_avg_price
+    strategy.exit("S-TP1", from_entry="Short", qty_percent=50, limit=ep - tp1Points, stop=ep + riskPoints)
+    strategy.exit("S-TP2", from_entry="Short", qty_percent=50, limit=ep - tp2Points, stop=ep + riskPoints)
+
+// ---------------- Visuals ----------------
+plot(pdHigh, "Prev Day High", color=color.new(color.orange, 0), style=plot.style_linebr)
+plot(pdLow,  "Prev Day Low",  color=color.new(color.orange, 40), style=plot.style_linebr)
+plot(pwHigh, "Prev Week High", color=color.new(color.purple, 0), style=plot.style_linebr)
+plot(pwLow,  "Prev Week Low",  color=color.new(color.purple, 40), style=plot.style_linebr)
+plot(dOpen,  "Daily Open", color=color.new(color.gray, 0), style=plot.style_linebr)
+plot(ema20,  "EMA20", color=color.new(color.blue, 0))
+
+bgcolor(biasBull ? color.new(color.green, 92) : biasBear ? color.new(color.red, 92) : na, title="Daily bias")
+plotshape(bullFvg, "Bullish FVG", shape.triangleup, location.belowbar, color.new(color.teal, 30), size=size.tiny)
+plotshape(bearFvg, "Bearish FVG", shape.triangledown, location.abovebar, color.new(color.maroon, 30), size=size.tiny)
