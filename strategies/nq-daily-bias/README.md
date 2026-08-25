@@ -26,9 +26,13 @@ Replicated bar-for-bar on 60 days of 15m data and 3 months of 1h data
 - No variant was profitable on 15m data (best: stop 25 / TP 125-175, PF 0.94).
   1h data showed PF 2.0+ with the session filter, but on only ~24 setups —
   too small and too coarse to trust.
-- Conclusion: the 10-pt stop is the binding constraint; treat this as a baseline
-  for iteration (e.g. ATR-scaled stops, level-anchored FVG entries), not a
-  finished edge.
+- Conclusion: the 10-pt stop is the binding constraint.
+- ATR-scaled stops (stop = k * ATR(14), targets 5x/7x the stop, session filter on)
+  were the first profitable configuration on 15m data: k=1.5 -> PF 1.24, k=2.0 ->
+  PF 1.38 (+10R over 60 days), confirmed directionally on 1h/3mo (PF 2.2-2.4).
+  Now the default (ATR-scaled, mult 2.0). Caveat: only 16-20 setups in the
+  sample, and the resulting stops are ~100-140 pts, far larger than the
+  original 10-pt spec - risk per trade must be sized accordingly (e.g. MNQ).
 
 ## Notes and caveats
 

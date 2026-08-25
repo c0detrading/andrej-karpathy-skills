@@ -13,9 +13,13 @@ strategy("NQ Daily Bias S/R Strategy", overlay=true,
      calc_on_order_fills=true, process_orders_on_close=false)
 
 // ---------------- Inputs ----------------
-riskPoints = input.float(10.0, "Stop loss (points)", minval=1.0, group="Risk")
-tp1Points  = input.float(50.0, "TP1 - 50% off (points)", minval=1.0, group="Risk")
-tp2Points  = input.float(70.0, "TP2 - runner (points)", minval=1.0, group="Risk")
+stopMode = input.string("ATR-scaled", "Stop mode", options=["ATR-scaled", "Fixed points"], group="Risk",
+     tooltip="ATR-scaled sizes the stop to current volatility (targets stay at 5x and 7x the stop, keeping 1:5 / 1:7). Fixed points uses the values below.")
+atrMult = input.float(2.0, "ATR multiplier (ATR-scaled mode)", minval=0.1, group="Risk")
+atrLen  = input.int(14, "ATR length", minval=1, group="Risk")
+riskPoints = input.float(10.0, "Stop loss (points, Fixed mode)", minval=1.0, group="Risk")
+tp1Points  = input.float(50.0, "TP1 - 50% off (points, Fixed mode)", minval=1.0, group="Risk")
+tp2Points  = input.float(70.0, "TP2 - runner (points, Fixed mode)", minval=1.0, group="Risk")
 
 biasMode = input.string("Both (stricter)", "Daily bias mode",
      options=["Previous daily candle", "Price vs daily open", "Both (stricter)"], group="Bias")
@@ -88,20 +92,26 @@ inSession = not useSession or not na(time(timeframe.period, sessWindow, "America
 longSetup  = inSession and biasBull and longAtLevel and confirmBull and emaOkLong and fvgOkLong
 shortSetup = inSession and biasBear and shortAtLevel and confirmBear and emaOkShort and fvgOkShort
 
+atrVal = ta.atr(atrLen)
+var float tradeRisk = na
 if longSetup and strategy.position_size == 0
+    tradeRisk := stopMode == "ATR-scaled" ? atrMult * atrVal : riskPoints
     strategy.entry("Long", strategy.long)
 if shortSetup and strategy.position_size == 0
+    tradeRisk := stopMode == "ATR-scaled" ? atrMult * atrVal : riskPoints
     strategy.entry("Short", strategy.short)
 
-// ---------------- 3. Exits: 10 pt stop, 50% at 1:5, 50% at 1:7 ----------------
+// ---------------- 3. Exits: stop = tradeRisk, 50% at 1:5, 50% at 1:7 ----------------
+t1 = stopMode == "ATR-scaled" ? tradeRisk * 5 : tp1Points
+t2 = stopMode == "ATR-scaled" ? tradeRisk * 7 : tp2Points
 if strategy.position_size > 0
     ep = strategy.position_avg_price
-    strategy.exit("L-TP1", from_entry="Long", qty_percent=50, limit=ep + tp1Points, stop=ep - riskPoints)
-    strategy.exit("L-TP2", from_entry="Long", qty_percent=50, limit=ep + tp2Points, stop=ep - riskPoints)
+    strategy.exit("L-TP1", from_entry="Long", qty_percent=50, limit=ep + t1, stop=ep - tradeRisk)
+    strategy.exit("L-TP2", from_entry="Long", qty_percent=50, limit=ep + t2, stop=ep - tradeRisk)
 if strategy.position_size < 0
     ep = strategy.position_avg_price
-    strategy.exit("S-TP1", from_entry="Short", qty_percent=50, limit=ep - tp1Points, stop=ep + riskPoints)
-    strategy.exit("S-TP2", from_entry="Short", qty_percent=50, limit=ep - tp2Points, stop=ep + riskPoints)
+    strategy.exit("S-TP1", from_entry="Short", qty_percent=50, limit=ep - t1, stop=ep + tradeRisk)
+    strategy.exit("S-TP2", from_entry="Short", qty_percent=50, limit=ep - t2, stop=ep + tradeRisk)
 
 // ---------------- Visuals ----------------
 plot(pdHigh, "Prev Day High", color=color.new(color.orange, 0), style=plot.style_linebr)
