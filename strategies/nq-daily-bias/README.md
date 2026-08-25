@@ -14,6 +14,22 @@ and run it on an NQ intraday chart (5m or 15m recommended).
 | 4. Confirmation on close | Signals are evaluated only on completed candles: the confirmation candle must close in the trade direction and beyond the tested level. Entry fills on the next bar open. |
 | 5. Confluences | EMA20 filter (long above / short below) and a recent same-direction Fair Value Gap (3-candle imbalance within the lookback window). Both toggleable in settings. |
 
+## Backtest findings (Python replication, NQ=F, June-Aug 2026)
+
+Replicated bar-for-bar on 60 days of 15m data and 3 months of 1h data
+(conservative fills: stop counts first when a bar touches both stop and target):
+
+- Original spec (all hours, 15-pt proximity): ~11% win rate, profit factor 0.73-0.78 — losing.
+  ~88% of entries stop out; a 10-pt stop is inside normal NQ intrabar noise.
+- Restricting entries to 09:30-11:30 ET cut losses ~85% in every variant tested
+  (now the default). Tightening proximity 15 -> 5 pts helped marginally (now default).
+- No variant was profitable on 15m data (best: stop 25 / TP 125-175, PF 0.94).
+  1h data showed PF 2.0+ with the session filter, but on only ~24 setups —
+  too small and too coarse to trust.
+- Conclusion: the 10-pt stop is the binding constraint; treat this as a baseline
+  for iteration (e.g. ATR-scaled stops, level-anchored FVG entries), not a
+  finished edge.
+
 ## Notes and caveats
 
 - **Fills**: entries fill at the next bar's open after the confirmation close, so the
