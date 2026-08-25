@@ -1,11 +1,13 @@
 //@version=5
-// NQ Daily Bias + Key Level Strategy
+// NQ Daily Bias + Key Level Strategy (retrace-entry version)
 // Rules implemented:
 //   1. Daily bias decides direction: bullish -> longs only, bearish -> shorts only.
 //   2. Entries only at key levels (PDH, PDL, PWH, PWL, daily open) - never at random prices.
-//   3. Fixed risk: 10 pt stop. TP1 +50 pts (1:5) closes 50%, TP2 +70 pts (1:7) closes the rest.
-//   4. Confirmation on candle close: signal candle must test the level and close through it
-//      in the trade direction. Orders are evaluated on bar close, filled next bar open.
+//   3. Stop sits just beyond the traded level (structure stop). Targets keep the
+//      1:5 / 1:7 geometry: TP1 at 5x risk closes 50%, TP2 at 7x risk closes the rest.
+//   4. Confirmation on candle close: a candle must test the level and close through it
+//      in the trade direction. Then a limit order waits AT the level for the retrace -
+//      no chasing the confirmation candle.
 //   5. Optional confluences: EMA20 trend filter and recent Fair Value Gap (FVG) displacement.
 strategy("NQ Daily Bias S/R Strategy", overlay=true,
      default_qty_type=strategy.fixed, default_qty_value=2,
@@ -13,19 +15,16 @@ strategy("NQ Daily Bias S/R Strategy", overlay=true,
      calc_on_order_fills=true, process_orders_on_close=false)
 
 // ---------------- Inputs ----------------
-stopMode = input.string("ATR-scaled", "Stop mode", options=["ATR-scaled", "Fixed points"], group="Risk",
-     tooltip="ATR-scaled sizes the stop to current volatility (targets stay at 5x and 7x the stop, keeping 1:5 / 1:7). Fixed points uses the values below.")
-atrMult = input.float(2.0, "ATR multiplier (ATR-scaled mode)", minval=0.1, group="Risk")
-atrLen  = input.int(14, "ATR length", minval=1, group="Risk")
-riskPoints = input.float(10.0, "Stop loss (points, Fixed mode)", minval=1.0, group="Risk")
-tp1Points  = input.float(50.0, "TP1 - 50% off (points, Fixed mode)", minval=1.0, group="Risk")
-tp2Points  = input.float(70.0, "TP2 - runner (points, Fixed mode)", minval=1.0, group="Risk")
+stopBuffer = input.float(20.0, "Stop buffer beyond level (points)", minval=1.0, group="Risk",
+     tooltip="Stop = traded level minus this buffer (longs) / plus it (shorts). Backtests were profitable for 15-25 pts.")
+entryTTL = input.int(12, "Entry order lifetime (bars)", minval=1, group="Risk",
+     tooltip="The limit order at the level is cancelled if not filled within this many bars.")
 
 biasMode = input.string("Both (stricter)", "Daily bias mode",
      options=["Previous daily candle", "Price vs daily open", "Both (stricter)"], group="Bias")
 
 levelProx = input.float(5.0, "Level proximity (points)", minval=0.0, group="Key levels",
-     tooltip="Signal candle must trade within this many points of a key level and close back through it.")
+     tooltip="Confirmation candle must trade within this many points of a key level and close back through it.")
 
 useSession = input.bool(true, "Limit entries to session window", group="Session",
      tooltip="Backtests show most losing signals fire in overnight chop; restricting entries to the NY morning cut losses sharply.")
@@ -60,18 +59,18 @@ biasBear = biasMode == "Previous daily candle" ? prevDayBear :
      prevDayBear and belowDOpen
 
 // ---------------- 2. Key levels ----------------
-// Long: candle dips to within levelProx of a level and closes back above it (support rejection).
-// Short: candle spikes to within levelProx of a level and closes back below it (resistance rejection).
-longAtLevel  = false
-shortAtLevel = false
+// A confirmation candle must dip to within levelProx of a level and close back
+// through it. Track WHICH level was tested: the nearest one to the close.
+float longLvl  = na
+float shortLvl = na
 float[] levels = array.from(pdHigh, pdLow, pwHigh, pwLow, dOpen)
 for i = 0 to array.size(levels) - 1
     lv = array.get(levels, i)
     if not na(lv)
         if low <= lv + levelProx and close > lv
-            longAtLevel := true
+            longLvl := na(longLvl) ? lv : math.max(longLvl, lv)
         if high >= lv - levelProx and close < lv
-            shortAtLevel := true
+            shortLvl := na(shortLvl) ? lv : math.min(shortLvl, lv)
 
 // ---------------- 5. Confluences ----------------
 ema20 = ta.ema(close, emaLen)
@@ -83,35 +82,44 @@ bearFvg = high < low[2]
 fvgOkLong  = not useFvg or ta.barssince(bullFvg) <= fvgLookback
 fvgOkShort = not useFvg or ta.barssince(bearFvg) <= fvgLookback
 
-// ---------------- 4. Confirmation candle + entries ----------------
+// ---------------- 4. Confirmation + retrace-limit entries ----------------
 confirmBull = close > open
 confirmBear = close < open
-
 inSession = not useSession or not na(time(timeframe.period, sessWindow, "America/New_York"))
 
-longSetup  = inSession and biasBull and longAtLevel and confirmBull and emaOkLong and fvgOkLong
-shortSetup = inSession and biasBear and shortAtLevel and confirmBear and emaOkShort and fvgOkShort
+longSetup  = inSession and biasBull and not na(longLvl) and confirmBull and emaOkLong and fvgOkLong
+shortSetup = inSession and biasBear and not na(shortLvl) and confirmBear and emaOkShort and fvgOkShort
 
-atrVal = ta.atr(atrLen)
-var float tradeRisk = na
+// After confirmation, a limit order waits AT the level for the retrace.
+var float pendStop = na
+var int   pendBar  = na
 if longSetup and strategy.position_size == 0
-    tradeRisk := stopMode == "ATR-scaled" ? atrMult * atrVal : riskPoints
-    strategy.entry("Long", strategy.long)
+    strategy.cancel("Short")
+    strategy.entry("Long", strategy.long, limit=longLvl)
+    pendStop := longLvl - stopBuffer
+    pendBar  := bar_index
 if shortSetup and strategy.position_size == 0
-    tradeRisk := stopMode == "ATR-scaled" ? atrMult * atrVal : riskPoints
-    strategy.entry("Short", strategy.short)
+    strategy.cancel("Long")
+    strategy.entry("Short", strategy.short, limit=shortLvl)
+    pendStop := shortLvl + stopBuffer
+    pendBar  := bar_index
+// Cancel a stale entry order that never got filled.
+if strategy.position_size == 0 and not na(pendBar) and bar_index - pendBar > entryTTL
+    strategy.cancel("Long")
+    strategy.cancel("Short")
+    pendBar := na
 
-// ---------------- 3. Exits: stop = tradeRisk, 50% at 1:5, 50% at 1:7 ----------------
-t1 = stopMode == "ATR-scaled" ? tradeRisk * 5 : tp1Points
-t2 = stopMode == "ATR-scaled" ? tradeRisk * 7 : tp2Points
+// ---------------- 3. Exits: structure stop, 50% at 1:5, 50% at 1:7 ----------------
 if strategy.position_size > 0
     ep = strategy.position_avg_price
-    strategy.exit("L-TP1", from_entry="Long", qty_percent=50, limit=ep + t1, stop=ep - tradeRisk)
-    strategy.exit("L-TP2", from_entry="Long", qty_percent=50, limit=ep + t2, stop=ep - tradeRisk)
+    risk = math.max(ep - pendStop, 1.0)
+    strategy.exit("L-TP1", from_entry="Long", qty_percent=50, limit=ep + 5 * risk, stop=pendStop)
+    strategy.exit("L-TP2", from_entry="Long", qty_percent=50, limit=ep + 7 * risk, stop=pendStop)
 if strategy.position_size < 0
     ep = strategy.position_avg_price
-    strategy.exit("S-TP1", from_entry="Short", qty_percent=50, limit=ep - t1, stop=ep + tradeRisk)
-    strategy.exit("S-TP2", from_entry="Short", qty_percent=50, limit=ep - t2, stop=ep + tradeRisk)
+    risk = math.max(pendStop - ep, 1.0)
+    strategy.exit("S-TP1", from_entry="Short", qty_percent=50, limit=ep - 5 * risk, stop=pendStop)
+    strategy.exit("S-TP2", from_entry="Short", qty_percent=50, limit=ep - 7 * risk, stop=pendStop)
 
 // ---------------- Visuals ----------------
 plot(pdHigh, "Prev Day High", color=color.new(color.orange, 0), style=plot.style_linebr)
@@ -124,3 +132,5 @@ plot(ema20,  "EMA20", color=color.new(color.blue, 0))
 bgcolor(biasBull ? color.new(color.green, 92) : biasBear ? color.new(color.red, 92) : na, title="Daily bias")
 plotshape(bullFvg, "Bullish FVG", shape.triangleup, location.belowbar, color.new(color.teal, 30), size=size.tiny)
 plotshape(bearFvg, "Bearish FVG", shape.triangledown, location.abovebar, color.new(color.maroon, 30), size=size.tiny)
+plotshape(longSetup, "Long signal (limit placed at level)", shape.circle, location.belowbar, color.new(color.green, 0), size=size.tiny)
+plotshape(shortSetup, "Short signal (limit placed at level)", shape.circle, location.abovebar, color.new(color.red, 0), size=size.tiny)

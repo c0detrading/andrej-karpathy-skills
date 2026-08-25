@@ -10,8 +10,8 @@ and run it on an NQ intraday chart (5m or 15m recommended).
 |------|----------------|
 | 1. Daily bias | Bullish → longs only, bearish → shorts only. Default mode requires the previous daily candle to be bullish **and** price above today's daily open (selectable via *Daily bias mode*). |
 | 2. Key levels only | Entries are allowed **only** when the signal candle tests one of: previous day high/low, previous week high/low, or today's daily open (within *Level proximity*, default 15 pts) and closes back through it in the trade direction. No level, no trade. |
-| 3. Risk | 10 pt stop. TP1 at +50 pts (1:5) closes 50%; TP2 at +70 pts (1:7) closes the remaining 50%. Default size is 2 contracts so the partials split evenly. |
-| 4. Confirmation on close | Signals are evaluated only on completed candles: the confirmation candle must close in the trade direction and beyond the tested level. Entry fills on the next bar open. |
+| 3. Risk | Structure stop just beyond the traded level (default 20-pt buffer). TP1 at 5x risk (1:5) closes 50%; TP2 at 7x risk (1:7) closes the remaining 50%. Default size is 2 contracts so the partials split evenly. |
+| 4. Confirmation on close | Signals are evaluated only on completed candles: the confirmation candle must close in the trade direction and beyond the tested level. A limit order then waits AT the level for the retrace (cancelled after 12 bars if unfilled) - the strategy never chases the confirmation candle. |
 | 5. Confluences | EMA20 filter (long above / short below) and a recent same-direction Fair Value Gap (3-candle imbalance within the lookback window). Both toggleable in settings. |
 
 ## Backtest findings (Python replication, NQ=F, June-Aug 2026)
@@ -30,9 +30,19 @@ Replicated bar-for-bar on 60 days of 15m data and 3 months of 1h data
 - ATR-scaled stops (stop = k * ATR(14), targets 5x/7x the stop, session filter on)
   were the first profitable configuration on 15m data: k=1.5 -> PF 1.24, k=2.0 ->
   PF 1.38 (+10R over 60 days), confirmed directionally on 1h/3mo (PF 2.2-2.4).
-  Now the default (ATR-scaled, mult 2.0). Caveat: only 16-20 setups in the
-  sample, and the resulting stops are ~100-140 pts, far larger than the
-  original 10-pt spec - risk per trade must be sized accordingly (e.g. MNQ).
+  On TradingView's own 3-month 15m data that edge did not replicate robustly
+  (profitable only at exactly mult 2.0) - judged curve-fit and removed.
+- MFE/MAE diagnosis on TradingView data: 94% of signals reached +50 pts within
+  24h (median favorable move 269 pts), but entries averaged 25 pts past the
+  level and winners suffered ~49 pts median drawdown first. Direction selection
+  was fine; entry execution was the problem.
+- Final model (current script): after confirmation, a limit order waits AT the
+  tested level for the retrace; stop sits a buffer beyond the level; targets at
+  5x/7x risk. On TradingView 3-month 15m data: buffer 15 -> 25% win rate,
+  PF 1.97; buffer 20 -> PF 1.26; buffer 25 -> PF 1.31; degrades gradually
+  beyond 30 (a robustness sign, not a single-point spike). Default buffer 20
+  (mid-range, not the peak). Sample is still only ~30 setups - validate on
+  longer history before trading real money.
 
 ## Notes and caveats
 
