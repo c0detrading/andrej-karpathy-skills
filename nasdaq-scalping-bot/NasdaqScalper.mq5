@@ -3,9 +3,12 @@
 //|  Ultra-scalping Expert Advisor for the Nasdaq 100 index          |
 //|  (US100 / NAS100 / USTEC CFD, or NQ/MNQ futures symbol).         |
 //|                                                                  |
-//|  Exits are fixed by specification:                               |
+//|  Exits by specification:                                         |
 //|    Take profit : +5.0 index points                               |
 //|    Stop loss   : -2.5 index points                               |
+//|    At +3.0 points profit the stop loss moves to break even;      |
+//|    while momentum keeps gaining, SL trails behind price and TP   |
+//|    is pushed ahead so winners can run (see ManagePosition()).    |
 //|                                                                  |
 //|  Entry signal (swappable, see GetSignal()):                      |
 //|    Fast EMA / slow EMA crossover, evaluated once per closed bar. |
@@ -21,6 +24,11 @@
 //--- exit rules (index points, i.e. price units on US100-style quotes)
 input double InpTakeProfitPts = 5.0;   // Take profit (index points)
 input double InpStopLossPts   = 2.5;   // Stop loss (index points)
+
+//--- trade management (index points)
+input double InpBreakEvenTriggerPts = 3.0; // Move SL to entry after this much profit
+input double InpTrailDistancePts    = 2.5; // Trailing SL distance while momentum is gaining
+input double InpTrailTpExtendPts    = 5.0; // Keep TP this far ahead while momentum is gaining
 
 //--- position sizing
 input double InpLots          = 0.1;   // Lot size (contracts)
@@ -92,8 +100,10 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 int GetSignal()
   {
-   double fast[2], slow[2];
-   // Index 0 = last closed bar, index 1 = the bar before it.
+   double fast[], slow[];
+   ArraySetAsSeries(fast, true);
+   ArraySetAsSeries(slow, true);
+   // Series order: index 0 = last closed bar, index 1 = the bar before it.
    if(CopyBuffer(g_fastHandle, 0, 1, 2, fast) != 2 ||
       CopyBuffer(g_slowHandle, 0, 1, 2, slow) != 2)
       return(0);
@@ -107,7 +117,28 @@ int GetSignal()
   }
 
 //+------------------------------------------------------------------+
-bool HasOpenPosition()
+//| Momentum is "gaining" when the fast/slow EMA gap in the trade    |
+//| direction (dir = +1 buy, -1 sell) is positive and wider on the   |
+//| last closed bar than on the bar before it.                       |
+//+------------------------------------------------------------------+
+bool MomentumGaining(int dir)
+  {
+   double fast[], slow[];
+   ArraySetAsSeries(fast, true);
+   ArraySetAsSeries(slow, true);
+   if(CopyBuffer(g_fastHandle, 0, 1, 2, fast) != 2 ||
+      CopyBuffer(g_slowHandle, 0, 1, 2, slow) != 2)
+      return(false);
+
+   double gapNow  = dir * (fast[0] - slow[0]);
+   double gapPrev = dir * (fast[1] - slow[1]);
+   return(gapNow > 0 && gapNow > gapPrev);
+  }
+
+//+------------------------------------------------------------------+
+//| Returns the ticket of this EA's open position, or 0 if none.     |
+//+------------------------------------------------------------------+
+ulong FindPosition()
   {
    for(int i = PositionsTotal() - 1; i >= 0; i--)
      {
@@ -115,9 +146,58 @@ bool HasOpenPosition()
       if(ticket == 0) continue;
       if(PositionGetString(POSITION_SYMBOL) == _Symbol &&
          PositionGetInteger(POSITION_MAGIC) == InpMagic)
-         return(true);
+         return(ticket);
      }
-   return(false);
+   return(0);
+  }
+
+//+------------------------------------------------------------------+
+//| Runs every tick while a position is open:                        |
+//|  1. At +InpBreakEvenTriggerPts profit, move SL to the entry.     |
+//|  2. While momentum keeps gaining, trail SL InpTrailDistancePts   |
+//|     behind price and keep TP InpTrailTpExtendPts ahead of it.    |
+//| SL and TP only ever move in the trade's favor (ratchet).         |
+//+------------------------------------------------------------------+
+void ManagePosition(ulong ticket)
+  {
+   if(!PositionSelectByTicket(ticket)) return;
+
+   int    dir   = (PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY) ? 1 : -1;
+   double entry = PositionGetDouble(POSITION_PRICE_OPEN);
+   double curSL = PositionGetDouble(POSITION_SL);
+   double curTP = PositionGetDouble(POSITION_TP);
+
+   // Price the position would close at right now.
+   double close = SymbolInfoDouble(_Symbol, dir > 0 ? SYMBOL_BID : SYMBOL_ASK);
+   double profitPts = dir * (close - entry);
+   if(profitPts < InpBreakEvenTriggerPts) return;
+
+   double newSL = curSL;
+   double newTP = curTP;
+
+   // 1) Break even: SL still on the losing side of entry (or missing).
+   if(curSL == 0 || dir * (entry - curSL) > 0)
+      newSL = entry;
+
+   // 2) Momentum trailing.
+   if(MomentumGaining(dir))
+     {
+      double trailSL = NormalizeToTick(close - dir * InpTrailDistancePts);
+      if(dir * (trailSL - newSL) > 0)
+         newSL = trailSL;
+
+      double trailTP = NormalizeToTick(close + dir * InpTrailTpExtendPts);
+      if(dir * (trailTP - newTP) > 0)
+         newTP = trailTP;
+     }
+
+   double tick = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_SIZE);
+   if(MathAbs(newSL - curSL) < tick && MathAbs(newTP - curTP) < tick)
+      return;
+
+   if(!g_trade.PositionModify(ticket, NormalizeToTick(newSL), newTP))
+      PrintFormat("PositionModify failed: %d / %s", g_trade.ResultRetcode(),
+                  g_trade.ResultRetcodeDescription());
   }
 
 //+------------------------------------------------------------------+
@@ -143,12 +223,17 @@ double NormalizeToTick(double price)
 //+------------------------------------------------------------------+
 void OnTick()
   {
-   // Act once per bar, on bar open.
+   // Manage the open position on every tick.
+   ulong ticket = FindPosition();
+   if(ticket != 0)
+      ManagePosition(ticket);
+
+   // Entries: act once per bar, on bar open.
    datetime barTime = iTime(_Symbol, _Period, 0);
    if(barTime == g_lastBarTime) return;
    g_lastBarTime = barTime;
 
-   if(HasOpenPosition()) return;          // one position at a time
+   if(ticket != 0) return;                // one position at a time
    if(!TradingHoursOk()) return;
 
    double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);

@@ -5,8 +5,21 @@ fixed exits:
 
 - **Take profit: +5.0 index points**
 - **Stop loss: −2.5 index points**
+- **Break even: at +3.0 points profit the stop loss moves to the entry price**
+- **Momentum trailing: while the move keeps gaining momentum, the stop loss
+  trails 2.5 points behind price and the take profit is pushed 5.0 points
+  ahead of price, so winners can run and are eventually closed by the
+  trailing stop**
 
-It opens at most one position at a time and evaluates entries once per bar.
+It opens at most one position at a time and evaluates entries once per bar;
+the open position is managed on every tick.
+
+"Gaining momentum" is defined concretely as: the gap between the fast and
+slow EMA, measured in the trade's direction, is positive and wider on the
+last closed bar than on the bar before it. While that holds, SL and TP
+ratchet upward (for a buy; downward for a sell) — they never move against
+the trade. When momentum stops gaining, the TP freezes where it is and price
+can reach it, or the trailed SL takes the exit.
 
 ## Assumptions made
 
@@ -49,6 +62,9 @@ live or demo account. With a 2.5-point stop, tick-level modeling matters.
 |---|---|---|
 | `InpTakeProfitPts` | `5.0` | Take profit in index points |
 | `InpStopLossPts` | `2.5` | Stop loss in index points |
+| `InpBreakEvenTriggerPts` | `3.0` | Profit (points) at which SL moves to entry |
+| `InpTrailDistancePts` | `2.5` | Trailing SL distance behind price while momentum is gaining |
+| `InpTrailTpExtendPts` | `5.0` | TP is kept this far ahead of price while momentum is gaining |
 | `InpLots` | `0.1` | Position size in lots |
 | `InpFastEMA` / `InpSlowEMA` | `9` / `21` | Entry crossover periods |
 | `InpMaxSpreadPts` | `1.5` | Skip entries when spread exceeds this (0 = off) |
