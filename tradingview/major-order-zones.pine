@@ -1,0 +1,82 @@
+//@version=6
+// Major Order Zones — buy-side (demand) and sell-side (supply) zones.
+//
+// NOTE: TradingView cannot connect to Bookmap or read live order-book (DOM)
+// data. Pine Script only sees price and traded volume. This indicator
+// approximates Bookmap-style major order zones from where price pivoted on
+// unusually high volume — the footprint large resting orders leave on the
+// tape. Use it side by side with Bookmap to cross-check zones.
+indicator("Major Order Zones (Buy/Sell Side)", shorttitle = "Order Zones", overlay = true, max_boxes_count = 500)
+
+pivotLen     = input.int(5, "Pivot length", minval = 1, tooltip = "Bars required on each side of a swing high/low for it to count as a pivot. Zones confirm this many bars after the pivot.")
+volMult      = input.float(1.5, "Volume spike multiplier", minval = 1.0, step = 0.1, tooltip = "Volume at the pivot must exceed this multiple of the 20-bar average volume for the zone to count as major.")
+maxZones     = input.int(10, "Max zones per side", minval = 1, maxval = 50)
+deleteBroken = input.bool(true, "Remove broken zones", tooltip = "Delete a zone once price closes through it. If off, broken zones stay on the chart greyed out.")
+buyColor     = input.color(color.new(color.teal, 80), "Buy-side zone")
+sellColor    = input.color(color.new(color.red, 80), "Sell-side zone")
+
+volAvg = ta.sma(volume, 20)
+atr    = ta.atr(14)
+
+var demandZones = array.new<box>()
+var supplyZones = array.new<box>()
+
+// Minimum zone thickness so full-body pivot candles still draw a visible zone.
+minHeight = atr * 0.25
+
+pl = ta.pivotlow(low, pivotLen, pivotLen)
+ph = ta.pivothigh(high, pivotLen, pivotLen)
+
+newZone(zones, top, bottom, col) =>
+    b = box.new(bar_index - pivotLen, top, bar_index, bottom, border_color = col, bgcolor = col, extend = extend.right)
+    array.push(zones, b)
+    if array.size(zones) > maxZones
+        box.delete(array.shift(zones))
+
+// Buy-side zone: swing low on a volume spike. The zone spans the lower wick
+// (low to body bottom), where sell pressure was absorbed by resting bids.
+if not na(pl) and volume[pivotLen] > volAvg[pivotLen] * volMult
+    zBottom = low[pivotLen]
+    zTop    = math.max(math.min(open[pivotLen], close[pivotLen]), zBottom + minHeight)
+    newZone(demandZones, zTop, zBottom, buyColor)
+
+// Sell-side zone: swing high on a volume spike. The zone spans the upper wick
+// (body top to high), where buy pressure was absorbed by resting offers.
+if not na(ph) and volume[pivotLen] > volAvg[pivotLen] * volMult
+    zTop    = high[pivotLen]
+    zBottom = math.min(math.max(open[pivotLen], close[pivotLen]), zTop - minHeight)
+    newZone(supplyZones, zTop, zBottom, sellColor)
+
+retireZone(zones, i, b) =>
+    array.remove(zones, i)
+    if deleteBroken
+        box.delete(b)
+    else
+        box.set_extend(b, extend.none)
+        box.set_right(b, bar_index)
+        box.set_bgcolor(b, color.new(color.gray, 90))
+        box.set_border_color(b, color.new(color.gray, 90))
+
+var bool touchedBuy = false
+var bool touchedSell = false
+touchedBuy := false
+touchedSell := false
+
+if array.size(demandZones) > 0
+    for i = array.size(demandZones) - 1 to 0
+        b = array.get(demandZones, i)
+        if close < box.get_bottom(b)
+            retireZone(demandZones, i, b)
+        else if low <= box.get_top(b) and high >= box.get_bottom(b)
+            touchedBuy := true
+
+if array.size(supplyZones) > 0
+    for i = array.size(supplyZones) - 1 to 0
+        b = array.get(supplyZones, i)
+        if close > box.get_top(b)
+            retireZone(supplyZones, i, b)
+        else if high >= box.get_bottom(b) and low <= box.get_top(b)
+            touchedSell := true
+
+alertcondition(touchedBuy, "Price in buy-side zone", "Price entered a major buy-side order zone")
+alertcondition(touchedSell, "Price in sell-side zone", "Price entered a major sell-side order zone")
