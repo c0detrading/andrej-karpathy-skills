@@ -57,14 +57,16 @@ class Voice:
     def __init__(self, enabled=True):
         self.engine = None
         self._lock = threading.Lock()  # reminders speak from a background thread
+        reason = "the pyttsx3 package is not installed — run: pip install pyttsx3"
         if enabled and pyttsx3 is not None:
             try:
                 self.engine = pyttsx3.init()
                 self.engine.setProperty("rate", 175)
-            except Exception:
+            except Exception as e:
                 self.engine = None
+                reason = f"{e.__class__.__name__}: {e}"
         if enabled and self.engine is None:
-            print("(voice unavailable — running in text-only mode)")
+            print(f"(voice unavailable, running in text-only mode — {reason})")
 
     def say(self, text):
         with self._lock:
@@ -274,16 +276,18 @@ class Ears:
     def __init__(self, enabled=True):
         self.recognizer = None
         self.mic = None
+        reason = "the SpeechRecognition package is not installed — run: pip install SpeechRecognition PyAudio"
         if enabled and sr is not None:
             try:
                 self.recognizer = sr.Recognizer()
                 self.mic = sr.Microphone()
                 with self.mic as source:
                     self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
-            except Exception:
+            except Exception as e:
                 self.mic = None
+                reason = f"{e.__class__.__name__}: {e}"
         if enabled and self.mic is None:
-            print("(microphone unavailable — type your messages instead)")
+            print(f"(microphone unavailable, type your messages instead — {reason})")
 
     @property
     def available(self):
