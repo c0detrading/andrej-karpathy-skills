@@ -9,6 +9,9 @@ conversation memory. Every reply is printed and spoken aloud.
 - **Greetings** — "hello", "hi", "good morning"
 - **Time** — "what time is it"
 - **Date** — "what's the date", "what day is it"
+- **Reminders** — "remind me to stretch in 20 minutes", "remind me to call
+  mom at 5:30 pm", "list my reminders"; Eve announces them out loud when
+  they're due (while she's running — they aren't saved between sessions)
 - **Help** — "help", "what can you do"
 - **Chat** — anything else goes to Claude (remembers the conversation)
 - **Voice input** — talk to Eve through your microphone; falls back to
