@@ -12,6 +12,10 @@ conversation memory. Every reply is printed and spoken aloud.
 - **Reminders** — "remind me to stretch in 20 minutes", "remind me to call
   mom at 5:30 pm", "list my reminders"; Eve announces them out loud when
   they're due (while she's running — they aren't saved between sessions)
+- **Task queue** — "queue a task: draft a packing list for Japan"; Claude
+  works through queued tasks in the background one at a time while you keep
+  chatting, Eve announces when each finishes, and full results are saved as
+  markdown files in `eve_tasks/`. "List tasks" reads back the queue status.
 - **Help** — "help", "what can you do"
 - **Chat** — anything else goes to Claude (remembers the conversation)
 - **Voice input** — talk to Eve through your microphone; falls back to

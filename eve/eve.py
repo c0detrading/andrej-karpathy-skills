@@ -10,6 +10,8 @@ and always printed to the terminal.
 
 import argparse
 import datetime
+import pathlib
+import queue
 import re
 import sys
 import threading
@@ -43,7 +45,8 @@ DATE_PHRASES = {"date", "what's the date", "what is the date", "what day is it",
 
 HELP_TEXT = (
     "I can tell you the time or the date, set reminders — like, remind me to "
-    "stretch in 20 minutes — and chat about anything else. "
+    "stretch in 20 minutes — queue up bigger jobs — like, queue a task: plan "
+    "my week — and chat about anything else. "
     "Say goodbye when you want to leave."
 )
 
@@ -167,6 +170,104 @@ def reminder_reply(user_text, reminders):
     return None
 
 
+TASK_SYSTEM_PROMPT = (
+    "You are Eve, a personal assistant, completing a background task for your "
+    "user. Produce the complete, finished result of the task. The result is "
+    "saved to a file, so markdown formatting is fine."
+)
+
+
+class Tasks:
+    """Background task queue: Claude works through tasks while you keep chatting."""
+
+    def __init__(self, voice, outdir="eve_tasks"):
+        self.voice = voice
+        self.client = anthropic.Anthropic() if anthropic is not None else None
+        self.outdir = pathlib.Path(outdir)
+        self.queue = queue.Queue()
+        self.items = []  # dicts: num, desc, status, path
+        self.lock = threading.Lock()
+        threading.Thread(target=self._work, daemon=True).start()
+
+    def add(self, desc):
+        with self.lock:
+            item = {"num": len(self.items) + 1, "desc": desc, "status": "queued", "path": None}
+            self.items.append(item)
+        self.queue.put(item)
+        return item["num"]
+
+    def list_text(self):
+        with self.lock:
+            if not self.items:
+                return "The task queue is empty."
+            parts = []
+            for item in self.items:
+                status = item["status"]
+                if status == "done":
+                    status = f"done, saved to {item['path']}"
+                parts.append(f"Task {item['num']}, {item['desc']}: {status}")
+        return ". ".join(parts) + "."
+
+    def _work(self):
+        while True:
+            item = self.queue.get()
+            with self.lock:
+                item["status"] = "working"
+            error = None
+            try:
+                response = self.client.messages.create(
+                    model="claude-opus-5",
+                    max_tokens=16000,
+                    system=TASK_SYSTEM_PROMPT,
+                    messages=[{"role": "user", "content": item["desc"]}],
+                )
+                text = next((b.text for b in response.content if b.type == "text"), "")
+                if not text:
+                    error = "Claude returned an empty result"
+            except TypeError:
+                error = "no Anthropic credentials — set ANTHROPIC_API_KEY"
+            except anthropic.APIConnectionError:
+                error = "couldn't reach the internet"
+            except anthropic.APIError as e:
+                error = f"API error: {getattr(e, 'message', None) or e}"
+
+            if error is not None:
+                with self.lock:
+                    item["status"] = f"failed ({error})"
+                self.voice.say(f"Task {item['num']} failed: {error}.")
+                continue
+            self.outdir.mkdir(exist_ok=True)
+            path = self.outdir / f"task-{item['num']}.md"
+            path.write_text(f"# Task {item['num']}: {item['desc']}\n\n{text}\n")
+            with self.lock:
+                item["status"] = "done"
+                item["path"] = str(path)
+            self.voice.say(f"Task {item['num']} is done: {item['desc']}. I saved the result to {path}.")
+
+
+TASK_ADD_PATTERN = re.compile(r"(?:queue|add|new)(?: a| another| up a)? task[:,]?\s*(.+)$")
+TASK_LIST_PHRASES = {
+    "list tasks", "list my tasks", "my tasks", "what are my tasks",
+    "show my tasks", "task status", "how are my tasks", "how are my tasks going",
+}
+
+
+def task_reply(user_text, tasks):
+    """Handle task-queue commands; return a reply, or None if not a task command."""
+    t = user_text.lower().strip().rstrip("?!.")
+    if t in TASK_LIST_PHRASES:
+        return tasks.list_text() if tasks is not None else "The task queue is empty."
+    match = TASK_ADD_PATTERN.fullmatch(t)
+    if match:
+        if tasks is None:
+            return "I need the anthropic package installed to work on tasks."
+        num = tasks.add(match.group(1))
+        return f"Task {num} queued: {match.group(1)}. I'll let you know when it's done."
+    if t in ("queue a task", "add a task", "new task", "add another task"):
+        return "Sure — what's the task? Say something like: queue a task: plan my week."
+    return None
+
+
 class Ears:
     """Listens for speech on the microphone; unavailable if there's no mic."""
 
@@ -282,6 +383,7 @@ def main():
     voice = Voice(enabled=not args.no_voice)
     ears = Ears(enabled=not args.no_mic)
     reminders = Reminders(voice)
+    tasks = Tasks(voice) if anthropic is not None else None
     brain = ClaudeBrain() if anthropic is not None else None
     if brain is None:
         print("(anthropic package not installed — only basic commands will work)")
@@ -310,6 +412,8 @@ def main():
             break
         if reply is None:
             reply = reminder_reply(user_text, reminders)
+        if reply is None:
+            reply = task_reply(user_text, tasks)
         if reply is None:
             if brain is not None:
                 reply = brain.reply(user_text)
