@@ -59,6 +59,29 @@ python eve.py --no-voice # silent replies (text only)
 
 Say `bye`, `exit`, or `quit` (or press Ctrl-C) to leave.
 
+## Start Eve by voice ("Hey Eve")
+
+```bash
+python wake.py
+```
+
+This listens in the background for the wake word and launches Eve when it
+hears "Hey Eve" (or just "Eve"). When you say goodbye to Eve, it goes back
+to listening for the wake word. Ctrl-C quits the listener itself.
+
+To have the listener start automatically when you log in:
+
+- **Windows** — press Win+R, run `shell:startup`, and in the folder that
+  opens create a shortcut with target
+  `pythonw C:\path\to\eve\wake.py` (`pythonw` runs it without a console
+  window).
+- **macOS/Linux** — add `python /path/to/eve/wake.py &` to your login items
+  or a systemd user service.
+
+Note: like voice input, wake-word detection uses the free Google Web Speech
+API, so audio snippets it picks up are sent to Google for transcription
+while the listener runs.
+
 ## Example
 
 ```
