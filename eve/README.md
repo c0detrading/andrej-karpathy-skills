@@ -1,8 +1,8 @@
 # Eve — Personal AI Assistant with Speech
 
-Eve is a command-line personal assistant. Basic commands are handled instantly
-on your machine; everything else is answered by Claude with conversation
-memory. Every reply is printed and spoken aloud.
+Eve is a command-line personal assistant you can talk to. Basic commands are
+handled instantly on your machine; everything else is answered by Claude with
+conversation memory. Every reply is printed and spoken aloud.
 
 ## Features (the basics)
 
@@ -11,6 +11,8 @@ memory. Every reply is printed and spoken aloud.
 - **Date** — "what's the date", "what day is it"
 - **Help** — "help", "what can you do"
 - **Chat** — anything else goes to Claude (remembers the conversation)
+- **Voice input** — talk to Eve through your microphone; falls back to
+  typed input automatically if no mic is available
 - **Speech** — replies are spoken aloud via offline TTS; falls back to
   text-only automatically if no audio is available
 
@@ -20,9 +22,16 @@ memory. Every reply is printed and spoken aloud.
 pip install -r requirements.txt
 ```
 
-Speech uses [pyttsx3](https://pypi.org/project/pyttsx3/), which is fully
-offline. On Linux it needs espeak (`sudo apt install espeak-ng`); on macOS and
-Windows it uses the built-in system voices.
+Speech output uses [pyttsx3](https://pypi.org/project/pyttsx3/), which is
+fully offline. On Linux it needs espeak (`sudo apt install espeak-ng`); on
+macOS and Windows it uses the built-in system voices.
+
+Voice input uses
+[SpeechRecognition](https://pypi.org/project/SpeechRecognition/) with PyAudio
+for microphone access, and the free Google Web Speech API for recognition (so
+it needs internet). PyAudio needs PortAudio on Linux
+(`sudo apt install portaudio19-dev`) and Homebrew's `portaudio` on macOS.
+Without a microphone, Eve falls back to typed input.
 
 For the AI chat, the Anthropic SDK needs credentials — either:
 
@@ -36,8 +45,9 @@ with the basic commands.
 ## Run
 
 ```bash
-python eve.py            # with speech
-python eve.py --no-voice # text-only
+python eve.py            # talk to Eve, she talks back
+python eve.py --no-mic   # type instead of talking
+python eve.py --no-voice # silent replies (text only)
 ```
 
 Say `bye`, `exit`, or `quit` (or press Ctrl-C) to leave.

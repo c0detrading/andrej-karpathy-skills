@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Eve — a personal AI assistant with speech output.
+"""Eve — a personal AI assistant with speech input and output.
 
 Basic commands (time, date, greetings, help, exit) are handled locally.
 Anything else is answered by Claude, with conversation memory.
-Replies are spoken aloud with pyttsx3 when a TTS engine is available,
+You can talk to Eve through your microphone (SpeechRecognition) or type;
+replies are spoken aloud with pyttsx3 when a TTS engine is available,
 and always printed to the terminal.
 """
 
@@ -15,6 +16,11 @@ try:
     import pyttsx3
 except ImportError:
     pyttsx3 = None
+
+try:
+    import speech_recognition as sr
+except ImportError:
+    sr = None
 
 try:
     import anthropic
@@ -61,6 +67,51 @@ class Voice:
             except Exception:
                 self.engine = None
                 print("(voice stopped working — continuing in text-only mode)")
+
+
+class Ears:
+    """Listens for speech on the microphone; unavailable if there's no mic."""
+
+    def __init__(self, enabled=True):
+        self.recognizer = None
+        self.mic = None
+        if enabled and sr is not None:
+            try:
+                self.recognizer = sr.Recognizer()
+                self.mic = sr.Microphone()
+                with self.mic as source:
+                    self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
+            except Exception:
+                self.mic = None
+        if enabled and self.mic is None:
+            print("(microphone unavailable — type your messages instead)")
+
+    @property
+    def available(self):
+        return self.mic is not None
+
+    def listen(self):
+        """Return recognized speech, or None if nothing was understood."""
+        print("(listening — speak now)")
+        try:
+            with self.mic as source:
+                audio = self.recognizer.listen(source, timeout=8, phrase_time_limit=15)
+        except sr.WaitTimeoutError:
+            return None
+        except Exception:
+            self.mic = None
+            print("(microphone stopped working — type your messages instead)")
+            return None
+        try:
+            text = self.recognizer.recognize_google(audio)
+        except sr.UnknownValueError:
+            print("(sorry, I didn't catch that)")
+            return None
+        except sr.RequestError:
+            print("(speech recognition needs internet — type your message instead)")
+            return None
+        print(f"You: {text}")
+        return text
 
 
 class ClaudeBrain:
@@ -127,9 +178,11 @@ def builtin_reply(user_text):
 def main():
     parser = argparse.ArgumentParser(description="Eve — a personal AI assistant with speech.")
     parser.add_argument("--no-voice", action="store_true", help="disable speech output")
+    parser.add_argument("--no-mic", action="store_true", help="disable voice input (type instead)")
     args = parser.parse_args()
 
     voice = Voice(enabled=not args.no_voice)
+    ears = Ears(enabled=not args.no_mic)
     brain = ClaudeBrain() if anthropic is not None else None
     if brain is None:
         print("(anthropic package not installed — only basic commands will work)")
@@ -138,7 +191,13 @@ def main():
 
     while True:
         try:
-            user_text = input("You: ").strip()
+            if ears.available:
+                user_text = ears.listen()
+                if user_text is None:
+                    continue
+                user_text = user_text.strip()
+            else:
+                user_text = input("You: ").strip()
         except (EOFError, KeyboardInterrupt):
             print()
             voice.say("Goodbye!")
