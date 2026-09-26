@@ -1,11 +1,30 @@
 """All tunable settings in one place."""
 
-SYMBOLS = {
-    # cme: 4h bars start at the 18:00 New York session open; otherwise at 00:00 UTC (24/7 markets).
-    "GOLD": {"ticker": "GC=F", "name": "Gold (COMEX GC)", "cme": True},
-    "NASDAQ": {"ticker": "NQ=F", "name": "Nasdaq 100 (CME NQ)", "cme": True},
-    "BITCOIN": {"ticker": "BTC-USD", "name": "Bitcoin", "cme": False},
+# Assets you can pick on the Settings page.
+#   cme:   True  -> 4h bars start at the 18:00 New York session open (futures, FX);
+#          False -> 4h bars start at 00:00 UTC (24/7 markets like crypto).
+#   news:  which headline profile moves it ("GOLD", "NASDAQ", "BITCOIN") or None.
+#   macro: how a rising dollar / rising 10y yield affects it (-1 = fully against, 0 = ignore).
+ASSET_PRESETS = {
+    "GOLD": {"ticker": "GC=F", "name": "Gold (COMEX GC)", "cme": True, "news": "GOLD", "macro": -1.0},
+    "NASDAQ": {"ticker": "NQ=F", "name": "Nasdaq 100 (CME NQ)", "cme": True, "news": "NASDAQ", "macro": -0.5},
+    "BITCOIN": {"ticker": "BTC-USD", "name": "Bitcoin", "cme": False, "news": "BITCOIN", "macro": -0.5},
+    "SILVER": {"ticker": "SI=F", "name": "Silver (COMEX SI)", "cme": True, "news": "GOLD", "macro": -1.0},
+    "SP500": {"ticker": "ES=F", "name": "S&P 500 (CME ES)", "cme": True, "news": "NASDAQ", "macro": -0.5},
+    "DOW": {"ticker": "YM=F", "name": "Dow (CBOT YM)", "cme": True, "news": "NASDAQ", "macro": -0.5},
+    "OIL": {"ticker": "CL=F", "name": "Crude Oil (NYMEX CL)", "cme": True, "news": None, "macro": 0.0},
+    "EURUSD": {"ticker": "EURUSD=X", "name": "EUR/USD", "cme": True, "news": None, "macro": -1.0},
+    "ETHEREUM": {"ticker": "ETH-USD", "name": "Ethereum", "cme": False, "news": "BITCOIN", "macro": -0.5},
 }
+DEFAULT_ASSETS = ["GOLD", "NASDAQ", "BITCOIN"]
+NEWS_PROFILES = ["GOLD", "NASDAQ", "BITCOIN"]
+
+# Cross-market inputs: a rising dollar index and 10-year yield pressure most assets.
+MACRO = {
+    "DXY": {"ticker": "DX-Y.NYB", "name": "US Dollar Index"},
+    "US10Y": {"ticker": "^TNX", "name": "US 10Y yield"},
+}
+MACRO_TIMEFRAME_WEIGHTS = {"1h": 0.3, "4h": 0.3, "1D": 0.4}
 
 # Station timeframe -> (Yahoo interval, Yahoo range, resample rule or None).
 # Yahoo has no 4h bars, so 4h is resampled from 60m.
@@ -42,8 +61,10 @@ INDICATOR_WEIGHTS = {
 # A bias only flips once the score crosses this far past zero (stops flapping).
 BIAS_HYSTERESIS = 10
 
-# Share of the overall bias that comes from news (the rest is technical).
-NEWS_WEIGHT = 0.3
+# How the overall daily bias is blended (sums to 1).
+TECH_WEIGHT = 0.6
+NEWS_WEIGHT = 0.25
+MACRO_WEIGHT = 0.15
 NEWS_HALF_LIFE_MIN = 90      # a headline's effect halves every 90 minutes
 NEWS_WINDOW_HOURS = 6        # headlines older than this are ignored
 NEWS_POINTS_PER_UNIT = 20    # rule impact 1.0 == 20 news-score points
@@ -60,9 +81,29 @@ FF_ALERT_MINUTES = 15
 NEWS_FEEDS = {
     "FinancialJuice": "https://www.financialjuice.com/feed.ashx?xy=rss",
     "Yahoo Finance": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GC=F,NQ=F,^NDX,BTC-USD&region=US&lang=en-US",
+    "Fed": "https://www.federalreserve.gov/feeds/press_monetary.xml",
+    "Fed Speeches": "https://www.federalreserve.gov/feeds/speeches.xml",
+    "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
 }
 FF_CALENDAR_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
 NEWS_REFRESH_SECONDS = 60
 FF_REFRESH_SECONDS = 1800
 
 HTTP_HEADERS = {"User-Agent": "Mozilla/5.0 (onyx)"}
+
+# Accuracy: a timeframe's bias is checked against the price this many bars later.
+ACCURACY_HORIZON_BARS = {"1m": 15, "5m": 12, "15m": 16, "1h": 8, "4h": 6, "1D": 1}
+ACCURACY_MAX_SAMPLES = 1000
+# The live daily record snapshots every asset's overall bias at this New York time.
+LIVE_LOG_TIME_NY = "09:30"
+
+# Key levels count as "testing" when price is within this many 1h ATRs.
+LEVEL_TEST_ATR = 0.25
+
+# After a high-impact event, measure each asset's move over this many minutes.
+REACTION_MINUTES = 15
+
+# Claude headline scoring (optional, needs an Anthropic API key in Settings).
+CLAUDE_MODEL = "claude-opus-5"
+CLAUDE_BATCH_SIZE = 25
+CLAUDE_DAILY_HEADLINE_CAP = 200

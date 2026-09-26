@@ -1,6 +1,8 @@
-"""News sources: FinancialJuice and Yahoo Finance RSS, plus the Forex Factory calendar."""
+"""News sources: RSS feeds (FinancialJuice, Yahoo Finance, the Fed, CoinDesk) and the Forex Factory calendar."""
 
 import hashlib
+import html
+import re
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from email.utils import parsedate_to_datetime
@@ -21,6 +23,7 @@ def parse_rss(xml_text: str, source: str) -> list[dict]:
             "source": source,
             "title": title,
             "link": node.findtext("link"),
+            "summary": html.unescape(re.sub(r"<[^>]+>", " ", node.findtext("description") or "")).strip()[:500],
             "published": parsedate_to_datetime(pub),
             "impact": score_headline(title),
         })

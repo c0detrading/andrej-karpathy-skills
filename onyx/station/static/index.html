@@ -8,21 +8,27 @@
 </head>
 <body>
   <header>
-    <h1>ONYX <span class="sub">Gold · Nasdaq · Bitcoin</span></h1>
+    <h1>ONYX <span class="sub" id="subtitle"></span></h1>
     <div class="header-right">
       <span id="clock" class="muted"></span>
       <span id="status" class="status">connecting…</span>
+      <span id="features"></span>
       <button id="alerts-btn">Enable alerts</button>
+      <a class="btn" href="settings.html">Settings</a>
     </div>
   </header>
   <div id="event-risk" class="event-risk" hidden></div>
   <main>
     <section class="panel left">
+      <h2>Macro <span class="muted">dollar and yields: rising pressures gold and risk assets</span></h2>
+      <div id="macro" class="macro"></div>
       <h2>Bias</h2>
       <div id="symbols"></div>
     </section>
     <section class="panel right">
-      <h2>Economic calendar <span class="muted">Forex Factory · USD</span></h2>
+      <h2>Briefing <button id="brief-btn">Generate now</button></h2>
+      <pre id="briefing" class="briefing"></pre>
+      <h2>Economic calendar <span class="muted">Forex Factory · USD · reaction = move 15 min after release</span></h2>
       <ul id="calendar" class="calendar"></ul>
       <h2 class="news-head">
         News
@@ -34,6 +40,8 @@
           <button data-src="" class="on">All</button>
           <button data-src="FinancialJuice">FinancialJuice</button>
           <button data-src="Yahoo Finance">Yahoo</button>
+          <button data-src="Fed">Fed</button>
+          <button data-src="CoinDesk">CoinDesk</button>
           <button data-src="scored">Market-moving</button>
         </span>
       </h2>
@@ -43,6 +51,7 @@
       <ul id="alerts" class="alerts"></ul>
     </section>
   </main>
+  <div id="chart-tip" class="chart-tip" hidden></div>
   <script src="app.js"></script>
 </body>
 </html>

@@ -33,17 +33,24 @@ def macd(close: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9) -> p
     return pd.DataFrame({"macd": line, "signal": sig, "hist": line - sig})
 
 
+def true_range(df: pd.DataFrame) -> pd.Series:
+    prev_close = df["close"].shift()
+    return pd.concat(
+        [df["high"] - df["low"], (df["high"] - prev_close).abs(), (df["low"] - prev_close).abs()], axis=1
+    ).max(axis=1)
+
+
+def atr(df: pd.DataFrame, length: int = 14) -> pd.Series:
+    return _wilder(true_range(df), length)
+
+
 def dmi(df: pd.DataFrame, length: int = 14) -> pd.DataFrame:
     up = df["high"].diff()
     down = -df["low"].diff()
     plus_dm = up.where((up > down) & (up > 0), 0.0)
     minus_dm = down.where((down > up) & (down > 0), 0.0)
-    prev_close = df["close"].shift()
-    tr = pd.concat(
-        [df["high"] - df["low"], (df["high"] - prev_close).abs(), (df["low"] - prev_close).abs()], axis=1
-    ).max(axis=1)
-    atr = _wilder(tr, length)
-    plus_di = 100 * _wilder(plus_dm, length) / atr
-    minus_di = 100 * _wilder(minus_dm, length) / atr
+    tr_avg = atr(df, length)
+    plus_di = 100 * _wilder(plus_dm, length) / tr_avg
+    minus_di = 100 * _wilder(minus_dm, length) / tr_avg
     dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di)
     return pd.DataFrame({"plus_di": plus_di, "minus_di": minus_di, "adx": _wilder(dx, length)})

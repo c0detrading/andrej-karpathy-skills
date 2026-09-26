@@ -72,3 +72,11 @@ def test_parse_chart_drops_empty_bars():
     df = parse_chart(payload)
     assert len(df) == 1 and df["close"].iloc[0] == 1.5
     assert str(df.index.tz) == "America/New_York"
+
+
+def test_accuracy_counts_hits_against_future_price():
+    from station.bias import accuracy
+    close = pd.Series(np.linspace(100, 200, 400))
+    assert accuracy(close, pd.Series([50.0] * 400), 5)["hit_rate"] == 100
+    assert accuracy(close, pd.Series([-50.0] * 400), 5)["hit_rate"] == 0
+    assert accuracy(close[:150], pd.Series([50.0] * 150), 5) is None
