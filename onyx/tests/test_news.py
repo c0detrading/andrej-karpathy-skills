@@ -106,3 +106,13 @@ def test_parse_ff_calendar_filters_usd_high_medium():
     out = parse_ff_calendar(events)
     assert [e["title"] for e in out] == ["Claims", "CPI m/m"]
     assert out[1]["time"].utcoffset() == timedelta(hours=-4)
+
+
+def test_speech_headlines_count_as_one_event():
+    speech = [item(f"Fed's Hammack: point {i}", 5 + i, gold=-1) for i in range(10)]
+    other = [item("Gold rises on central bank buying", 5, gold=1)]
+    c = news_contributions(speech + other, "GOLD", NOW)
+    assert len(c) == 2
+    points, top, count = c[0]
+    assert count == 10 and points == -60  # ten -1 headlines capped at one maximal (3 x 20) headline
+    assert news_score(c) > -60

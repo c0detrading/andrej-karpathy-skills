@@ -1,6 +1,7 @@
 """Background loop: fetch prices and news, score the bias, raise notifications."""
 
 import asyncio
+import json
 import logging
 import time
 from datetime import datetime, timedelta, timezone
@@ -12,8 +13,8 @@ import pandas as pd
 from . import config as cfg
 from . import livelog, llm, settings as settings_mod, telegram
 from .analysis import alignment, key_levels, reaction, volatility
-from .bias import MIN_BARS, accuracy, next_bias, score_frame, score_timeframe
-from .market import fetch_bars, resample
+from .bias import MIN_BARS, VARIANT_LABELS, accuracy, indicator_frame, next_bias, score_frame, score_timeframe, tune
+from .market import fetch_bars, fetch_oanda, resample
 from .news import dedupe, fetch_ff_calendar, fetch_rss
 from .sentiment import news_contributions, news_score
 
@@ -62,6 +63,9 @@ class Station:
         self._outbox = []         # notifications waiting to go to Telegram
         self._briefed_on = None
         self._claude_used = (None, 0)  # (date, headlines scored that day)
+        self.tuning = self._load_tuning()  # {asset: {tf: tune() result}}
+        self.version = 0          # bumped after every tick; the live stream waits on it
+        self.updated = asyncio.Event()
 
     @property
     def assets(self) -> dict:
@@ -81,18 +85,23 @@ class Station:
         key = (ticker, interval)
         if not self._due(key, cfg.REFRESH_SECONDS[interval]):
             return
+        label = f"{'OANDA' if ticker.startswith('oanda:') else 'Yahoo'} {ticker.removeprefix('oanda:')} {interval}"
         try:
-            self.bars[key] = await fetch_bars(client, ticker, interval, range_)
+            if ticker.startswith("oanda:"):
+                self.bars[key] = await fetch_oanda(client, self.settings["oanda_token"], self.settings["oanda_env"],
+                                                   ticker.removeprefix("oanda:"), interval)
+            else:
+                self.bars[key] = await fetch_bars(client, ticker, interval, range_)
             self.fetched_at[key] = time.monotonic()
-            self.errors.pop(f"Yahoo {ticker} {interval}", None)
+            self.errors.pop(label, None)
         except Exception as e:  # network/HTTP/parse: keep last good data, show the error
-            self.errors[f"Yahoo {ticker} {interval}"] = str(e)
+            self.errors[label] = str(e)[:200]
 
     async def _refresh_market(self, client):
         intervals = {(i, r) for i, r, _ in cfg.TIMEFRAMES.values()}
         for a in self.assets.values():
             for interval, range_ in intervals:
-                await self._fetch(client, a["ticker"], interval, range_)
+                await self._fetch(client, a["src"], interval, range_)
         for m in cfg.MACRO.values():
             for interval, range_ in intervals:
                 if interval in ("60m", "1d"):
@@ -170,14 +179,54 @@ class Station:
             df = resample(df, rule, cme)
         return df
 
-    def _accuracy(self, ticker: str, tf: str, df: pd.DataFrame, frame: pd.DataFrame) -> dict | None:
-        key = (ticker, tf, len(df), df.index[-1])
+    def _accuracy(self, ticker: str, tf: str, variant: str, df: pd.DataFrame, frame: pd.DataFrame) -> dict | None:
+        key = (ticker, tf, variant, len(df), df.index[-1])
         if key not in self._accuracy_cache:
             h = cfg.ACCURACY_HORIZON_BARS[tf]
             result = accuracy(df["close"], frame["score"], h)
             self._accuracy_cache = {k: v for k, v in self._accuracy_cache.items() if k[:2] != (ticker, tf)}
             self._accuracy_cache[key] = result and {**result, "horizon": h}
         return self._accuracy_cache[key]
+
+    # ---- model tuning -----------------------------------------------------
+
+    def _load_tuning(self) -> dict:
+        try:
+            return json.loads((settings_mod.DATA_DIR / "tuning.json").read_text())
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    def variant(self, asset: str, tf: str) -> str:
+        if not self.settings["use_tuning"]:
+            return "default"
+        return self.tuning.get(asset, {}).get(tf, {}).get("variant", "default")
+
+    def retune(self) -> dict:
+        """Re-run the walk-forward model choice for every asset and timeframe with data."""
+        tuning = {k: dict(v) for k, v in self.tuning.items()}
+        for name, a in self.assets.items():
+            for tf in cfg.TIMEFRAMES:
+                df = self._frame(a["src"], tf, a["cme"])
+                if df is None or len(df) < MIN_BARS * 2:
+                    continue
+                result = tune(df, cfg.ACCURACY_HORIZON_BARS[tf])
+                if result:
+                    tuning.setdefault(name, {})[tf] = {**result, "tuned_at": datetime.now(timezone.utc).isoformat()}
+        self.tuning = tuning  # swapped in whole, so the tick loop never sees a half-built table
+        settings_mod.DATA_DIR.mkdir(exist_ok=True)
+        (settings_mod.DATA_DIR / "tuning.json").write_text(json.dumps(self.tuning, indent=1))
+        self.fetched_at["tune"] = time.monotonic()
+        return self.tuning
+
+    def _maybe_tune(self):
+        have_data = all((a["src"], "1d") in self.bars for a in self.assets.values())
+        if have_data and self._due("tune", cfg.TUNE_EVERY_HOURS * 3600):
+            stale = [t.get("tuned_at", "") for per in self.tuning.values() for t in per.values()]
+            fresh_enough = stale and min(stale) > (datetime.now(timezone.utc) - timedelta(hours=cfg.TUNE_EVERY_HOURS)).isoformat()
+            if fresh_enough and set(self.tuning) >= set(self.assets):
+                self.fetched_at["tune"] = time.monotonic()  # loaded from disk and still current
+            else:
+                self.retune()
 
     def _recompute_macro(self):
         pressures = []
@@ -203,34 +252,42 @@ class Station:
         for name, a in self.assets.items():
             frames = {}
             for tf in cfg.TIMEFRAMES:
-                df = self._frame(a["ticker"], tf, a["cme"])
+                df = self._frame(a["src"], tf, a["cme"])
                 if df is None or len(df) < MIN_BARS:
                     continue
-                frame = score_frame(df)
+                variant = self.variant(name, tf)
+                frame = score_frame(df, variant, indicator_frame(df))
                 res = score_timeframe(df, frame)
                 bias = self._set_bias(name, tf, res["score"], f"{a['name']} {tf}")
                 frames[tf] = {
                     "bias": bias,
+                    "strength": "strong" if abs(res["score"]) >= cfg.WEAK_THRESHOLD else "weak",
+                    "model": variant,
+                    "model_label": VARIANT_LABELS[variant],
+                    "counted": cfg.TIMEFRAME_WEIGHTS[tf] > 0,
                     "score": res["score"],
                     "votes": res["votes"],
                     "values": {k: _num(v) for k, v in res["values"].items()},
                     "bar_time": df.index[-1].isoformat(),
-                    "accuracy": self._accuracy(a["ticker"], tf, df, frame),
+                    "accuracy": self._accuracy(a["src"], tf, variant, df, frame),
                 }
             if not frames:
                 continue
 
             weight = sum(cfg.TIMEFRAME_WEIGHTS[tf] for tf in frames)
+            if not weight:
+                continue  # only uncounted timeframes (1m) have data so far
             technical = sum(cfg.TIMEFRAME_WEIGHTS[tf] * f["score"] for tf, f in frames.items()) / weight
             contributions = news_contributions(self.news, a["news"], now) if a["news"] else []
             news = news_score(contributions)
             macro = round(a["macro"] * self.macro_pressure, 1) if self.macro_pressure is not None else 0.0
             overall = round(cfg.TECH_WEIGHT * technical + cfg.NEWS_WEIGHT * news + cfg.MACRO_WEIGHT * macro, 1)
-            drivers = [{"points": round(p, 1), "title": i["title"], "source": i["source"]} for p, i in contributions[:3]]
+            drivers = [{"points": round(p, 1), "title": i["title"], "source": i["source"], "related": n - 1}
+                       for p, i, n in contributions[:3]]
             bias = self._set_bias(name, "overall", overall, f"{a['name']} daily", technical, news, macro, drivers)
 
-            price = self._price(a["ticker"])
-            daily = self.bars.get((a["ticker"], "1d"))
+            price = self._price(a["src"])
+            daily = self.bars.get((a["src"], "1d"))
             read = alignment(frames)
             if abs(macro) >= 30 and (macro > 0) != (bias == "BULLISH"):
                 moving = "rising" if (self.macro_pressure or 0) > 0 else "falling"
@@ -239,8 +296,10 @@ class Station:
             self.symbols[name] = {
                 "name": a["name"],
                 "ticker": a["ticker"],
+                "source": "OANDA (real-time)" if a["src"].startswith("oanda:") else "Yahoo (may be delayed)",
                 "price": price,
                 "bias": bias,
+                "strength": "strong" if abs(overall) >= cfg.WEAK_THRESHOLD else "weak",
                 "score": overall,
                 "technical": round(technical, 1),
                 "news": news,
@@ -250,7 +309,7 @@ class Station:
                 "timeframes": frames,
                 "read": read,
                 "volatility": volatility(daily),
-                "levels": key_levels(daily, self.bars.get((a["ticker"], "15m")), price["last"], atr_1h, a["cme"]),
+                "levels": key_levels(daily, self.bars.get((a["src"], "15m")), price["last"], atr_1h, a["cme"]),
                 "live_record": livelog.grade(self.live_records, name, self._daily_by_date(daily, a["cme"]),
                                              now.astimezone(NY).date().isoformat()),
             }
@@ -307,7 +366,7 @@ class Station:
             done_at = e["time"] + timedelta(minutes=cfg.REACTION_MINUTES + 1)
             if e["impact"] != "High" or key in self.reactions or not (done_at <= now <= e["time"] + timedelta(days=5)):
                 continue
-            moves = {name: reaction(self.bars.get((a["ticker"], "1m")), e["time"], cfg.REACTION_MINUTES)
+            moves = {name: reaction(self.bars.get((a["src"], "1m")), e["time"], cfg.REACTION_MINUTES)
                      for name, a in self.assets.items()}
             self.reactions[key] = moves
             shown = {k: v for k, v in moves.items() if v is not None}
@@ -411,7 +470,11 @@ class Station:
         self._check_reactions(now)
         self._live_log(now)
         self._maybe_brief(now)
+        self._maybe_tune()
         await self._flush_telegram(client)
+        self.version += 1
+        self.updated.set()
+        self.updated = asyncio.Event()
 
     async def run(self):
         async with httpx.AsyncClient(headers=cfg.HTTP_HEADERS, timeout=15, follow_redirects=True) as client:
@@ -424,7 +487,7 @@ class Station:
 
     def chart(self, asset: str, tf: str) -> dict | None:
         a = self.assets.get(asset)
-        df = self._frame(a["ticker"], tf, a["cme"]) if a and tf in cfg.TIMEFRAMES else None
+        df = self._frame(a["src"], tf, a["cme"]) if a and tf in cfg.TIMEFRAMES else None
         if df is None or len(df) < MIN_BARS:
             return None
         v = score_frame(df)["values"].iloc[-CHART_BARS:]

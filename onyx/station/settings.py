@@ -8,7 +8,7 @@ from .config import ASSET_PRESETS, DEFAULT_ASSETS, NEWS_PROFILES
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 SETTINGS_FILE = DATA_DIR / "settings.json"
-SECRETS = ("telegram_token", "anthropic_api_key")
+SECRETS = ("telegram_token", "anthropic_api_key", "oanda_token")
 MASK = "••••••••"
 
 DEFAULTS = {
@@ -19,6 +19,9 @@ DEFAULTS = {
     "anthropic_api_key": "",
     "claude_scoring": False,
     "briefing_time": "08:00",     # local time of this computer, "" = off
+    "use_tuning": True,           # use the walk-forward tuned model per asset/timeframe
+    "oanda_token": "",            # real-time prices from OANDA when set
+    "oanda_env": "practice",      # "practice" (free demo account) or "live"
 }
 
 
@@ -44,13 +47,22 @@ def public(settings: dict) -> dict:
 def assets(settings: dict) -> dict:
     """The chosen assets, in order, as key -> asset config."""
     catalog = {**ASSET_PRESETS, **settings["custom_assets"]}
-    return {k: catalog[k] for k in settings["assets"] if k in catalog}
+    use_oanda = bool(settings["oanda_token"])
+
+    def with_source(a: dict) -> dict:
+        # "src" keys the price cache: an OANDA instrument when available, else the Yahoo ticker.
+        return {**a, "src": f"oanda:{a['oanda']}" if use_oanda and a.get("oanda") else a["ticker"]}
+
+    return {k: with_source(catalog[k]) for k in settings["assets"] if k in catalog}
 
 
 def _custom_asset(key: str, a: dict) -> dict:
     ticker = str(a.get("ticker", "")).strip()
     if not re.fullmatch(r"[\w.^=\-]{1,20}", ticker):
         raise ValueError(f"Invalid ticker for {key}: {ticker!r}")
+    oanda = str(a.get("oanda") or "").strip().upper()
+    if oanda and not re.fullmatch(r"[A-Z0-9]{2,10}_[A-Z0-9]{2,10}", oanda):
+        raise ValueError(f"Invalid OANDA instrument for {key}: {oanda!r}")
     news = a.get("news") or None
     if news not in (None, *NEWS_PROFILES):
         raise ValueError(f"Unknown news profile {news!r}")
@@ -60,6 +72,7 @@ def _custom_asset(key: str, a: dict) -> dict:
         "cme": bool(a.get("cme", True)),
         "news": news,
         "macro": max(-1.0, min(1.0, float(a.get("macro", 0)))),
+        "oanda": oanda or None,
     }
 
 
@@ -82,7 +95,11 @@ def update(current: dict, changes: dict) -> dict:
             if v and not re.fullmatch(r"([01]\d|2[0-3]):[0-5]\d", v):
                 raise ValueError("Briefing time must be HH:MM")
             new[k] = v
-        elif k == "claude_scoring":
+        elif k == "oanda_env":
+            if v not in ("practice", "live"):
+                raise ValueError("OANDA account must be practice or live")
+            new[k] = v
+        elif k in ("claude_scoring", "use_tuning"):
             new[k] = bool(v)
         else:
             new[k] = str(v).strip()

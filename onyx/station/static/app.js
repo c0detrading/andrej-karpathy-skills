@@ -1,4 +1,3 @@
-const POLL_MS = 3000;
 const CHART_REFRESH_MS = 30000;
 const SYMBOL_SHORT = { GOLD: "XAU", NASDAQ: "NQ", BITCOIN: "BTC" };  // news profiles
 const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -47,7 +46,7 @@ function renderMacro() {
       <div style="text-align:right"><div class="dir ${m.score >= 0 ? "bear" : "bull"}">${m.direction === "RISING" ? "▲ RISING" : "▼ FALLING"}</div>
         <span class="muted">${Object.entries(m.timeframes).map(([tf, s]) => `${tf} ${signed(s)}`).join(" · ")}</span></div>
     </div>`).join("");
-  $("macro").innerHTML = cards || `<div class="empty">Loading dollar index and 10-year yield…</div>`;
+  setHTML($("macro"), cards || `<div class="empty">Loading dollar index and 10-year yield…</div>`);
 }
 
 function liveRecord(r) {
@@ -56,74 +55,103 @@ function liveRecord(r) {
   return `<span class="record" title="Overall bias at the New York open vs that day's close">Live record ${r.hits}/${r.days} (${r.hit_rate}%) ${dots}</span>`;
 }
 
+const setHTML = (el, html) => { if (el._html !== html) { el.innerHTML = html; el._html = html; } };
+const cards = {};  // asset -> { root, parts }: built once, then only changed sections are rewritten
+
+function card(asset) {
+  if (!cards[asset]) {
+    const root = document.createElement("div");
+    root.className = "symbol";
+    root.innerHTML = `<div data-p="head" class="sym-head"></div><div data-p="overall" class="overall"></div>
+      <p data-p="read" class="read"></p><div data-p="tiles" class="tiles"></div><div data-p="chart"></div>
+      <div data-p="levels" class="chips"></div>
+      <details class="more"><summary>Indicators and track record by timeframe</summary><div data-p="table" class="table-wrap"></div></details>
+      <h2 style="margin-top:12px">News drivers</h2><div data-p="drivers"></div>`;
+    const parts = {};
+    root.querySelectorAll("[data-p]").forEach((e) => { parts[e.dataset.p] = e; });
+    parts.chart.replaceWith(chartBox(asset));
+    cards[asset] = { root, parts };
+  }
+  return cards[asset];
+}
+
+const pct = (x, d = 3) => (x == null ? "–" : signed(x, d) + "%");
+
+function accTitle(a) {
+  if (!a) return "";
+  return `Checked against price ${a.horizon} bars later, last ${a.n} calls: right ${a.hit_rate}% of the time, ` +
+    `average move in the bias direction ${pct(a.edge_pct)} (always-long: ${pct(a.baseline_pct)}). ` +
+    `Strong signals only (|score| ≥ 20): ${a.strong_hit_rate ?? "–"}% of ${a.strong_n}, edge ${pct(a.strong_edge_pct)}.`;
+}
+
 function renderSymbols() {
-  const html = Object.entries(state.symbols).map(([key, s]) => {
+  const box = $("symbols");
+  const keys = Object.keys(state.symbols);
+  if (!keys.length) { box.innerHTML = `<div class="empty">Loading market data…</div>`; return; }
+  box.querySelector(".empty")?.remove();
+  Object.keys(cards).filter((k) => !keys.includes(k)).forEach((k) => { cards[k].root.remove(); delete cards[k]; delete charts[k]; });
+  keys.forEach((key, i) => {
+    const s = state.symbols[key], { root, parts } = card(key);
+    if (box.children[i] !== root) box.insertBefore(root, box.children[i] || null);
     chartTf[key] ??= "15m";
-    const tfs = state.timeframes.filter((tf) => s.timeframes[tf]);
-    const tiles = state.timeframes.map((tf) => {
+    const p = s.price;
+    setHTML(parts.head, `<div><span class="sym-name">${esc(s.name)}</span><span class="sym-ticker">${esc(s.ticker)} · ${esc(s.source)}</span></div>
+      <div><span class="price">${price(p.last)}</span><span class="change ${signCls(p.change_pct)}">${signed(p.change_pct, 2)}%</span></div>`);
+    const weak = s.strength === "weak";
+    setHTML(parts.overall, `<div class="pill ${weak ? "weak" : cls(s.bias)}" title="${weak ? "Score is within ±20: too weak to call" : ""}">
+        ${weak ? `NO CLEAR BIAS <small>leaning ${s.bias === "BULLISH" ? "▲ bull" : "▼ bear"}</small>` : `${s.bias === "BULLISH" ? "▲" : "▼"} ${s.bias}`}</div>
+      <div class="breakdown">Daily bias score <b class="${signCls(s.score)}">${signed(s.score)}</b><br>
+        technical <b>${signed(s.technical)}</b> · news <b>${signed(s.news)}</b> · macro <b>${signed(s.macro)}</b><br>
+        ${liveRecord(s.live_record)}</div>`);
+    const vol = s.volatility;
+    setHTML(parts.read, `${esc(s.read)}${vol ? ` <span class="muted">· Volatility <b>${vol.regime}</b>: today's range is ${vol.range_used_pct}% of the daily ATR (${fmt(vol.atr_pct, 2)}% of price).</span>` : ""}`);
+    setHTML(parts.tiles, state.timeframes.map((tf) => {
       const f = s.timeframes[tf];
       if (!f) return `<div class="tile"><div class="tf">${tf}</div><div class="b muted">–</div></div>`;
-      const acc = f.accuracy ? `hit ${Math.round(f.accuracy.hit_rate)}%` : "";
-      return `<div class="tile ${cls(f.bias)} ${chartTf[key] === tf ? "sel" : ""}" data-asset="${esc(key)}" data-tf="${tf}"
-          title="Click to chart ${tf}. Last bar ${esc(localDateTime(f.bar_time))}${f.accuracy ? `. Bias matched direction ${f.accuracy.horizon} bars later ${f.accuracy.hit_rate}% of ${f.accuracy.n} times` : ""}">
-        <div class="tf">${tf}</div><div class="b ${cls(f.bias)}">${f.bias === "BULLISH" ? "▲ BULL" : "▼ BEAR"}</div>
-        <div class="s">${signed(f.score)}</div>${bar(f.score)}<div class="acc">${acc}</div></div>`;
-    }).join("");
-    const rows = tfs.map((tf) => {
-      const f = s.timeframes[tf], v = f.values, vt = f.votes;
+      const a = f.accuracy, w = f.strength === "weak";
+      const acc = a ? `hit ${Math.round(a.hit_rate)}% · edge ${signed(a.edge_pct, 2)}%` : "";
+      return `<div class="tile ${w ? "weak" : cls(f.bias)} ${chartTf[key] === tf ? "sel" : ""}" data-asset="${esc(key)}" data-tf="${tf}"
+          title="Click to chart ${tf}. Model: ${esc(f.model_label)}.${f.counted ? "" : " Not counted in the daily bias."} ${esc(accTitle(a))}">
+        <div class="tf">${tf}${f.counted ? "" : " <span class='muted'>(info)</span>"}</div>
+        <div class="b ${w ? "muted" : cls(f.bias)}">${w ? "· WEAK" : f.bias === "BULLISH" ? "▲ BULL" : "▼ BEAR"}</div>
+        <div class="s">${signed(f.score)}</div>${bar(f.score)}<div class="acc">${acc}</div>
+        ${f.model !== "default" ? `<div class="acc model">tuned: ${esc(f.model)}</div>` : ""}</div>`;
+    }).join(""));
+    parts.tiles.querySelectorAll(".tile").forEach((t) => t.classList.toggle("sel", t.dataset.tf === chartTf[key]));
+    setHTML(parts.levels, s.levels.map((l) => {
+      const where = l.distance_pct < 0 ? "above" : "below";
+      return `<span class="lvl ${l.testing ? "testing" : ""}" title="Level is ${Math.abs(l.distance_pct).toFixed(2)}% ${where} price${l.testing ? " · price is testing it" : ""}">
+        ${esc(l.name)} <b>${price(l.price)}</b> ${where === "above" ? "↑" : "↓"}${Math.abs(l.distance_pct).toFixed(2)}%${l.testing ? " · testing" : ""}</span>`;
+    }).join(""));
+    const rows = state.timeframes.filter((tf) => s.timeframes[tf]).map((tf) => {
+      const f = s.timeframes[tf], v = f.values, vt = f.votes, a = f.accuracy;
       const dots = [20, 50, 100, 200].map((n) => `<span class="dot ${vt["close>ema" + n] > 0 ? "bull" : "bear"}" title="close ${vt["close>ema" + n] > 0 ? "above" : "below"} EMA${n} (${price(v["ema" + n])})"></span>`).join("");
       const stack = ["ema20>ema50", "ema50>ema100", "ema100>ema200"].map((k) => `<span class="dot ${vt[k] > 0 ? "bull" : "bear"}" title="${k.replace(">", " > ")}"></span>`).join("");
-      const acc = f.accuracy;
       return `<tr><td>${tf}</td><td>${dots}</td><td>${stack}</td>
         <td class="${signCls(v.rsi - 50)}">${fmt(v.rsi, 1)}</td>
         <td class="${signCls(v.pct_b - 0.5)}">${fmt(v.pct_b, 2)}</td>
         <td class="${signCls(v.macd_hist)}">${fmt(v.macd_hist, decimals(v.macd_hist))}</td>
         <td>${fmt(v.adx, 0)} <span class="${signCls(v.plus_di - v.minus_di)}">${v.plus_di > v.minus_di ? "+DI" : "−DI"}</span></td>
         <td>${price(v.atr)}</td>
-        <td title="${acc ? `${acc.n} samples, ${acc.horizon} bars ahead` : ""}">${acc ? acc.hit_rate + "%" : "–"}</td>
+        <td title="${esc(f.model_label)}">${esc(f.model)}</td>
+        <td title="${esc(accTitle(a))}">${a ? a.hit_rate + "%" : "–"}</td>
+        <td class="${signCls(a?.edge_pct)}">${pct(a?.edge_pct)}</td>
+        <td>${a?.strong_hit_rate != null ? a.strong_hit_rate + "%" : "–"} <span class="muted">(${a?.strong_n ?? 0})</span></td>
         <td class="${signCls(f.score)}"><b>${signed(f.score)}</b></td></tr>`;
     }).join("");
-    const drivers = s.news_profile == null
+    setHTML(parts.table, `<table class="details">
+      <thead><tr><th>TF</th><th title="Close vs EMA 20/50/100/200">Close vs EMA</th><th title="EMA20>50, 50>100, 100>200">EMA stack</th><th>RSI 14</th><th>BB %B</th><th>MACD hist</th><th>ADX / DMI</th><th>ATR</th>
+      <th title="Model in use (tuned walk-forward, see Settings)">Model</th><th title="How often the bias matched the price direction a few bars later">Hit rate</th>
+      <th title="Average % move in the bias direction per call">Edge</th><th title="Hit rate when |score| ≥ 20 (number of calls)">Strong hit</th><th>Score</th></tr></thead>
+      <tbody>${rows}</tbody></table>`);
+    setHTML(parts.drivers, s.news_profile == null
       ? `<div class="empty">News scoring doesn't cover this asset.</div>`
       : s.drivers.length
-        ? `<ul class="drivers">${s.drivers.map((d) => `<li><span class="pts ${signCls(d.points)}">${signed(d.points, 1)}</span><span>${esc(d.title)} <span class="muted">· ${esc(d.source)}</span></span></li>`).join("")}</ul>`
-        : `<div class="empty">No market-moving headlines in the last few hours.</div>`;
-    const levels = s.levels.map((l) => {
-      const where = l.distance_pct < 0 ? "above" : "below";
-      return `<span class="lvl ${l.testing ? "testing" : ""}" title="Level is ${Math.abs(l.distance_pct).toFixed(2)}% ${where} price${l.testing ? " · price is testing it" : ""}">
-        ${esc(l.name)} <b>${price(l.price)}</b> ${where === "above" ? "↑" : "↓"}${Math.abs(l.distance_pct).toFixed(2)}%${l.testing ? " · testing" : ""}</span>`;
-    }).join("");
-    const vol = s.volatility;
-    const p = s.price;
-    return `<div class="symbol">
-      <div class="sym-head">
-        <div><span class="sym-name">${esc(s.name)}</span><span class="sym-ticker">${esc(s.ticker)}</span></div>
-        <div><span class="price">${price(p.last)}</span><span class="change ${signCls(p.change_pct)}">${signed(p.change_pct, 2)}%</span></div>
-      </div>
-      <div class="overall">
-        <div class="pill ${cls(s.bias)}">${s.bias === "BULLISH" ? "▲" : "▼"} ${s.bias}</div>
-        <div class="breakdown">Daily bias score <b class="${signCls(s.score)}">${signed(s.score)}</b><br>
-          technical <b>${signed(s.technical)}</b> · news <b>${signed(s.news)}</b> · macro <b>${signed(s.macro)}</b><br>
-          ${liveRecord(s.live_record)}</div>
-      </div>
-      <p class="read">${esc(s.read)}${vol ? ` <span class="muted">· Volatility <b>${vol.regime}</b>: today's range is ${vol.range_used_pct}% of the daily ATR (${fmt(vol.atr_pct, 2)}% of price).</span>` : ""}</p>
-      <div class="tiles">${tiles}</div>
-      <div class="chart-slot" data-asset="${esc(key)}"></div>
-      <div class="chips">${levels}</div>
-      <details class="more" ${openDetails.has(key) ? "open" : ""} data-asset="${esc(key)}"><summary>Indicators by timeframe</summary>
-      <div class="table-wrap"><table class="details">
-        <thead><tr><th>TF</th><th title="Close vs EMA 20/50/100/200">Close vs EMA</th><th title="EMA20>50, 50>100, 100>200">EMA stack</th><th>RSI 14</th><th>BB %B</th><th>MACD hist</th><th>ADX / DMI</th><th>ATR</th><th title="How often this timeframe's bias matched the price direction a few bars later">Hit rate</th><th>Score</th></tr></thead>
-        <tbody>${rows}</tbody></table></div></details>
-      <h2 style="margin-top:12px">News drivers</h2>${drivers}
-    </div>`;
-  }).join("");
-  $("symbols").innerHTML = html || `<div class="empty">Loading market data…</div>`;
-  // Charts live outside the re-rendered HTML so hover state survives each poll.
-  document.querySelectorAll(".chart-slot").forEach((slot) => slot.replaceWith(chartBox(slot.dataset.asset)));
-  Object.keys(state.symbols).forEach(refreshChart);
+        ? `<ul class="drivers">${s.drivers.map((d) => `<li><span class="pts ${signCls(d.points)}">${signed(d.points, 1)}</span><span>${esc(d.title)} <span class="muted">· ${esc(d.source)}${d.related ? ` · +${d.related} related headlines counted as one event` : ""}</span></span></li>`).join("")}</ul>`
+        : `<div class="empty">No market-moving headlines in the last few hours.</div>`);
+    refreshChart(key);
+  });
 }
-
-const openDetails = new Set();
 
 // ---- charts ---------------------------------------------------------------
 
@@ -220,7 +248,7 @@ function chartHover(asset, e) {
 function renderCalendar() {
   const now = Date.now();
   const items = state.calendar.filter((e) => new Date(e.time) > now - 24 * 3600e3).slice(0, 14);
-  $("calendar").innerHTML = items.length ? items.map((e) => {
+  setHTML($("calendar"), items.length ? items.map((e) => {
     const t = new Date(e.time), past = t < now;
     const mins = Math.round((t - now) / 60e3);
     const when = localDateTime(e.time) + (!past && mins < 90 ? ` (in ${mins} min)` : "");
@@ -231,7 +259,7 @@ function renderCalendar() {
     return `<li class="${past && !reaction ? "past" : ""}"><span>${esc(when)}</span>
       <span><span class="imp ${esc(e.impact)}">${esc(e.impact.toUpperCase())}</span> ${esc(e.country)} ${esc(e.title)}</span>
       <span class="muted">${detail}</span>${reaction}</li>`;
-  }).join("") : `<li class="empty">No USD events in the last day or ahead this week.</li>`;
+  }).join("") : `<li class="empty">No USD events in the last day or ahead this week.</li>`);
 
   const risk = state.event_risk;
   $("event-risk").hidden = !risk;
@@ -248,7 +276,7 @@ function renderNews() {
     !newsFilter || (newsFilter === "scored" ? n.impact.tags.length : n.source.startsWith(newsFilter))).slice(0, 80);
   const firstLoad = seenNews === null;
   seenNews ??= new Set();
-  $("news").innerHTML = items.length ? items.map((n) => {
+  setHTML($("news"), items.length ? items.map((n) => {
     const fresh = !firstLoad && !seenNews.has(n.id);
     const chips = Object.keys(SYMBOL_SHORT).filter((k) => n.impact[k])
       .map((k) => `<span class="chip ${signCls(n.impact[k])}">${SYMBOL_SHORT[k]} ${n.impact[k] > 0 ? "▲" : "▼"}${Math.abs(n.impact[k])}</span>`).join(" ");
@@ -257,22 +285,22 @@ function renderNews() {
       <div class="meta">${relevanceDot(n.impact)}<span>${esc(localDateTime(n.published))}</span><span>${esc(n.source)}</span>${chips}
         ${n.impact.tags.length ? `<span class="tag">${esc(n.impact.tags.join(", "))}</span>` : ""}</div>
       <a href="${esc(safeLink)}" target="_blank" rel="noopener noreferrer">${esc(n.title)}</a></li>`;
-  }).join("") : `<li class="empty">No headlines yet.</li>`;
+  }).join("") : `<li class="empty">No headlines yet.</li>`);
   state.news.forEach((n) => seenNews.add(n.id));
 }
 
 function renderAlerts() {
   const list = [...state.notifications].reverse().slice(0, 30);
-  $("alerts").innerHTML = list.length ? list.map((a) =>
+  setHTML($("alerts"), list.length ? list.map((a) =>
     `<li><span class="t">${esc(localDateTime(a.time))}</span><b>${esc(a.title)}</b> <span class="muted">${esc(a.kind === "briefing" ? "(see Briefing above)" : a.body)}</span></li>`
-  ).join("") : `<li class="empty">Bias flips, market-moving headlines, event reactions and briefings will appear here.</li>`;
+  ).join("") : `<li class="empty">Bias flips, market-moving headlines, event reactions and briefings will appear here.</li>`);
 }
 
 function renderHeader() {
   $("subtitle").textContent = Object.values(state.asset_names).join(" · ");
   const f = state.features;
-  $("features").innerHTML = `<span class="feat ${f.telegram ? "on" : ""}" title="Configure in Settings">Telegram ${f.telegram ? "on" : "off"}</span>` +
-    `<span class="feat ${f.claude ? "on" : ""}" title="Configure in Settings">Claude news ${f.claude ? "on" : "off"}</span>`;
+  setHTML($("features"), `<span class="feat ${f.telegram ? "on" : ""}" title="Configure in Settings">Telegram ${f.telegram ? "on" : "off"}</span>` +
+    `<span class="feat ${f.claude ? "on" : ""}" title="Configure in Settings">Claude news ${f.claude ? "on" : "off"}</span>`);
 }
 
 // ---- alerts -----------------------------------------------------------------
@@ -305,19 +333,23 @@ function renderAlertsButton() {
   btn.classList.toggle("on", p === "granted");
 }
 
-async function poll() {
-  try {
-    const res = await fetch("/api/state");
-    state = await res.json();
-    renderHeader(); renderMacro(); renderSymbols(); renderBriefing(); renderCalendar(); renderNews(); renderAlerts(); fireAlerts();
-    const errs = Object.keys(state.errors);
-    $("status").className = "status " + (errs.length ? "err" : "ok");
-    $("status").textContent = errs.length ? `${errs.length} source error(s)` : "live";
-    $("status").title = errs.map((k) => `${k}: ${state.errors[k]}`).join("\n");
-  } catch (e) {
+function render() {
+  renderHeader(); renderMacro(); renderSymbols(); renderBriefing(); renderCalendar(); renderNews(); renderAlerts(); fireAlerts();
+  const errs = Object.keys(state.errors);
+  $("status").className = "status " + (errs.length ? "err" : "ok");
+  $("status").textContent = errs.length ? `${errs.length} source error(s)` : "live";
+  $("status").title = errs.map((k) => `${k}: ${state.errors[k]}`).join("\n");
+}
+
+// The server pushes new state after every update (about every 10 s); EventSource reconnects by itself.
+function connect() {
+  const es = new EventSource("/api/stream");
+  es.onmessage = (e) => { state = JSON.parse(e.data); render(); };
+  es.onerror = async () => {
     $("status").className = "status err";
-    $("status").textContent = "server offline";
-  }
+    $("status").textContent = "reconnecting…";
+    try { if ((await fetch("/api/state")).status === 401) location.href = "/login"; } catch { /* server down */ }
+  };
 }
 
 const postJSON = (url, body = {}) => fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -342,10 +374,6 @@ $("symbols").addEventListener("click", (e) => {
   document.querySelectorAll(`.tile[data-asset="${CSS.escape(tile.dataset.asset)}"]`).forEach((t) => t.classList.toggle("sel", t === tile));
   refreshChart(tile.dataset.asset);
 });
-$("symbols").addEventListener("toggle", (e) => {
-  const d = e.target.closest("details.more"); if (!d) return;
-  d.open ? openDetails.add(d.dataset.asset) : openDetails.delete(d.dataset.asset);
-}, true);
 window.addEventListener("resize", () => Object.keys(charts).forEach(drawChart));
 setInterval(() => {
   const now = new Date();
@@ -354,5 +382,4 @@ setInterval(() => {
 $("tz-note").textContent = `Times shown in your local time (${TZ}).`;
 
 renderAlertsButton();
-poll();
-setInterval(poll, POLL_MS);
+connect();

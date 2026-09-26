@@ -162,3 +162,40 @@ def test_settings_change_assets():
         s.update_settings({"assets": []})
     with pytest.raises(ValueError):
         s.update_settings({"custom_assets": {"BAD": {"ticker": "a b/c"}}})
+
+
+def test_oanda_token_switches_price_source():
+    s = Station()
+    assert s.assets["GOLD"]["src"] == "GC=F"
+    s.update_settings({"oanda_token": "abc"})
+    assert s.assets["GOLD"]["src"] == "oanda:XAU_USD"
+    s.update_settings({"custom_assets": {"PLAT": {"ticker": "PL=F", "name": "Platinum"}}, "assets": ["GOLD", "PLAT"]})
+    assert s.assets["PLAT"]["src"] == "PL=F"  # no OANDA instrument given: stays on Yahoo
+
+
+def test_weak_scores_and_uncounted_1m():
+    s = Station()
+    load(s, (100, 200))
+    s._recompute(NOW)
+    f = s.symbols["GOLD"]["timeframes"]
+    assert f["1m"]["counted"] is False and f["1h"]["counted"] is True
+    assert s.symbols["GOLD"]["strength"] == "strong"
+    flat = 100 + 0.01 * np.sin(np.arange(1200))
+    for interval, _, _ in cfg.TIMEFRAMES.values():
+        s.bars[("GC=F", interval)] = bars(flat[: (1200 if interval == "60m" else 300)], FREQ[interval])
+    s._recompute(NOW)
+    assert any(tf["strength"] == "weak" for tf in s.symbols["GOLD"]["timeframes"].values())
+
+
+def test_retune_saves_and_applies_models():
+    s = Station()
+    load(s, (100, 200))
+    s.retune()
+    assert set(s.tuning) == {"GOLD", "NASDAQ", "BITCOIN"}
+    assert Station().tuning == s.tuning  # persisted
+    s.tuning["GOLD"]["1h"]["variant"] = "contrarian"
+    s._recompute(NOW)
+    assert s.symbols["GOLD"]["timeframes"]["1h"]["model"] == "contrarian"
+    assert s.symbols["GOLD"]["timeframes"]["1h"]["bias"] == "BEARISH"  # fading a clean uptrend
+    s.settings["use_tuning"] = False
+    assert s.variant("GOLD", "1h") == "default"

@@ -149,18 +149,39 @@ def score_headline(title: str) -> dict:
     return {**{sym: clamp(t) for sym, t in zip(SYMBOLS, totals)}, "tags": tags}
 
 
-def news_contributions(items: list[dict], symbol: str, now: datetime) -> list[tuple[float, dict]]:
-    """(points, item) for every recent headline that moves this symbol, biggest first."""
-    out = []
+SPEAKER = re.compile(r"^([^:]{3,40}):\s")
+
+
+def cluster_key(item: dict):
+    """Headlines from the same source and speaker within the same hour are one event.
+
+    FinancialJuice posts a speech as 10-20 lines ("Fed's Hammack: ..."); without this, one
+    speech would swing the news score far more than one strong headline."""
+    m = SPEAKER.match(item["title"])
+    if not m:
+        return item["id"]
+    return (item["source"], m.group(1).lower(), int(item["published"].timestamp() // 3600))
+
+
+def news_contributions(items: list[dict], symbol: str, now: datetime) -> list[tuple[float, dict, int]]:
+    """(points, representative headline, headlines in the event) for every recent news event
+    that moves this symbol, biggest first. An event counts at most as much as one maximal headline."""
+    events = {}
     for item in items:
         age = now - item["published"]
         if age > timedelta(hours=NEWS_WINDOW_HOURS) or age < timedelta(0) or not item["impact"][symbol]:
             continue
         decay = math.pow(0.5, age.total_seconds() / 60 / NEWS_HALF_LIFE_MIN)
-        out.append((item["impact"][symbol] * decay * NEWS_POINTS_PER_UNIT, item))
+        events.setdefault(cluster_key(item), []).append((item["impact"][symbol] * decay * NEWS_POINTS_PER_UNIT, item))
+    cap = MAX_IMPACT * NEWS_POINTS_PER_UNIT
+    out = []
+    for members in events.values():
+        total = max(-cap, min(cap, sum(p for p, _ in members)))
+        top = max(members, key=lambda m: abs(m[0]))[1]
+        out.append((total, top, len(members)))
     return sorted(out, key=lambda c: abs(c[0]), reverse=True)
 
 
-def news_score(contributions: list[tuple[float, dict]]) -> float:
-    """Sum of contributions, clamped to -100..+100 points."""
-    return max(-100.0, min(100.0, round(sum(p for p, _ in contributions), 1)))
+def news_score(contributions: list[tuple[float, dict, int]]) -> float:
+    """Sum of event contributions, clamped to -100..+100 points."""
+    return max(-100.0, min(100.0, round(sum(c[0] for c in contributions), 1)))

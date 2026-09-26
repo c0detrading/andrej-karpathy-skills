@@ -19,14 +19,31 @@ function renderAssets() {
 }
 
 function fillForm() {
-  for (const k of ["telegram_token", "telegram_chat_id", "anthropic_api_key", "briefing_time"]) $(k).value = settings[k] || "";
+  for (const k of ["telegram_token", "telegram_chat_id", "anthropic_api_key", "briefing_time", "oanda_token", "oanda_env"]) $(k).value = settings[k] || "";
   $("claude_scoring").checked = settings.claude_scoring;
+  $("use_tuning").checked = settings.use_tuning;
+}
+
+const edgeCls = (x) => (x > 0 ? "bull" : x < 0 ? "bear" : "muted");
+const edge = (x) => (x == null ? "–" : (x > 0 ? "+" : "") + x.toFixed(3) + "%");
+
+function renderTuning(t) {
+  const rows = Object.entries(t).flatMap(([asset, tfs]) => Object.entries(tfs).map(([tf, r]) => {
+    const d = r.results.default?.test, c = r.results[r.variant]?.test;
+    return `<tr><td>${esc(asset)}</td><td>${esc(tf)}</td><td><b>${esc(r.variant)}</b></td>
+      <td class="${edgeCls(d?.edge_pct)}">${edge(d?.edge_pct)}</td><td class="${edgeCls(c?.edge_pct)}">${edge(c?.edge_pct)}</td>
+      <td>${c ? c.hit_rate + "%" : "–"}</td><td class="muted">${esc(r.best_on_train)}</td><td class="muted">${r.tuned_at ? new Date(r.tuned_at).toLocaleString() : ""}</td></tr>`;
+  }));
+  $("tuning").innerHTML = rows.length
+    ? `<table class="details"><thead><tr><th>Asset</th><th>TF</th><th>Model in use</th><th>Default edge</th><th>In-use edge</th><th>In-use hit rate</th><th>Best on older data</th><th>Tuned</th></tr></thead><tbody>${rows.join("")}</tbody></table>`
+    : `<div class="empty">Not tuned yet: runs automatically once price history has loaded.</div>`;
 }
 
 async function load() {
   settings = await (await fetch("/api/settings")).json();
   chosen = [...settings.assets];
   renderAssets(); fillForm();
+  renderTuning(await (await fetch("/api/tuning")).json());
 }
 
 function say(text, ok = true) { $("msg").textContent = text; $("msg").className = ok ? "bull" : "bear"; }
@@ -47,6 +64,9 @@ async function save() {
     anthropic_api_key: $("anthropic_api_key").value,
     claude_scoring: $("claude_scoring").checked,
     briefing_time: $("briefing_time").value,
+    oanda_token: $("oanda_token").value,
+    oanda_env: $("oanda_env").value,
+    use_tuning: $("use_tuning").checked,
   };
   settings = { ...settings, ...(await post("/api/settings", body)) };
   chosen = [...settings.assets];
@@ -82,6 +102,15 @@ $("save").addEventListener("click", async () => {
 $("tg-test").addEventListener("click", async () => {
   try { await save(); await post("/api/telegram/test", {}); say("Test message sent. Check Telegram."); }
   catch (e) { say(e.message, false); }
+});
+
+$("retune").addEventListener("click", async () => {
+  say("Retuning… this takes a few seconds.");
+  try { renderTuning(await post("/api/tune", {})); say("Retuned."); } catch (e) { say(e.message, false); }
+});
+$("stop").addEventListener("click", async () => {
+  if (!confirm("Stop ONYX? Start it again with your desktop shortcut.")) return;
+  try { await post("/api/shutdown", {}); say("ONYX stopped. You can close this tab."); } catch (e) { say(e.message, false); }
 });
 
 load();

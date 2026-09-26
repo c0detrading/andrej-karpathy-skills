@@ -5,16 +5,18 @@
 #          False -> 4h bars start at 00:00 UTC (24/7 markets like crypto).
 #   news:  which headline profile moves it ("GOLD", "NASDAQ", "BITCOIN") or None.
 #   macro: how a rising dollar / rising 10y yield affects it (-1 = fully against, 0 = ignore).
+#   oanda: the OANDA instrument used instead of Yahoo when an OANDA token is set (real-time).
+#          OANDA prices are spot/CFD, so levels differ slightly from the futures on Yahoo.
 ASSET_PRESETS = {
-    "GOLD": {"ticker": "GC=F", "name": "Gold (COMEX GC)", "cme": True, "news": "GOLD", "macro": -1.0},
-    "NASDAQ": {"ticker": "NQ=F", "name": "Nasdaq 100 (CME NQ)", "cme": True, "news": "NASDAQ", "macro": -0.5},
-    "BITCOIN": {"ticker": "BTC-USD", "name": "Bitcoin", "cme": False, "news": "BITCOIN", "macro": -0.5},
-    "SILVER": {"ticker": "SI=F", "name": "Silver (COMEX SI)", "cme": True, "news": "GOLD", "macro": -1.0},
-    "SP500": {"ticker": "ES=F", "name": "S&P 500 (CME ES)", "cme": True, "news": "NASDAQ", "macro": -0.5},
-    "DOW": {"ticker": "YM=F", "name": "Dow (CBOT YM)", "cme": True, "news": "NASDAQ", "macro": -0.5},
-    "OIL": {"ticker": "CL=F", "name": "Crude Oil (NYMEX CL)", "cme": True, "news": None, "macro": 0.0},
-    "EURUSD": {"ticker": "EURUSD=X", "name": "EUR/USD", "cme": True, "news": None, "macro": -1.0},
-    "ETHEREUM": {"ticker": "ETH-USD", "name": "Ethereum", "cme": False, "news": "BITCOIN", "macro": -0.5},
+    "GOLD": {"ticker": "GC=F", "name": "Gold (COMEX GC)", "cme": True, "news": "GOLD", "macro": -1.0, "oanda": "XAU_USD"},
+    "NASDAQ": {"ticker": "NQ=F", "name": "Nasdaq 100 (CME NQ)", "cme": True, "news": "NASDAQ", "macro": -0.5, "oanda": "NAS100_USD"},
+    "BITCOIN": {"ticker": "BTC-USD", "name": "Bitcoin", "cme": False, "news": "BITCOIN", "macro": -0.5, "oanda": "BTC_USD"},
+    "SILVER": {"ticker": "SI=F", "name": "Silver (COMEX SI)", "cme": True, "news": "GOLD", "macro": -1.0, "oanda": "XAG_USD"},
+    "SP500": {"ticker": "ES=F", "name": "S&P 500 (CME ES)", "cme": True, "news": "NASDAQ", "macro": -0.5, "oanda": "SPX500_USD"},
+    "DOW": {"ticker": "YM=F", "name": "Dow (CBOT YM)", "cme": True, "news": "NASDAQ", "macro": -0.5, "oanda": "US30_USD"},
+    "OIL": {"ticker": "CL=F", "name": "Crude Oil (NYMEX CL)", "cme": True, "news": None, "macro": 0.0, "oanda": "WTICO_USD"},
+    "EURUSD": {"ticker": "EURUSD=X", "name": "EUR/USD", "cme": True, "news": None, "macro": -1.0, "oanda": "EUR_USD"},
+    "ETHEREUM": {"ticker": "ETH-USD", "name": "Ethereum", "cme": False, "news": "BITCOIN", "macro": -0.5, "oanda": "ETH_USD"},
 }
 DEFAULT_ASSETS = ["GOLD", "NASDAQ", "BITCOIN"]
 NEWS_PROFILES = ["GOLD", "NASDAQ", "BITCOIN"]
@@ -41,7 +43,8 @@ TIMEFRAMES = {
 REFRESH_SECONDS = {"1m": 30, "5m": 60, "15m": 120, "60m": 300, "1d": 600}
 
 # Weight of each timeframe in the overall daily bias (sums to 100).
-TIMEFRAME_WEIGHTS = {"1m": 5, "5m": 8, "15m": 12, "1h": 20, "4h": 25, "1D": 30}
+# The 1m timeframe is shown but not counted: it backtested as the noisiest.
+TIMEFRAME_WEIGHTS = {"1m": 0, "5m": 10, "15m": 13, "1h": 20, "4h": 25, "1D": 32}
 
 # Weight of each indicator vote in a timeframe score (sums to 100).
 INDICATOR_WEIGHTS = {
@@ -60,6 +63,8 @@ INDICATOR_WEIGHTS = {
 
 # A bias only flips once the score crosses this far past zero (stops flapping).
 BIAS_HYSTERESIS = 10
+# Scores closer to zero than this are shown as "no clear bias" (the lean is still shown).
+WEAK_THRESHOLD = 20
 
 # How the overall daily bias is blended (sums to 1).
 TECH_WEIGHT = 0.6
@@ -96,6 +101,9 @@ ACCURACY_HORIZON_BARS = {"1m": 15, "5m": 12, "15m": 16, "1h": 8, "4h": 6, "1D": 
 ACCURACY_MAX_SAMPLES = 1000
 # The live daily record snapshots every asset's overall bias at this New York time.
 LIVE_LOG_TIME_NY = "09:30"
+
+# Model tuning reruns once a day (see bias.tune).
+TUNE_EVERY_HOURS = 24
 
 # Key levels count as "testing" when price is within this many 1h ATRs.
 LEVEL_TEST_ATR = 0.25

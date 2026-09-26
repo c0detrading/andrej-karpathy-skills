@@ -136,3 +136,10 @@ input[type=checkbox] { width: 18px; height: 18px; }
 code { background: var(--bg); padding: 1px 4px; border-radius: 4px; }
 .save-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel); border-top: 1px solid var(--line); padding: 10px 16px; }
 .save-bar button { font-size: 14px; padding: 6px 16px; }
+
+/* weak signals: too close to zero to call */
+.pill.weak { background: rgba(125,136,150,.12); border: 1px solid var(--muted); color: var(--muted); }
+.pill small { font-size: 12px; font-weight: 600; margin-left: 6px; }
+.tile.weak { border-color: var(--line); opacity: .75; }
+.tile .acc.model { color: var(--accent); }
+.sym-ticker { font-size: 12px; }

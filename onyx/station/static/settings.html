@@ -9,7 +9,8 @@
 <body>
   <header>
     <h1>ONYX <span class="sub">Settings</span></h1>
-    <div class="header-right"><a class="btn" href="/">← Back to station</a></div>
+    <div class="header-right"><button id="stop" title="Stops the ONYX server (useful when it runs in the background)">Stop ONYX</button>
+      <a class="btn" href="/">← Back to station</a></div>
   </header>
   <main class="settings">
     <section class="panel">
@@ -31,7 +32,17 @@
     </section>
 
     <section class="panel">
-      <h2>Telegram alerts</h2>
+      <h2>Real-time prices (OANDA, optional)</h2>
+      <p class="muted">Yahoo's free futures data can lag about 10 minutes. With an OANDA API token, ONYX uses OANDA's
+        real-time prices for every asset OANDA carries (gold, silver, Nasdaq, S&amp;P, Dow, oil, EUR/USD, Bitcoin, Ethereum) and Yahoo for the rest.
+        A free practice (demo) account works: sign up at oanda.com, then <b>Manage API Access</b> → generate a token.
+        OANDA quotes spot/CFD prices, so levels differ slightly from the futures.</p>
+      <div class="form-grid">
+        <label>OANDA API token <input id="oanda_token" type="password" autocomplete="off"></label>
+        <label>Account type <select id="oanda_env"><option value="practice">practice (demo)</option><option value="live">live</option></select></label>
+      </div>
+
+      <h2 style="margin-top:16px">Telegram alerts</h2>
       <ol class="muted steps">
         <li>In Telegram, message <b>@BotFather</b>, send <code>/newbot</code> and copy the token it gives you.</li>
         <li>Open a chat with your new bot and press <b>Start</b>.</li>
@@ -56,6 +67,15 @@
       <div class="form-grid">
         <label>Send at (your local time, blank = off) <input id="briefing_time" type="time"></label>
       </div>
+    </section>
+
+    <section class="panel" style="grid-column: 1 / -1">
+      <h2>Tuned models <button id="retune">Retune now</button></h2>
+      <p class="muted">Once a day ONYX tests five models per asset and timeframe on the older 70% of its price history
+        and keeps an alternative only if it also beats the default by at least 0.01% per call on the newest 30%, which it never saw.
+        Edge = average % move in the bias direction per call, on that unseen 30%.</p>
+      <div class="form-grid"><label>Use tuned models <input id="use_tuning" type="checkbox"></label></div>
+      <div id="tuning" class="table-wrap"></div>
     </section>
   </main>
   <div class="save-bar"><button id="save" class="on">Save settings</button> <span id="msg" class="muted"></span></div>
