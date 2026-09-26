@@ -17,6 +17,11 @@ pip install -r requirements.txt
 uvicorn station.app:app --port 8000
 ```
 
+Or double-click **`Start Trading Station.bat`** (Windows) or **`Start Trading Station.command`**
+(Mac), which installs requirements, starts the server and opens the browser. For a desktop
+shortcut: on Windows, right-click the `.bat` → *Send to* → *Desktop (create shortcut)*; on Mac,
+right-click the `.command` → *Make Alias* and drag the alias to the Desktop.
+
 Open <http://localhost:8000> and click **Enable alerts** to allow desktop notifications
 (a short beep also plays for each alert). Run the tests with `python -m pytest`.
 
