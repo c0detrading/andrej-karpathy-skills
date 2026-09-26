@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ONYX Settings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>ONYX <span class="sub">Settings</span></h1>
+    <div class="header-right"><button id="stop" title="Stops the ONYX server (useful when it runs in the background)">Stop ONYX</button>
+      <a class="btn" href="/">← Back to station</a></div>
+  </header>
+  <main class="settings">
+    <section class="panel">
+      <h2>Assets</h2>
+      <p class="muted">Pick the assets ONYX follows. The first one you tick shows first.</p>
+      <div id="assets" class="asset-list"></div>
+      <h2 style="margin-top:16px">Add a custom asset</h2>
+      <p class="muted">Any Yahoo Finance ticker, for example <code>PL=F</code> (platinum), <code>GBPUSD=X</code>, <code>SOL-USD</code>, <code>AAPL</code>.</p>
+      <div class="form-grid">
+        <label>Name <input id="c-name" placeholder="Platinum"></label>
+        <label>Yahoo ticker <input id="c-ticker" placeholder="PL=F"></label>
+        <label>Trades 24/7 (crypto) <input id="c-247" type="checkbox"></label>
+        <label>News moves it like
+          <select id="c-news"><option value="">no news scoring</option><option>GOLD</option><option>NASDAQ</option><option>BITCOIN</option></select></label>
+        <label>Rising dollar / yields are
+          <select id="c-macro"><option value="-1">bad for it</option><option value="-0.5">slightly bad</option><option value="0" selected>irrelevant</option><option value="0.5">slightly good</option><option value="1">good for it</option></select></label>
+        <button id="c-add">Add asset</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Real-time prices (OANDA, optional)</h2>
+      <p class="muted">Yahoo's free futures data can lag about 10 minutes. With an OANDA API token, ONYX uses OANDA's
+        real-time prices for every asset OANDA carries (gold, silver, Nasdaq, S&amp;P, Dow, oil, EUR/USD, Bitcoin, Ethereum) and Yahoo for the rest.
+        A free practice (demo) account works: sign up at oanda.com, then <b>Manage API Access</b> → generate a token.
+        OANDA quotes spot/CFD prices, so levels differ slightly from the futures.</p>
+      <div class="form-grid">
+        <label>OANDA API token <input id="oanda_token" type="password" autocomplete="off"></label>
+        <label>Account type <select id="oanda_env"><option value="practice">practice (demo)</option><option value="live">live</option></select></label>
+      </div>
+
+      <h2 style="margin-top:16px">Telegram alerts</h2>
+      <ol class="muted steps">
+        <li>In Telegram, message <b>@BotFather</b>, send <code>/newbot</code> and copy the token it gives you.</li>
+        <li>Open a chat with your new bot and press <b>Start</b>.</li>
+        <li>Message <b>@userinfobot</b> to get your chat ID (a number).</li>
+      </ol>
+      <div class="form-grid">
+        <label>Bot token <input id="telegram_token" type="password" autocomplete="off"></label>
+        <label>Chat ID <input id="telegram_chat_id"></label>
+        <button id="tg-test">Send test message</button>
+      </div>
+
+      <h2 style="margin-top:16px">Claude news scoring (optional)</h2>
+      <p class="muted">Claude re-reads market-relevant headlines and scores them with more nuance than the keyword rules
+        (e.g. "rate cut hopes fade"). Needs an Anthropic API key from console.anthropic.com. At most 200 headlines a day
+        are sent, roughly $0.25/day at most.</p>
+      <div class="form-grid">
+        <label>Anthropic API key <input id="anthropic_api_key" type="password" autocomplete="off"></label>
+        <label>Use Claude scoring <input id="claude_scoring" type="checkbox"></label>
+      </div>
+
+      <h2 style="margin-top:16px">Daily briefing</h2>
+      <div class="form-grid">
+        <label>Send at (your local time, blank = off) <input id="briefing_time" type="time"></label>
+      </div>
+    </section>
+
+    <section class="panel" style="grid-column: 1 / -1">
+      <h2>Tuned models <button id="retune">Retune now</button></h2>
+      <p class="muted">Once a day ONYX tests five models per asset and timeframe on the older 70% of its price history
+        and keeps an alternative only if it also beats the default by at least 0.01% per call on the newest 30%, which it never saw.
+        Edge = average % move in the bias direction per call, on that unseen 30%.</p>
+      <div class="form-grid"><label>Use tuned models <input id="use_tuning" type="checkbox"></label></div>
+      <div id="tuning" class="table-wrap"></div>
+    </section>
+  </main>
+  <div class="save-bar"><button id="save" class="on">Save settings</button> <span id="msg" class="muted"></span></div>
+  <script src="settings.js"></script>
+</body>
+</html>
