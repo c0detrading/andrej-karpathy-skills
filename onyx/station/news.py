@@ -28,7 +28,7 @@ def parse_rss(xml_text: str, source: str) -> list[dict]:
 
 
 def parse_ff_calendar(events: list[dict]) -> list[dict]:
-    """Keep the Forex Factory events that move gold and Nasdaq (USD, high/medium impact)."""
+    """Keep the Forex Factory events that move gold, Nasdaq and Bitcoin (USD, high/medium impact)."""
     return sorted(
         (
             {

@@ -18,12 +18,14 @@ def parse_chart(payload: dict) -> pd.DataFrame:
     return df.dropna(subset=["open", "high", "low", "close"])
 
 
-def resample(df: pd.DataFrame, rule: str) -> pd.DataFrame:
-    """Resample bars. 4h bins start at 18:00 New York, matching the CME session open."""
-    offset = "2h" if rule == "4h" else None
-    out = df.resample(rule, offset=offset).agg(
-        {"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"}
-    )
+def resample(df: pd.DataFrame, rule: str, cme: bool = True) -> pd.DataFrame:
+    """Resample bars. For CME futures 4h bins start at 18:00 New York (the session open);
+    for 24/7 markets like Bitcoin they start at 00:00 UTC, as on most crypto charts."""
+    agg = {"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"}
+    if cme:
+        out = df.resample(rule, offset="2h" if rule == "4h" else None).agg(agg)
+    else:
+        out = df.tz_convert("UTC").resample(rule).agg(agg).tz_convert(df.index.tz)
     return out.dropna(subset=["close"])
 
 

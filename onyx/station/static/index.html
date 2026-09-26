@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Trading Station</title>
+  <title>ONYX</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>Trading Station <span class="sub">Gold · Nasdaq</span></h1>
+    <h1>ONYX <span class="sub">Gold · Nasdaq · Bitcoin</span></h1>
     <div class="header-right">
       <span id="clock" class="muted"></span>
       <span id="status" class="status">connecting…</span>
@@ -26,6 +26,10 @@
       <ul id="calendar" class="calendar"></ul>
       <h2 class="news-head">
         News
+        <span class="legend" title="How strongly a headline moves gold, Nasdaq or Bitcoin">
+          <i class="rel" style="background:var(--rel-none)"></i>none
+          <i class="rel" style="background:hsl(46 90% 55%)"></i>low
+          <i class="rel" style="background:hsl(0 90% 55%)"></i>high</span>
         <span class="filters" id="filters">
           <button data-src="" class="on">All</button>
           <button data-src="FinancialJuice">FinancialJuice</button>
@@ -33,6 +37,7 @@
           <button data-src="scored">Market-moving</button>
         </span>
       </h2>
+      <div id="tz-note" class="empty"></div>
       <ul id="news" class="news"></ul>
       <h2>Alerts</h2>
       <ul id="alerts" class="alerts"></ul>

@@ -59,6 +59,13 @@ def test_4h_bins_start_at_cme_session_open():
     assert out["high"].iloc[0] == 4 and out["low"].iloc[0] == -1
 
 
+def test_4h_bins_for_24_7_markets_start_at_utc_midnight():
+    df = bars(np.arange(48, dtype=float), freq="1h")  # 18:00 NY == 22:00 UTC
+    out = resample(df, "4h", cme=False)
+    assert [t.tz_convert("UTC").hour for t in out.index[:3]] == [20, 0, 4]
+    assert str(out.index.tz) == "America/New_York"
+
+
 def test_parse_chart_drops_empty_bars():
     payload = {"chart": {"result": [{"timestamp": [1790370000, 1790370060], "indicators": {"quote": [
         {"open": [1, None], "high": [2, None], "low": [0.5, None], "close": [1.5, None], "volume": [10, None]}]}}]}}

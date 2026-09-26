@@ -21,7 +21,7 @@ async def lifespan(app):
     task.cancel()
 
 
-app = FastAPI(title="Trading Station", lifespan=lifespan)
+app = FastAPI(title="ONYX", lifespan=lifespan)
 
 
 @app.get("/api/state")

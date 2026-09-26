@@ -3,6 +3,6 @@
 cd "$(dirname "$0")"
 echo "Installing/updating requirements..."
 python3 -m pip install -q -r requirements.txt
-echo "Starting Trading Station - keep this window open. Close it to stop."
+echo "Starting ONYX - keep this window open. Close it to stop."
 (sleep 5; open http://localhost:8000) &
 python3 -m uvicorn station.app:app --port 8000

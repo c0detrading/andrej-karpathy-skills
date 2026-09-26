@@ -1,23 +1,25 @@
-# Trading Station — Gold & Nasdaq daily bias
+# ONYX — Gold, Nasdaq & Bitcoin daily bias
 
-A local web dashboard that gives a **BULLISH / BEARISH** bias for gold (`GC=F`) and the
-Nasdaq 100 (`NQ=F`) on six timeframes, combines them into an overall daily bias, adjusts it
+A local web dashboard that gives a **BULLISH / BEARISH** bias for gold (`GC=F`), the
+Nasdaq 100 (`NQ=F`) and Bitcoin (`BTC-USD`) on six timeframes, combines them into an overall daily bias, adjusts it
 with live news, and pops up a browser notification when the bias changes.
 
 - **Left panel:** bias per symbol for 1m, 5m, 15m, 1h, 4h and 1D, the indicator readings behind
   each one, and the headlines currently pushing the bias.
 - **Right panel:** Forex Factory economic calendar (USD, high/medium impact), a live news feed
-  from FinancialJuice and Yahoo Finance with each headline's gold/Nasdaq impact, and an alert log.
+  from FinancialJuice and Yahoo Finance with each headline's gold/Nasdaq/Bitcoin impact, and an alert log.
+  Every timestamp shows the full date and time in your computer's time zone, and the dot in
+  front of each headline shows its relevance: grey = no effect, yellow → red = weak → strong.
 
 ## Run
 
 ```bash
-cd trading-station
+cd onyx
 pip install -r requirements.txt
 uvicorn station.app:app --port 8000
 ```
 
-Or double-click **`Start Trading Station.bat`** (Windows) or **`Start Trading Station.command`**
+Or double-click **`Start ONYX.bat`** (Windows) or **`Start ONYX.command`**
 (Mac), which installs requirements, starts the server and opens the browser. For a desktop
 shortcut: on Windows, right-click the `.bat` → *Send to* → *Desktop (create shortcut)*; on Mac,
 right-click the `.command` → *Make Alias* and drag the alias to the Desktop.
@@ -41,7 +43,8 @@ The votes are weighted and summed into a score from -100 to +100:
 
 A bias only flips once the score passes ±10 (`BIAS_HYSTERESIS`), so it doesn't flicker around zero.
 A timeframe needs 200 bars before it is scored. The 4h bars are built from 1h bars, with
-bins starting at 18:00 New York time (the CME session open).
+bins starting at 18:00 New York time (the CME session open) for gold and Nasdaq, and at
+00:00 UTC for Bitcoin, which trades 24/7.
 
 **Overall daily bias**: a weighted average of the timeframes (1D 30, 4h 25, 1h 20, 15m 12, 5m 8,
 1m 5), blended 70/30 with the news score.
@@ -49,7 +52,8 @@ bins starting at 18:00 New York time (the CME session open).
 **News score** (`station/sentiment.py`): every headline is scored by keyword rules, for example:
 hawkish Fed / hot inflation / rising yields / strong dollar → both bearish; dovish / cooling
 inflation → both bullish; war, missiles, sanctions → gold up, Nasdaq down; ceasefire or
-de-escalation → the reverse. A negator in the same clause flips a rule ("rejects ceasefire",
+de-escalation → the reverse. Bitcoin follows risk sentiment on macro news
+(hawkish or risk-off → bearish) and has its own rules for ETF flows, buying, hacks and regulation. A negator in the same clause flips a rule ("rejects ceasefire",
 "denies plans for military action"). Rate-policy rules are skipped for non-US central banks.
 FinancialJuice data releases (`US CPI Actual 0.4% (Forecast 0.3%, …)`) are scored by their
 surprise against forecast. Each headline's impact fades with a 90-minute half-life and drops

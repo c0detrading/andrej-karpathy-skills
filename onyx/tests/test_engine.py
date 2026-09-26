@@ -39,7 +39,7 @@ def test_news_shifts_overall_and_backlog_is_silent():
     s = Station()
     load(s, (100, 200))
     old = {"id": "old", "source": "t", "title": "old", "published": NOW,
-           "impact": {"GOLD": 3, "NASDAQ": 0, "tags": []}}
+           "impact": {"GOLD": 3, "NASDAQ": 0, "BITCOIN": 0, "tags": []}}
     s._merge_news([old], NOW)
     assert s.notifications == []  # first batch is backlog
 
@@ -49,7 +49,7 @@ def test_news_shifts_overall_and_backlog_is_silent():
     assert gold["score"] == round((1 - cfg.NEWS_WEIGHT) * gold["technical"] + cfg.NEWS_WEIGHT * 60, 1)
     assert gold["drivers"][0]["title"] == "old"
 
-    new = {**old, "id": "new", "title": "Fed hikes rates", "impact": {"GOLD": -2, "NASDAQ": -2, "tags": []}}
+    new = {**old, "id": "new", "title": "Fed hikes rates", "impact": {"GOLD": -2, "NASDAQ": -2, "BITCOIN": -2, "tags": []}}
     stale = {**new, "id": "stale", "title": "Fed hikes rates again", "published": NOW - timedelta(hours=2)}
     s._merge_news([new, stale], NOW)
     assert len(s.notifications) == 1 and "Gold ▼" in s.notifications[0]["title"]

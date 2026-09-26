@@ -30,6 +30,20 @@ def test_headline_direction(title, gold, nasdaq):
     assert (s["NASDAQ"] > 0) - (s["NASDAQ"] < 0) == nasdaq
 
 
+@pytest.mark.parametrize("title, bitcoin", [
+    ("Bitcoin surges past $120,000", 1),
+    ("Bitcoin ETFs see $500 million in outflows", -1),
+    ("MicroStrategy buys 10,000 bitcoin", 1),
+    ("Crypto exchange hacked, $200 million stolen", -1),
+    ("Fed rules out rate cut", -1),  # macro: follows risk sentiment
+    ("Trump rejects Iran ceasefire: anticipates increased bombing", -1),
+    ("US Initial Jobless Claims Actual 250K (Forecast 230K, Previous 225K)", 1),
+])
+def test_bitcoin_direction(title, bitcoin):
+    b = score_headline(title)["BITCOIN"]
+    assert (b > 0) - (b < 0) == bitcoin
+
+
 @pytest.mark.parametrize("title", [
     "ECB's Vujcic: We have started a tightening cycle",  # non-US central bank
     "US Baker Hughes Oil Rig Count Actual 455 (Forecast -, Previous 452)",  # no forecast

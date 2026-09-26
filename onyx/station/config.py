@@ -1,8 +1,10 @@
 """All tunable settings in one place."""
 
 SYMBOLS = {
-    "GOLD": {"ticker": "GC=F", "name": "Gold (COMEX GC)"},
-    "NASDAQ": {"ticker": "NQ=F", "name": "Nasdaq 100 (CME NQ)"},
+    # cme: 4h bars start at the 18:00 New York session open; otherwise at 00:00 UTC (24/7 markets).
+    "GOLD": {"ticker": "GC=F", "name": "Gold (COMEX GC)", "cme": True},
+    "NASDAQ": {"ticker": "NQ=F", "name": "Nasdaq 100 (CME NQ)", "cme": True},
+    "BITCOIN": {"ticker": "BTC-USD", "name": "Bitcoin", "cme": False},
 }
 
 # Station timeframe -> (Yahoo interval, Yahoo range, resample rule or None).
@@ -57,10 +59,10 @@ FF_ALERT_MINUTES = 15
 
 NEWS_FEEDS = {
     "FinancialJuice": "https://www.financialjuice.com/feed.ashx?xy=rss",
-    "Yahoo Finance": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GC=F,NQ=F,^NDX&region=US&lang=en-US",
+    "Yahoo Finance": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GC=F,NQ=F,^NDX,BTC-USD&region=US&lang=en-US",
 }
 FF_CALENDAR_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
 NEWS_REFRESH_SECONDS = 60
 FF_REFRESH_SECONDS = 1800
 
-HTTP_HEADERS = {"User-Agent": "Mozilla/5.0 (trading-station)"}
+HTTP_HEADERS = {"User-Agent": "Mozilla/5.0 (onyx)"}

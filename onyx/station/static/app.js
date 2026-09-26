@@ -1,5 +1,6 @@
 const POLL_MS = 3000;
-const SYMBOL_SHORT = { GOLD: "XAU", NASDAQ: "NQ" };
+const SYMBOL_SHORT = { GOLD: "XAU", NASDAQ: "NQ", BITCOIN: "BTC" };
+const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 let lastAlertId = null;   // null until the first poll, so old alerts are not replayed
 let seenNews = null;
 let newsFilter = "";
@@ -13,6 +14,18 @@ const fmt = (x, d = 2) => (x == null ? "–" : Number(x).toLocaleString(undefine
 const signed = (x, d = 0) => (x == null ? "–" : (x > 0 ? "+" : "") + Number(x).toFixed(d));
 const nyTime = (iso, opts = { hour: "2-digit", minute: "2-digit" }) =>
   new Date(iso).toLocaleString([], { timeZone: "America/New_York", hour12: false, ...opts });
+// Full date and time in the viewer's own time zone, e.g. "Sat, 26 Sep 2026 · 14:57".
+const localDateTime = (iso) => {
+  const d = new Date(iso);
+  return d.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short", year: "numeric" }) +
+    " · " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+};
+// Relevance = strongest impact on any asset (0..3): grey when none, then yellow → red.
+function relevanceDot(impact) {
+  const r = Math.max(...Object.keys(SYMBOL_SHORT).map((k) => Math.abs(impact[k] || 0)));
+  const color = r ? `hsl(${55 - (55 * Math.min(r, 3)) / 3} 90% 55%)` : "var(--rel-none)";
+  return `<i class="rel" style="background:${color}" title="Relevance ${r}/3"></i>`;
+}
 
 function bar(score) {
   const w = Math.min(Math.abs(score), 100) / 2;
@@ -26,7 +39,7 @@ function renderSymbols() {
     const tiles = state.timeframes.map((tf) => {
       const f = s.timeframes[tf];
       if (!f) return `<div class="tile"><div class="tf">${tf}</div><div class="b muted">–</div></div>`;
-      return `<div class="tile ${cls(f.bias)}" title="Last bar ${esc(nyTime(f.bar_time, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }))} NY">
+      return `<div class="tile ${cls(f.bias)}" title="Last bar ${esc(localDateTime(f.bar_time))}">
         <div class="tf">${tf}</div><div class="b ${cls(f.bias)}">${f.bias === "BULLISH" ? "▲ BULL" : "▼ BEAR"}</div>
         <div class="s">${signed(f.score)}</div>${bar(f.score)}</div>`;
     }).join("");
@@ -71,8 +84,7 @@ function renderCalendar() {
   $("calendar").innerHTML = items.length ? items.map((e) => {
     const t = new Date(e.time), past = t < now;
     const mins = Math.round((t - now) / 60e3);
-    const when = past ? nyTime(e.time, { weekday: "short", hour: "2-digit", minute: "2-digit" })
-      : mins < 90 ? `in ${mins} min` : nyTime(e.time, { weekday: "short", hour: "2-digit", minute: "2-digit" });
+    const when = localDateTime(e.time) + (!past && mins < 90 ? ` (in ${mins} min)` : "");
     const detail = [e.forecast && `F ${esc(e.forecast)}`, e.previous && `P ${esc(e.previous)}`].filter(Boolean).join(" · ");
     return `<li class="${past ? "past" : ""}"><span>${esc(when)}</span>
       <span><span class="imp ${esc(e.impact)}">${esc(e.impact.toUpperCase())}</span> ${esc(e.country)} ${esc(e.title)}</span>
@@ -81,7 +93,7 @@ function renderCalendar() {
 
   const risk = state.event_risk;
   $("event-risk").hidden = !risk;
-  if (risk) $("event-risk").textContent = `⚠ Event risk: ${risk.country} ${risk.title} at ${nyTime(risk.time)} NY. Bias can swing sharply around the release.`;
+  if (risk) $("event-risk").textContent = `⚠ Event risk: ${risk.country} ${risk.title} at ${localDateTime(risk.time)}. Bias can swing sharply around the release.`;
 }
 
 function renderNews() {
@@ -95,7 +107,7 @@ function renderNews() {
       .map((k) => `<span class="chip ${signCls(n.impact[k])}">${SYMBOL_SHORT[k]} ${n.impact[k] > 0 ? "▲" : "▼"}${Math.abs(n.impact[k])}</span>`).join(" ");
     const safeLink = /^https?:\/\//.test(n.link || "") ? n.link : "#";
     return `<li class="${fresh ? "fresh" : ""}">
-      <div class="meta"><span>${esc(nyTime(n.published))}</span><span>${esc(n.source)}</span>${chips}
+      <div class="meta">${relevanceDot(n.impact)}<span>${esc(localDateTime(n.published))}</span><span>${esc(n.source)}</span>${chips}
         ${n.impact.tags.length ? `<span class="tag">${esc(n.impact.tags.join(", "))}</span>` : ""}</div>
       <a href="${esc(safeLink)}" target="_blank" rel="noopener noreferrer">${esc(n.title)}</a></li>`;
   }).join("") : `<li class="empty">No headlines yet.</li>`;
@@ -105,7 +117,7 @@ function renderNews() {
 function renderAlerts() {
   const list = [...state.notifications].reverse().slice(0, 30);
   $("alerts").innerHTML = list.length ? list.map((a) =>
-    `<li><span class="t">${esc(nyTime(a.time))}</span><b>${esc(a.title)}</b> <span class="muted">${esc(a.body)}</span></li>`
+    `<li><span class="t">${esc(localDateTime(a.time))}</span><b>${esc(a.title)}</b> <span class="muted">${esc(a.body)}</span></li>`
   ).join("") : `<li class="empty">Bias flips, market-moving headlines and upcoming high-impact events will appear here.</li>`;
 }
 
@@ -162,7 +174,11 @@ $("filters").addEventListener("click", (e) => {
   document.querySelectorAll("#filters button").forEach((x) => x.classList.toggle("on", x === b));
   if (state) renderNews();
 });
-setInterval(() => { $("clock").textContent = `New York ${nyTime(new Date().toISOString(), { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`; }, 1000);
+setInterval(() => {
+  const now = new Date();
+  $("clock").textContent = `Local ${now.toLocaleTimeString([], { hour12: false })} · New York ${nyTime(now.toISOString())}`;
+}, 1000);
+$("tz-note").textContent = `Times shown in your local time (${TZ}).`;
 
 renderAlertsButton();
 poll();

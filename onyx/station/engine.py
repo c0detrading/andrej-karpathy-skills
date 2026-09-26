@@ -108,7 +108,7 @@ class Station:
                 if df is None:
                     continue
                 if rule:
-                    df = resample(df, rule)
+                    df = resample(df, rule, sym["cme"])
                 res = score_timeframe(df)
                 if res is None:
                     continue
