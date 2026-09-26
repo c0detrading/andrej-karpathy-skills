@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trading Station</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Trading Station <span class="sub">Gold · Nasdaq</span></h1>
+    <div class="header-right">
+      <span id="clock" class="muted"></span>
+      <span id="status" class="status">connecting…</span>
+      <button id="alerts-btn">Enable alerts</button>
+    </div>
+  </header>
+  <div id="event-risk" class="event-risk" hidden></div>
+  <main>
+    <section class="panel left">
+      <h2>Bias</h2>
+      <div id="symbols"></div>
+    </section>
+    <section class="panel right">
+      <h2>Economic calendar <span class="muted">Forex Factory · USD</span></h2>
+      <ul id="calendar" class="calendar"></ul>
+      <h2 class="news-head">
+        News
+        <span class="filters" id="filters">
+          <button data-src="" class="on">All</button>
+          <button data-src="FinancialJuice">FinancialJuice</button>
+          <button data-src="Yahoo Finance">Yahoo</button>
+          <button data-src="scored">Market-moving</button>
+        </span>
+      </h2>
+      <ul id="news" class="news"></ul>
+      <h2>Alerts</h2>
+      <ul id="alerts" class="alerts"></ul>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
