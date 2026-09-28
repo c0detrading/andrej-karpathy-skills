@@ -3,449 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Volstro | Web design studio, London</title>
-<meta name="description" content="Volstro designs and builds custom websites for London businesses on Framer, Webflow and Shopify. Packages from £350, monthly care from £69.">
+<title>VOLSTRO | London digital design studio</title>
+<meta name="description" content="VOLSTRO creates modern, purposeful websites for ambitious businesses in London and across the UK.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..800&family=Funnel+Sans:wght@400..700&family=Martian+Mono:wght@400..600&display=swap">
-<style>
-/* Layout: a green opener with a live responsive-design demo, then the studio's price list read top to bottom:
-   packages as cards, add-ons as an itemised invoice, care plans as a comparison table, then a plain enquiry form. */
-:root {
-  --paper: #F1F4F2;
-  --surface: #FFFFFF;
-  --ink: #131A16;
-  --muted: #56615A;
-  --line: #D6DDD8;
-  --rule: #B2BDB6;
-  --accent: #3F7158;
-  --on-accent: #FFFFFF;
-  --tint: #E3ECE6;
-  --band: #3F7158;
-  --on-band: #F1F4F2;
-  --band-soft: rgba(241, 244, 242, .86);
-  --band-line: rgba(241, 244, 242, .28);
-  --demo-shadow: 0 40px 70px -35px rgba(8, 28, 18, .6);
-  /* the demo "screen" stays light in both themes: it depicts a client's site */
-  --screen: #FFFFFF;
-  --screen-ink: #131A16;
-  --screen-bar: #F3F5F3;
-  --screen-line: #DCE2DE;
-  --screen-muted: #66706A;
-  --screen-tint: #E1EBE4;
-
-  --font-display: "Funnel Display", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "Funnel Sans", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-
-  --step-2: 1.75rem;
-  --step-3: clamp(2rem, 4.2vw, 3.1rem);
-  --step-4: clamp(2.6rem, 6.6vw, 5.4rem);
-  --radius: 14px;
-  --wrap: 1180px;
-  --gutter: clamp(16px, 4vw, 40px);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0C110E;
-    --surface: #151C18;
-    --ink: #E9EFEB;
-    --muted: #9CA8A0;
-    --line: #26302A;
-    --rule: #435048;
-    --accent: #87C5A6;
-    --on-accent: #0C110E;
-    --tint: #18261E;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #0C110E;
-  --surface: #151C18;
-  --ink: #E9EFEB;
-  --muted: #9CA8A0;
-  --line: #26302A;
-  --rule: #435048;
-  --accent: #87C5A6;
-  --on-accent: #0C110E;
-  --tint: #18261E;
-  color-scheme: dark;
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-a { color: inherit; }
-h1, h2, h3 {
-  margin: 0;
-  font-family: var(--font-display);
-  line-height: 1.05;
-  letter-spacing: -.025em;
-  text-wrap: balance;
-}
-p { margin: 0; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.band :focus-visible, .is-featured :focus-visible, .growth :focus-visible { outline-color: currentColor; }
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-}
-.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: .72rem;
-  font-weight: 500;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-height: 48px;
-  padding: .7em 1.35em;
-  border: 1.5px solid transparent;
-  border-radius: 999px;
-  font: 600 1rem/1.1 var(--font-body);
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform .15s ease;
-}
-.btn:hover { transform: translateY(-1px); }
-.btn-solid { background: var(--ink); color: var(--paper); }
-.btn-line { background: transparent; color: inherit; border-color: currentColor; }
-.btn-small { min-height: 36px; padding: .45em .95em; font-size: .85rem; }
-.band .btn-solid, .is-featured .btn-solid { background: var(--on-band); color: var(--band); }
-
-/* Header + hero */
-.band { background: var(--band); color: var(--on-band); }
-.site-header {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding-block: 1.25rem;
-}
-.wordmark {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.65rem;
-  letter-spacing: -.05em;
-  line-height: 1;
-  text-decoration: none;
-}
-.nav { display: flex; align-items: center; gap: 1.75rem; font-size: .95rem; }
-.nav-link { text-decoration: none; opacity: .85; }
-.nav-link:hover { opacity: 1; text-decoration: underline; text-underline-offset: .3em; }
-@media (max-width: 780px) { .nav-link { display: none; } }
-
-.hero {
-  display: grid;
-  gap: clamp(2.5rem, 5vw, 4rem);
-  align-items: center;
-  padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(3.5rem, 8vw, 6.5rem);
-}
-.hero > * { min-width: 0; }
-@media (min-width: 940px) { .hero { grid-template-columns: 1.05fr 1fr; } }
-.hero h1 {
-  margin-top: 1.1rem;
-  font-size: var(--step-4);
-  font-weight: 700;
-  line-height: .98;
-  letter-spacing: -.045em;
-}
-.hero-lede { max-width: 34rem; margin-top: 1.5rem; font-size: 1.2rem; color: var(--band-soft); }
-.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
-
-/* Responsive demo: the frame's width is animated, script reads it and switches the mock layout like real breakpoints */
-.demo { display: grid; gap: 1rem; }
-.demo-track { display: flex; justify-content: center; aspect-ratio: 16 / 11; max-width: 100%; }
-.demo-frame {
-  display: flex; flex-direction: column;
-  width: 100%; height: 100%;
-  background: var(--screen);
-  color: var(--screen-ink);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: var(--demo-shadow), 0 0 0 1px var(--band-line);
-  animation: resize 12s cubic-bezier(.65, 0, .35, 1) infinite;
-}
-@keyframes resize {
-  0%, 22% { width: 100%; }
-  33%, 55% { width: 60.75%; }
-  66%, 88% { width: 32%; }
-  100% { width: 100%; }
-}
-.demo-bar {
-  display: flex; align-items: center; gap: 5px;
-  padding: 8px 10px;
-  background: var(--screen-bar);
-  border-bottom: 1px solid var(--screen-line);
-}
-.demo-bar i { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--screen-line); }
-.demo-width {
-  margin-left: auto;
-  font: 500 .6rem/1 var(--font-mono);
-  color: var(--screen-muted);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.demo-page { flex: 1; min-height: 0; overflow: hidden; display: grid; align-content: start; gap: 12px; padding: 14px; }
-.demo-page span, .demo-page i { display: block; }
-.d-nav { display: flex; align-items: center; justify-content: space-between; }
-.d-logo { width: 44px; height: 9px; border-radius: 3px; background: var(--screen-ink); }
-.d-links { display: flex !important; gap: 8px; }
-.d-links i { width: 24px; height: 5px; border-radius: 3px; background: var(--screen-line); }
-.d-burger { display: none !important; position: relative; width: 14px; height: 10px; border-block: 2px solid var(--screen-ink); }
-.d-burger::after { content: ""; position: absolute; left: 0; right: 0; top: 2px; height: 2px; background: var(--screen-ink); }
-.d-hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; align-items: center; padding-block: 8px; }
-.d-copy { display: grid; gap: 7px; }
-.d-h { height: 12px; border-radius: 3px; background: var(--screen-ink); }
-.d-p { height: 5px; border-radius: 3px; background: var(--screen-line); }
-.d-h.short { width: 68%; }
-.d-p.short { width: 80%; }
-.d-btn { width: 56px; height: 14px; margin-top: 4px; border-radius: 999px; background: var(--band); }
-.d-img {
-  aspect-ratio: 4 / 3;
-  border-radius: 6px;
-  background: radial-gradient(circle at 32% 42%, var(--band) 0 17%, transparent 18%), var(--screen-tint);
-}
-.d-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.d-cards i { height: 54px; border-radius: 6px; background: var(--screen-bar); border: 1px solid var(--screen-line); }
-.demo-frame[data-mode="tablet"] .d-hero { grid-template-columns: 1fr 1fr; }
-.demo-frame[data-mode="tablet"] .d-cards { grid-template-columns: 1fr 1fr; }
-.demo-frame[data-mode="tablet"] .d-cards i:last-child { grid-column: span 2; }
-.demo-frame[data-mode="mobile"] .demo-page { padding: 10px; }
-.demo-frame[data-mode="mobile"] .d-links { display: none !important; }
-.demo-frame[data-mode="mobile"] .d-burger { display: block !important; }
-.demo-frame[data-mode="mobile"] .d-hero,
-.demo-frame[data-mode="mobile"] .d-cards { grid-template-columns: 1fr; }
-.demo-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: .4rem; }
-.demo-legend span {
-  padding: .55em .9em;
-  border: 1px solid var(--band-line);
-  border-radius: 999px;
-  font: 500 .66rem/1 var(--font-mono);
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  opacity: .65;
-  transition: opacity .2s ease, background-color .2s ease, color .2s ease;
-}
-.demo-legend span.is-on { opacity: 1; background: var(--on-band); color: var(--band); border-color: var(--on-band); }
-@media (prefers-reduced-motion: reduce) { .demo-frame { animation: none; } }
-
-/* Sections */
-.section { padding-block: clamp(4rem, 9vw, 7rem); }
-.section + .section { border-top: 1px solid var(--line); }
-.section-head { display: grid; gap: .9rem; max-width: 44rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
-.section-head .eyebrow { color: var(--accent); }
-.section-head h2 { font-size: var(--step-3); font-weight: 700; }
-.section-head p { color: var(--muted); font-size: 1.125rem; }
-.fine { margin-top: 1.25rem; color: var(--muted); font-size: .92rem; }
-
-/* Packages */
-.pkgs { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-@media (min-width: 640px) { .pkgs { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1080px) { .pkgs { grid-template-columns: repeat(4, 1fr); } }
-.pkg {
-  display: flex; flex-direction: column; gap: 1.4rem;
-  min-width: 0;
-  padding: 1.6rem 1.5rem 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-.pkg h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; }
-.pkg-price {
-  margin-top: .8rem;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2rem, 2.7vw, 2.35rem);
-  line-height: 1;
-  letter-spacing: -.035em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.pkg-lede { margin-top: .8rem; color: var(--muted); font-size: .98rem; }
-.ticks { display: grid; gap: .6rem; margin: 0; padding: 0; list-style: none; font-size: .96rem; line-height: 1.45; }
-.ticks li { position: relative; padding-left: 1.6rem; }
-.ticks li::before {
-  content: "";
-  position: absolute; left: .15rem; top: .38em;
-  width: .72rem; height: .38rem;
-  border-left: 2px solid var(--accent);
-  border-bottom: 2px solid var(--accent);
-  transform: rotate(-45deg);
-}
-.ticks .carry { font-weight: 600; }
-.specs {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-  margin: auto 0 0;
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--line);
-}
-.specs dt {
-  font: 500 .64rem/1.2 var(--font-mono);
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.specs dd { margin: .4rem 0 0; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; line-height: 1.2; }
-.pkg .btn { width: 100%; }
-.pkg.is-featured { background: var(--band); color: var(--on-band); border-color: var(--band); }
-.pkg.is-featured .pkg-lede, .pkg.is-featured .specs dt { color: var(--band-soft); }
-.pkg.is-featured .specs { border-color: var(--band-line); }
-.pkg.is-featured .ticks li::before { border-color: var(--on-band); }
-
-/* Add-ons as an itemised list */
-.split { display: grid; gap: 2rem; }
-.split > * { min-width: 0; }
-@media (min-width: 920px) { .split { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 4rem; align-items: start; } }
-.split .section-head { margin-bottom: 0; }
-.invoice { margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--ink); }
-.invoice li {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: baseline;
-  column-gap: .8rem; row-gap: .2rem;
-  padding-block: 1.15rem;
-  border-bottom: 1px solid var(--line);
-}
-.inv-name { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; letter-spacing: -.015em; }
-.inv-lead { position: relative; top: -.3em; min-width: 1rem; border-bottom: 2px dotted var(--rule); }
-.inv-amt {
-  font-family: var(--font-display); font-weight: 600; font-size: 1.2rem;
-  font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
-}
-.inv-amt small { font: 500 .62rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.inv-desc { grid-column: 1 / -1; color: var(--muted); font-size: .95rem; }
-
-/* Care plans */
-.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-.care { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.care col.c-feature { width: 44%; }
-.care th, .care td {
-  padding: 1rem clamp(.75rem, 2.5vw, 1.5rem);
-  text-align: left;
-  vertical-align: top;
-  border-bottom: 1px solid var(--line);
-  line-height: 1.4;
-}
-.care tbody tr:last-child > * { border-bottom: 0; }
-.care thead th { vertical-align: bottom; padding-block: 1.6rem 1.25rem; font-weight: 400; }
-.care tbody th { font-weight: 500; }
-.care td { color: var(--muted); font-size: .96rem; }
-.care .is-plus { background: var(--tint); }
-.plan-name { display: block; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; letter-spacing: -.02em; color: var(--ink); }
-.plan-price {
-  display: block; margin-top: .4rem;
-  font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(1.7rem, 3.2vw, 2.3rem); line-height: 1; letter-spacing: -.035em;
-  font-variant-numeric: tabular-nums; color: var(--ink);
-}
-.plan-price small {
-  display: block; margin-top: .45rem;
-  font: 500 .64rem/1 var(--font-mono); letter-spacing: .07em; text-transform: uppercase;
-  color: var(--muted);
-}
-.yes {
-  display: inline-block;
-  width: .8rem; height: .42rem; margin-top: .45em;
-  border-left: 2px solid var(--accent);
-  border-bottom: 2px solid var(--accent);
-  transform: rotate(-45deg);
-}
-.no { color: var(--rule); }
-
-.growth {
-  display: grid; gap: 1.25rem; align-items: center;
-  margin-top: 1.25rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  background: var(--ink);
-  color: var(--paper);
-  border-radius: var(--radius);
-}
-.growth > * { min-width: 0; }
-@media (min-width: 760px) { .growth { grid-template-columns: 1fr auto; gap: 2rem; } }
-.growth .eyebrow, .growth p { opacity: .75; }
-.growth h3 { margin-top: .6rem; font-size: var(--step-2); font-weight: 700; }
-.growth p { margin-top: .6rem; max-width: 36rem; }
-.growth .btn { background: var(--paper); color: var(--ink); }
-
-/* Contact */
-.contact { display: grid; gap: 2.5rem; }
-.contact > * { min-width: 0; }
-@media (min-width: 920px) { .contact { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 4rem; align-items: start; } }
-.contact .section-head { margin-bottom: 0; }
-.direct { display: grid; gap: .6rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
-.direct .eyebrow { color: var(--muted); }
-.direct-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
-.direct-email { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; letter-spacing: -.015em; overflow-wrap: anywhere; user-select: all; }
-.form {
-  display: grid; gap: 1.1rem;
-  padding: clamp(1.25rem, 3vw, 2rem);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-.row-2 { display: grid; gap: 1.1rem; }
-@media (min-width: 560px) { .row-2 { grid-template-columns: 1fr 1fr; } }
-.field { display: grid; gap: .4rem; min-width: 0; }
-.field label { font-size: .92rem; font-weight: 600; }
-.field .opt { font-weight: 400; color: var(--muted); }
-.field input, .field select, .field textarea {
-  width: 100%; min-width: 0;
-  padding: .75em .9em;
-  font: inherit; font-size: 1rem;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-.field textarea { min-height: 8.5rem; resize: vertical; }
-.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline-offset: 1px; border-color: var(--accent); }
-.form .btn { justify-self: start; }
-.form-status { padding: 1rem 1.1rem; border-radius: 10px; background: var(--tint); font-size: .95rem; }
-
-/* Footer */
-.site-footer { padding-block: 2.5rem 3rem; border-top: 1px solid var(--line); }
-.foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 3rem; }
-.foot .wordmark { font-size: clamp(2.6rem, 7vw, 4.25rem); }
-.foot-meta { display: grid; gap: .3rem; color: var(--muted); font-size: .92rem; }
-.foot-nav { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; }
-.foot-nav a { text-decoration: none; }
-.foot-nav a:hover { text-decoration: underline; text-underline-offset: .3em; }
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Funnel+Display:wght@400..800&family=Funnel+Sans:wght@400..700&family=Martian+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="band">
   <div class="wrap">
     <header class="site-header">
-      <a class="wordmark" href="#top" id="top">Volstro</a>
+      <a class="wordmark" href="index.html" aria-current="page">VOLSTRO</a>
       <nav class="nav" aria-label="Main">
-        <a class="nav-link" href="#packages">Packages</a>
-        <a class="nav-link" href="#add-ons">Add-ons</a>
-        <a class="nav-link" href="#care">Care plans</a>
-        <a class="btn btn-line btn-small" href="#contact">Start a project</a>
+        <a class="nav-link" href="work.html">Work</a>
+        <a class="nav-link" href="services.html">Services</a>
+        <a class="btn btn-solid btn-small" href="contact.html">Start a project</a>
       </nav>
     </header>
 
     <section class="hero">
       <div>
-        <p class="eyebrow">Web design studio · London</p>
-        <h1>Websites for London businesses, designed from scratch.</h1>
-        <p class="hero-lede">Volstro designs and builds custom sites on Framer, Webflow and Shopify, then keeps them running with a monthly care plan. Every price is listed below.</p>
+        <p class="eyebrow">London digital design studio</p>
+        <h1>Websites designed to move your business forward.</h1>
+        <p class="hero-lede">VOLSTRO creates modern, purposeful websites for ambitious businesses — combining thoughtful design, user experience and intelligent technology to create digital experiences that look exceptional and work hard.</p>
         <div class="hero-actions">
-          <a class="btn btn-solid" href="#packages">See prices</a>
-          <a class="btn btn-line" href="#contact">Start a project</a>
+          <a class="btn btn-solid" href="contact.html">Start a project</a>
+          <a class="btn btn-line" href="work.html">View our work</a>
         </div>
+        <p class="hero-note">London, UK · Working with businesses across the UK</p>
       </div>
 
       <div class="demo" aria-hidden="true">
@@ -469,305 +56,190 @@ p { margin: 0; }
 </div>
 
 <main>
-  <section class="section" id="packages">
+  <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Packages</p>
-        <h2>Pick a starting point</h2>
-        <p>Every package is designed from scratch for your business. Where you land in a price range depends on how many pages you need and how much content there is.</p>
+        <h2>Your website should do more than exist.</h2>
+        <p>Your website is often the first interaction someone has with your business. We design digital experiences that make that interaction count — helping businesses communicate clearly, build trust and turn visitors into enquiries, bookings and customers.</p>
       </div>
-
-      <div class="pkgs">
-        <article class="pkg">
-          <div>
-            <h3>Starter</h3>
-            <p class="pkg-price">£350–650</p>
-            <p class="pkg-lede">A clean, custom site that gets your business online.</p>
-          </div>
-          <ul class="ticks">
-            <li>Custom design</li>
-            <li>Mobile-friendly layout</li>
-            <li>Contact links</li>
-            <li>Social media links</li>
-          </ul>
-          <dl class="specs">
-            <div><dt>Pages</dt><dd>1–4</dd></div>
-            <div><dt>Revisions</dt><dd>2 rounds</dd></div>
-          </dl>
-          <a class="btn btn-solid" href="#contact" data-package="Starter">Choose Starter</a>
+      <div class="points">
+        <article class="point">
+          <p class="eyebrow">01 — Design</p>
+          <h3>Built around your business</h3>
+          <p>No generic templates. Every website is designed around your brand, audience and objectives.</p>
         </article>
-
-        <article class="pkg is-featured">
-          <div>
-            <h3>Professional</h3>
-            <p class="pkg-price">£650–1,000</p>
-            <p class="pkg-lede">A polished site with animation, laid out for every screen.</p>
-          </div>
-          <ul class="ticks">
-            <li class="carry">Everything in Starter</li>
-            <li>Custom UX/UI with interactive animation</li>
-            <li>Desktop, tablet and mobile layouts</li>
-            <li>Google Maps integration</li>
-          </ul>
-          <dl class="specs">
-            <div><dt>Pages</dt><dd>1–7</dd></div>
-            <div><dt>Revisions</dt><dd>2–4 rounds</dd></div>
-          </dl>
-          <a class="btn btn-solid" href="#contact" data-package="Professional">Choose Professional</a>
+        <article class="point">
+          <p class="eyebrow">02 — Experience</p>
+          <h3>Made for real people</h3>
+          <p>Clear structure, intuitive navigation and responsive design make it easy for customers to find what they need.</p>
         </article>
-
-        <article class="pkg">
-          <div>
-            <h3>Premium</h3>
-            <p class="pkg-price">£1,000+</p>
-            <p class="pkg-lede">High-end design for bigger sites with more to say.</p>
-          </div>
-          <ul class="ticks">
-            <li class="carry">Everything in Professional</li>
-            <li>High-end, bespoke design</li>
-          </ul>
-          <dl class="specs">
-            <div><dt>Pages</dt><dd>7+</dd></div>
-            <div><dt>Revisions</dt><dd>Agreed with you</dd></div>
-          </dl>
-          <a class="btn btn-solid" href="#contact" data-package="Premium">Choose Premium</a>
-        </article>
-
-        <article class="pkg">
-          <div>
-            <h3>E-commerce</h3>
-            <p class="pkg-price">£1,300+</p>
-            <p class="pkg-lede">An online shop, connected straight to Shopify.</p>
-          </div>
-          <ul class="ticks">
-            <li>Custom shop design</li>
-            <li>Connected straight to Shopify</li>
-            <li>Products, cart and checkout run on Shopify</li>
-          </ul>
-          <dl class="specs">
-            <div><dt>Platform</dt><dd>Shopify</dd></div>
-            <div><dt>Build time</dt><dd>Longer than a site</dd></div>
-          </dl>
-          <a class="btn btn-solid" href="#contact" data-package="E-commerce">Choose E-commerce</a>
+        <article class="point">
+          <p class="eyebrow">03 — Purpose</p>
+          <h3>Every element has a reason</h3>
+          <p>From the first impression to the final call-to-action, we design around what you want your website to achieve.</p>
         </article>
       </div>
-      <p class="fine">Package prices are one-off payments in GBP.</p>
     </div>
   </section>
 
-  <section class="section" id="add-ons">
-    <div class="wrap split">
-      <div class="section-head">
-        <p class="eyebrow">Add-ons</p>
-        <h2>Extras, priced up front</h2>
-        <p>Add any of these to a package.</p>
-      </div>
-      <ul class="invoice">
-        <li>
-          <span class="inv-name">Domain connection</span><span class="inv-lead"></span><span class="inv-amt">£15</span>
-          <span class="inv-desc">We point your domain at the new site.</span>
-        </li>
-        <li>
-          <span class="inv-name">Extra revision round</span><span class="inv-lead"></span><span class="inv-amt">£25 <small>each</small></span>
-          <span class="inv-desc">For changes beyond the rounds in your package.</span>
-        </li>
-        <li>
-          <span class="inv-name">Booking calendar</span><span class="inv-lead"></span><span class="inv-amt">£100</span>
-          <span class="inv-desc">Let customers book appointments straight from your site.</span>
-        </li>
-        <li>
-          <span class="inv-name">SEO and SSL setup</span><span class="inv-lead"></span><span class="inv-amt"><small>On request</small></span>
-          <span class="inv-desc">Search setup and a secure https connection, priced per project.</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="section" id="care">
+  <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Monthly care</p>
-        <h2>We keep your site running</h2>
-        <p>Hosting, updates and support for a flat monthly fee, so you can get on with running your business.</p>
+        <h2>What we do</h2>
       </div>
-
-      <div class="table-wrap">
-        <table class="care">
-          <caption class="sr-only">Care plans compared</caption>
-          <colgroup><col class="c-feature"><col><col></colgroup>
-          <thead>
-            <tr>
-              <th scope="col"><span class="sr-only">What's included</span></th>
-              <th scope="col"><span class="plan-name">Basic</span><span class="plan-price">£69<small>per month</small></span></th>
-              <th scope="col" class="is-plus"><span class="plan-name">Plus</span><span class="plan-price">£149<small>per month</small></span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><th scope="row">Hosting on Framer or Webflow</th><td><span class="yes"></span><span class="sr-only">Included</span></td><td class="is-plus"><span class="yes"></span><span class="sr-only">Included</span></td></tr>
-            <tr><th scope="row">Analytics</th><td>Basic: views and clicks</td><td class="is-plus">Full analytics</td></tr>
-            <tr><th scope="row">Content changes</th><td>Minor text and image edits</td><td class="is-plus">More changes each month</td></tr>
-            <tr><th scope="row">New sections</th><td><span class="no" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="is-plus"><span class="yes"></span><span class="sr-only">Included</span></td></tr>
-            <tr><th scope="row">Landing page and CTA updates</th><td><span class="no" aria-hidden="true">—</span><span class="sr-only">Not included</span></td><td class="is-plus"><span class="yes"></span><span class="sr-only">Included</span></td></tr>
-            <tr><th scope="row">Tech support and troubleshooting</th><td><span class="yes"></span><span class="sr-only">Included</span></td><td class="is-plus"><span class="yes"></span><span class="sr-only">Included</span></td></tr>
-            <tr><th scope="row">Email support</th><td><span class="yes"></span><span class="sr-only">Included</span></td><td class="is-plus"><span class="yes"></span><span class="sr-only">Included</span></td></tr>
-          </tbody>
-        </table>
+      <div class="services">
+        <article class="service">
+          <h3>Website Design</h3>
+          <p>Custom websites designed around your business.</p>
+        </article>
+        <article class="service">
+          <h3>Ecommerce</h3>
+          <p>Online stores designed to make browsing and purchasing simple.</p>
+        </article>
+        <article class="service">
+          <h3>Website Care</h3>
+          <p>Ongoing support, maintenance and updates.</p>
+        </article>
+        <article class="service">
+          <h3>Digital Growth</h3>
+          <p>Landing pages, content updates and ongoing optimisation.</p>
+        </article>
       </div>
-
-      <div class="growth">
-        <div>
-          <p class="eyebrow">Add-on</p>
-          <h3>Growth package</h3>
-          <p>Paid ad campaigns that bring more people to your site. Priced on request.</p>
-        </div>
-        <a class="btn" href="#contact">Ask about Growth</a>
-      </div>
+      <div class="section-foot"><a class="btn btn-line" href="services.html">Explore services →</a></div>
     </div>
   </section>
 
-  <section class="section" id="contact">
-    <div class="wrap contact">
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Selected work</h2>
+      </div>
+      <div class="work-grid">
+        <a class="work-card" href="work.html#pharaoh-blends">
+          <div class="mock mock--pharaoh" role="img" aria-label="Concept homepage design for Pharaoh Blends">
+            <div class="mock-bar"><i></i><i></i><i></i></div>
+            <div class="mock-page">
+              <div class="mk-nav"><span class="mk-logo">Pharaoh Blends</span><span class="mk-links"><span>Services</span><span>Prices</span><span>Gallery</span></span><span class="mk-cta">Book now</span></div>
+              <div class="mk-hero">
+                <div>
+                  <span class="mk-kicker">Premium barbering · London</span>
+                  <span class="mk-title">The art of the <em>premium</em> cut.</span>
+                  <span class="mk-text">Precision cuts, fades and beard work in a calm, private studio.</span>
+                  <span class="mk-btn">Book an appointment</span>
+                </div>
+                <span class="mk-arch"></span>
+              </div>
+              <div class="mk-strip"><span>Cuts</span><span>Fades</span><span>Beard sculpting</span><span>Hot towel shave</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="work-top"><span class="work-num">01</span><span class="tag">Concept project</span></div>
+            <h3>Pharaoh Blends</h3>
+            <p class="work-sector">Premium barbering · London</p>
+          </div>
+        </a>
+
+        <a class="work-card" href="work.html#powerup-electrical">
+          <div class="mock mock--powerup" role="img" aria-label="Concept homepage design for 24/7 Powerup Electrical">
+            <div class="mock-bar"><i></i><i></i><i></i></div>
+            <div class="mock-page">
+              <div class="mk-alert">24/7 emergency callouts across London</div>
+              <div class="mk-nav"><span class="mk-logo"><b class="mk-bolt"></b>Powerup Electrical</span><span class="mk-links"><span>Services</span><span>Areas</span><span>Contact</span></span><span class="mk-cta">Get a quote</span></div>
+              <div class="mk-hero">
+                <div>
+                  <span class="mk-kicker">Electrical services · London</span>
+                  <span class="mk-title">Power back on. Day or night.</span>
+                  <span class="mk-text">Fast, safe electrical repairs, installations and emergency callouts for homes and businesses.</span>
+                  <span class="mk-btns"><span class="mk-btn">Get a free quote</span><span class="mk-btn mk-btn--ghost">Emergency callout</span></span>
+                </div>
+                <span class="mk-panel"><b class="mk-bolt"></b><span class="mk-247">24/7</span></span>
+              </div>
+              <div class="mk-strip"><span>Rewiring</span><span>Fuse boards</span><span>EV chargers</span><span>Lighting</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="work-top"><span class="work-num">02</span><span class="tag">Concept project</span></div>
+            <h3>24/7 Powerup Electrical</h3>
+            <p class="work-sector">Electrical services · London</p>
+          </div>
+        </a>
+
+        <a class="work-card" href="work.html#london-interior-studio">
+          <div class="mock mock--interior" role="img" aria-label="Concept homepage design for London Interior Studio">
+            <div class="mock-bar"><i></i><i></i><i></i></div>
+            <div class="mock-page">
+              <div class="mk-nav"><span class="mk-logo">London Interior Studio</span><span class="mk-links"><span>Projects</span><span>Studio</span><span>Journal</span><span>Contact</span></span></div>
+              <div class="mk-hero">
+                <div>
+                  <span class="mk-kicker">Interior design · London</span>
+                  <span class="mk-title">Interiors with a quiet sense of calm.</span>
+                  <span class="mk-text">Considered interiors for homes and workspaces across London.</span>
+                  <span class="mk-btn">View projects</span>
+                </div>
+                <span class="mk-rooms"><i class="r1"></i><i class="r2"></i><i class="r3"></i></span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="work-top"><span class="work-num">03</span><span class="tag">Concept project</span></div>
+            <h3>London Interior Studio</h3>
+            <p class="work-sector">Interior design · London</p>
+          </div>
+        </a>
+      </div>
+      <div class="section-foot"><a class="btn btn-line" href="work.html">View all work →</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>From idea to launch.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step"><span class="step-num">01</span><h3>Discover</h3><p>Understand your business, audience and objectives.</p></li>
+        <li class="step"><span class="step-num">02</span><h3>Design</h3><p>Create the visual direction and user experience.</p></li>
+        <li class="step"><span class="step-num">03</span><h3>Build</h3><p>Develop the website across desktop, tablet and mobile.</p></li>
+        <li class="step"><span class="step-num">04</span><h3>Launch</h3><p>Test, connect your domain and take your website live.</p></li>
+        <li class="step"><span class="step-num">05</span><h3>Support</h3><p>Continue with <a href="services.html#care">VOLSTRO Care</a> if you need ongoing support.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap why">
       <div>
-        <div class="section-head">
-          <p class="eyebrow">Contact</p>
-          <h2>Start a project</h2>
-          <p>Tell us about your business and what you need, and we'll come back with a quote.</p>
-        </div>
-        <div class="direct">
-          <p class="eyebrow">Prefer email?</p>
-          <div class="direct-row">
-            <span class="direct-email" id="studio-email">hello@volstro.com</span>
-            <button class="btn btn-line btn-small" type="button" id="copy-email">Copy</button>
-          </div>
-        </div>
+        <h2>Designed with purpose. Built with intelligence.</h2>
+        <p>We combine professional digital design with modern technology and AI-assisted workflows to create high-quality websites efficiently.</p>
       </div>
+      <p class="pull">Technology helps us move faster. Design thinking determines where we're going.</p>
+    </div>
+  </section>
 
-      <form class="form" id="enquiry">
-        <div class="row-2">
-          <div class="field">
-            <label for="f-name">Your name</label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required>
-          </div>
-          <div class="field">
-            <label for="f-email">Email</label>
-            <input id="f-email" name="email" type="email" autocomplete="email" required>
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-business">Business name <span class="opt">(optional)</span></label>
-          <input id="f-business" name="business" type="text" autocomplete="organization">
-        </div>
-        <div class="row-2">
-          <div class="field">
-            <label for="f-package">Website package</label>
-            <select id="f-package" name="package">
-              <option>Not sure yet</option>
-              <option>Starter</option>
-              <option>Professional</option>
-              <option>Premium</option>
-              <option>E-commerce</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-plan">Care plan</label>
-            <select id="f-plan" name="plan">
-              <option>Not sure yet</option>
-              <option>Basic, £69/month</option>
-              <option>Plus, £149/month</option>
-              <option>No care plan</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-message">About your project</label>
-          <textarea id="f-message" name="message" required placeholder="What does your business do, and what should the site help with?"></textarea>
-        </div>
-        <button class="btn btn-solid" type="submit">Send enquiry</button>
-        <p class="form-status" id="form-status" role="status" hidden>Your email app should open with this enquiry filled in, ready to send. If nothing opened, email us at hello@volstro.com.</p>
-      </form>
+  <section class="band cta">
+    <div class="wrap cta-inner">
+      <h2>Ready to build something better?</h2>
+      <p>Tell us about your business and what you're looking to achieve.</p>
+      <a class="btn btn-solid" href="contact.html">Start a project</a>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="wrap foot">
-    <div>
-      <p class="wordmark">Volstro</p>
-    </div>
+    <a class="wordmark" href="index.html">VOLSTRO</a>
     <div class="foot-meta">
       <nav class="foot-nav" aria-label="Footer">
-        <a href="#packages">Packages</a>
-        <a href="#add-ons">Add-ons</a>
-        <a href="#care">Care plans</a>
-        <a href="#contact">Contact</a>
+        <a href="work.html">Work</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Start a project</a>
       </nav>
-      <p>Web design studio, London · © 2026 Volstro</p>
+      <p>London, UK · hello@volstro.co.uk</p>
+      <p>© 2026 VOLSTRO</p>
     </div>
   </div>
 </footer>
 
-<script>
-(() => {
-  const EMAIL = "hello@volstro.com";
-
-  // Responsive demo: map the animated frame width to a device width and switch the mock layout at breakpoints.
-  const track = document.querySelector(".demo-track");
-  const frame = document.querySelector(".demo-frame");
-  const readout = document.querySelector(".demo-width");
-  const legend = document.querySelectorAll(".demo-legend [data-mode]");
-  if (track && frame && "ResizeObserver" in window) {
-    new ResizeObserver(() => {
-      const ratio = frame.offsetWidth / track.clientWidth;
-      const mode = ratio > 0.8 ? "desktop" : ratio > 0.45 ? "tablet" : "mobile";
-      const px = Math.round(390 + (ratio - 0.32) / 0.68 * 1050);
-      frame.dataset.mode = mode;
-      readout.textContent = Math.min(1440, Math.max(390, px)) + " px";
-      legend.forEach(el => el.classList.toggle("is-on", el.dataset.mode === mode));
-    }).observe(frame);
-  }
-
-  // "Choose X" buttons preselect the package in the form.
-  const pkgSelect = document.getElementById("f-package");
-  document.querySelectorAll("[data-package]").forEach(link => {
-    link.addEventListener("click", () => { pkgSelect.value = link.dataset.package; });
-  });
-
-  // Copy the studio email, falling back to selecting it.
-  const copyBtn = document.getElementById("copy-email");
-  copyBtn.addEventListener("click", () => {
-    const done = label => { copyBtn.textContent = label; setTimeout(() => { copyBtn.textContent = "Copy"; }, 1800); };
-    const select = () => {
-      const range = document.createRange();
-      range.selectNodeContents(document.getElementById("studio-email"));
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      done("Selected");
-    };
-    if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(() => done("Copied"), select);
-    else select();
-  });
-
-  // No backend: the form opens the visitor's email app with the enquiry filled in.
-  const form = document.getElementById("enquiry");
-  const status = document.getElementById("form-status");
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    const d = new FormData(form);
-    const subject = "Website enquiry from " + d.get("name");
-    const body = [
-      "Name: " + d.get("name"),
-      "Email: " + d.get("email"),
-      "Business: " + (d.get("business") || "-"),
-      "Package: " + d.get("package"),
-      "Care plan: " + d.get("plan"),
-      "",
-      d.get("message")
-    ].join("\n");
-    status.hidden = false;
-    window.location.href = "mailto:" + EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-  });
-})();
-</script>
+<script src="main.js"></script>
 </body>
 </html>

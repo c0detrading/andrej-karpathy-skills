@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Start a project | VOLSTRO</title>
+<meta name="description" content="Tell VOLSTRO about your business and what you're looking to achieve. We usually respond within 1 business day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..800&family=Funnel+Sans:wght@400..700&family=Martian+Mono:wght@400..600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site-header">
+    <a class="wordmark" href="index.html">VOLSTRO</a>
+    <nav class="nav" aria-label="Main">
+      <a class="nav-link" href="work.html">Work</a>
+      <a class="nav-link" href="services.html">Services</a>
+      <a class="btn btn-solid btn-small" href="contact.html" aria-current="page">Start a project</a>
+    </nav>
+  </header>
+</div>
+
+<main>
+  <section class="page-hero wrap">
+    <h1>Let's build something worth visiting.</h1>
+    <p class="lede">Tell us a little about your business and what you're looking to achieve. We'll review your enquiry and get back to you with the next steps.</p>
+  </section>
+
+  <section class="section">
+    <div class="wrap contact">
+      <form class="form" id="enquiry">
+        <div class="row-2">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-business">Business name</label>
+            <input id="f-business" name="business" type="text" autocomplete="organization">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="f-phone">Phone number</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-website">Current website</label>
+          <input id="f-website" name="website" type="text" inputmode="url" autocomplete="url">
+        </div>
+        <fieldset class="field">
+          <legend>What are you looking for?</legend>
+          <div class="pills">
+            <label class="pill"><input type="radio" name="need" id="need-new" value="New website"><span>New website</span></label>
+            <label class="pill"><input type="radio" name="need" id="need-redesign" value="Website redesign"><span>Website redesign</span></label>
+            <label class="pill"><input type="radio" name="need" id="need-ecommerce" value="Ecommerce"><span>Ecommerce</span></label>
+            <label class="pill"><input type="radio" name="need" id="need-maintenance" value="Website maintenance"><span>Website maintenance</span></label>
+            <label class="pill"><input type="radio" name="need" id="need-growth" value="Digital growth"><span>Digital growth</span></label>
+            <label class="pill"><input type="radio" name="need" id="need-unsure" value="Not sure yet"><span>Not sure yet</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Approximate budget</legend>
+          <div class="pills">
+            <label class="pill"><input type="radio" name="budget" id="budget-1" value="Under £500"><span>Under £500</span></label>
+            <label class="pill"><input type="radio" name="budget" id="budget-2" value="£500–£1,000"><span>£500–£1,000</span></label>
+            <label class="pill"><input type="radio" name="budget" id="budget-3" value="£1,000–£2,000"><span>£1,000–£2,000</span></label>
+            <label class="pill"><input type="radio" name="budget" id="budget-4" value="£2,000+"><span>£2,000+</span></label>
+            <label class="pill"><input type="radio" name="budget" id="budget-5" value="Not sure"><span>Not sure</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="f-message">Tell us about your project</label>
+          <textarea id="f-message" name="message" required></textarea>
+        </div>
+        <div class="form-foot">
+          <button class="btn btn-solid" type="submit">Send enquiry</button>
+          <p class="respond">We usually respond within 1 business day.</p>
+        </div>
+        <p class="form-status" id="form-status" role="status" hidden>Your email app should open with this enquiry filled in, ready to send. If nothing opened, email us at hello@volstro.co.uk.</p>
+      </form>
+
+      <aside class="details" aria-label="Contact details">
+        <div>
+          <span class="wordmark">VOLSTRO</span>
+          <p>London, UK</p>
+        </div>
+        <div>
+          <p class="eyebrow">Email</p>
+          <div class="direct-row">
+            <span class="direct-email" id="studio-email">hello@volstro.co.uk</span>
+            <button class="btn btn-line btn-small" type="button" id="copy-email">Copy</button>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Social</p>
+          <ul class="socials">
+            <li><a>Instagram</a></li>
+            <li><a>LinkedIn</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot">
+    <a class="wordmark" href="index.html">VOLSTRO</a>
+    <div class="foot-meta">
+      <nav class="foot-nav" aria-label="Footer">
+        <a href="work.html">Work</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Start a project</a>
+      </nav>
+      <p>London, UK · hello@volstro.co.uk</p>
+      <p>© 2026 VOLSTRO</p>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

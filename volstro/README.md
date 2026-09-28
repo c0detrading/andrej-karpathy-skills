@@ -1,6 +1,15 @@
-# Volstro
+# VOLSTRO
 
-One-page website for Volstro, a web design studio in London. Everything is in `index.html`: no build step and no dependencies apart from Google Fonts.
+Four-page website for VOLSTRO, a London digital design studio. Plain HTML, CSS and JavaScript: no build step, and the only outside dependency is Google Fonts.
+
+| File | Page |
+|---|---|
+| `index.html` | Home: hero, the problem, services preview, selected work, process, why VOLSTRO, final call to action |
+| `services.html` | Website design packages, ecommerce, website care, additional services, FAQ |
+| `work.html` | The four projects, each with a large website mockup |
+| `contact.html` | Enquiry form and contact details |
+| `styles.css` | Shared styles for every page |
+| `main.js` | Home hero demo, the contact form and the copy-email button |
 
 ## View it
 
@@ -8,20 +17,11 @@ Open `index.html` in a browser.
 
 ## Before going live
 
-- **Email address.** `hello@volstro.com` is a placeholder. Replace every occurrence in `index.html`, including the `EMAIL` constant in the script at the bottom.
-- **Contact form.** The site has no backend, so the form opens the visitor's email app with the enquiry already filled in. To receive enquiries without that step, point the form at a form service such as Formspree or Netlify Forms.
-
-## Where the content comes from
-
-The prices and inclusions come from the studio's pricing notes:
-
-| Section | Items |
-|---|---|
-| Packages | Starter £350–650, Professional £650–1,000, Premium £1,000+, E-commerce (Shopify) £1,300+ |
-| Add-ons | Domain connection £15, extra revision £25, booking calendar £100, SEO and SSL on request |
-| Monthly care | Basic £69/month, Plus £149/month, hosted on Framer or Webflow |
-| Growth package | Paid ads, priced on request |
+- **Email.** The site uses `hello@volstro.co.uk`. It won't receive mail until the domain and mailbox are set up. The address appears in every page footer, on the contact page and in the `EMAIL` constant in `main.js`.
+- **Contact form.** There's no backend yet, so the form opens the visitor's email app with the enquiry filled in. To receive enquiries directly, point the form at a form service such as Formspree or Netlify Forms.
+- **Instagram and LinkedIn** on the contact page are placeholders with no links. Add each profile URL as the `href` on its `<a>` in `contact.html`.
+- **Work.** All four projects are concepts and are labelled "Concept project". Their "View project" links show "Coming soon" until they have somewhere to go: add an `href` to each `arrow-link` in `work.html` and delete its `<span class="soon">`. When you have real clients, replace the concepts with client name, industry, challenge, solution and result.
 
 ## Hosting
 
-It's a single static file, so any static host works: Netlify, Vercel, GitHub Pages or Cloudflare Pages.
+Any static host works: Netlify, Vercel, GitHub Pages or Cloudflare Pages. Upload the whole `volstro` folder.
