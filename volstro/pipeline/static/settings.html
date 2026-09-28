@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volstro Settings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1 class="brand">Volstro<span>Settings</span></h1>
+    <nav></nav>
+    <button id="stop" title="Stops the app (useful when it runs in the background)">Stop app</button>
+    <a class="btn" href="/">← Back to pipeline</a>
+  </header>
+  <main class="settings">
+    <section class="panel">
+      <h2>Instagram and Facebook (Meta)</h2>
+      <p class="muted">The app reads followers, posts, likes and comments from Meta once a day with an access token. Instagram works
+        for any <b>business or creator</b> account, so prospects too, with no permission needed from them. Facebook works for
+        Pages Volstro has access to. Set it up once (about 15 minutes):</p>
+      <ol class="steps">
+        <li>Make sure Volstro's Instagram is a <b>business or creator</b> account, linked to Volstro's Facebook Page.</li>
+        <li>At <b>developers.facebook.com</b> → <b>My Apps</b> → <b>Create App</b>, create an app of type <b>Business</b>
+          and connect it to Volstro's business portfolio.</li>
+        <li>At <b>business.facebook.com/settings</b> → <b>Users</b> → <b>System users</b>, add an <b>Admin</b> system user.
+          Under <b>Assign assets</b> give it the app, Volstro's Page, and every client Page you want Facebook numbers for
+          (a client adds Volstro as a partner on their Page first).</li>
+        <li>Click <b>Generate new token</b>, pick the app, set expiry to <b>Never</b> and tick
+          <code>instagram_basic</code>, <code>pages_show_list</code>, <code>pages_read_engagement</code> and
+          <code>business_management</code>.</li>
+        <li>Paste the token below, click <b>Save settings</b>, then <b>Check connection</b>.</li>
+      </ol>
+      <div class="form-grid">
+        <label>Meta access token <input id="meta_token" type="password" autocomplete="off"></label>
+        <button id="meta-check">Check connection</button>
+      </div>
+      <p class="msg" id="meta-msg"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Daily report</h2>
+      <div class="form-grid">
+        <label>Make the report at (this computer's time) <input id="report_time" type="time" required></label>
+        <label>Currency <input id="currency" maxlength="5" placeholder="€"></label>
+      </div>
+      <p class="muted">If the app isn't running at that time, the report is made as soon as it starts.</p>
+
+      <h2 style="margin-top:24px">Import numbers from a CSV</h2>
+      <p class="muted">For TikTok (or any account) you can type the numbers into a spreadsheet and import them all at once.
+        Rows are matched to clients by <b>platform</b> and <b>handle</b>. Only <code>platform</code>, <code>handle</code> and
+        <code>followers</code> are required. A missing date means today.</p>
+      <p><a href="numbers-template.csv" download>Download the template</a></p>
+      <div class="form-grid">
+        <label>CSV file <input id="csv-file" type="file" accept=".csv,text/csv"></label>
+        <button id="csv-import">Import</button>
+      </div>
+      <div class="msg" id="csv-msg"></div>
+    </section>
+  </main>
+  <div class="save-bar"><button id="save" class="primary">Save settings</button> <span id="msg" class="msg muted"></span></div>
+  <script src="settings.js"></script>
+</body>
+</html>

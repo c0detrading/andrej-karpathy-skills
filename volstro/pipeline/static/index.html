@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volstro Pipeline</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1 class="brand">Volstro<span>Pipeline</span></h1>
+    <nav>
+      <a href="#pipeline" id="nav-pipeline">Pipeline</a>
+      <a href="#report" id="nav-report">Daily report</a>
+    </nav>
+    <a class="btn" href="settings.html">Settings</a>
+  </header>
+
+  <main id="view-pipeline">
+    <div class="tiles" id="board-tiles"></div>
+    <div class="toolbar">
+      <button class="primary" id="new-client">+ New client</button>
+      <span class="muted">Drag a card to move it to another stage, or click it to edit.</span>
+      <span class="spacer"></span>
+      <label class="check"><input type="checkbox" id="show-lost"> Show lost</label>
+    </div>
+    <div class="board" id="board"></div>
+  </main>
+
+  <main id="view-report" hidden>
+    <div class="toolbar" style="margin-top:0">
+      <select id="report-date" style="width:auto"></select>
+      <button class="primary" id="refresh">Refresh numbers now</button>
+      <span class="msg muted" id="report-msg"></span>
+    </div>
+    <div class="tiles" id="report-tiles"></div>
+    <div id="report"></div>
+  </main>
+
+  <dialog id="client-dlg">
+    <div class="dlg-head"><h2 id="dlg-title">Client</h2><button id="dlg-close" aria-label="Close">✕</button></div>
+    <div class="dlg-body">
+      <form id="client-form" class="form-grid">
+        <label>Name <input name="name" required maxlength="200"></label>
+        <label>Stage <select name="stage" id="stage-select"></select></label>
+        <label>Value <input name="value" type="number" min="0" step="any" placeholder="0"></label>
+        <label class="inline"><input name="monthly" type="checkbox" checked> per month (untick for a one-off project)</label>
+        <label>Contact person <input name="contact"></label>
+        <label>Email <input name="email" type="email"></label>
+        <label>Phone <input name="phone"></label>
+        <label>Website <input name="website"></label>
+        <label>Next step <input name="next_step" placeholder="Send proposal"></label>
+        <label>Next step date <input name="next_date" type="date"></label>
+        <label class="wide">Notes <textarea name="notes"></textarea></label>
+      </form>
+      <div class="actions">
+        <button class="primary" id="save-client">Save</button>
+        <span class="msg" id="client-msg"></span>
+        <span class="spacer"></span>
+        <button class="danger" id="delete-client">Delete client</button>
+      </div>
+
+      <div id="client-extra">
+        <div id="client-concerns"></div>
+        <h3>Social accounts</h3>
+        <div class="table-wrap"><table id="accounts"></table></div>
+        <form id="add-account" class="form-grid" style="margin-top:10px">
+          <label>Platform <select name="platform" id="platform-select"></select></label>
+          <label>Username or link <input name="handle" placeholder="@username" required></label>
+          <button type="submit">Add account</button>
+        </form>
+        <p class="muted" style="font-size:12px">Instagram and Facebook numbers are fetched from Meta once a day. TikTok numbers are typed
+          in here (<b>Enter numbers</b>) or imported for many accounts at once from Settings.</p>
+
+        <form id="numbers-form" class="panel form-grid" hidden style="margin-top:10px">
+          <b class="wide" id="numbers-title"></b>
+          <label>Date <input name="date" type="date" required></label>
+          <label>Followers <input name="followers" type="number" min="0" required></label>
+          <label>Posts in the last 7 days <input name="posts_7d" type="number" min="0"></label>
+          <label>Average likes per post <input name="avg_likes" type="number" min="0" step="any"></label>
+          <label>Average comments per post <input name="avg_comments" type="number" min="0" step="any"></label>
+          <label>Last post date <input name="last_post" type="date"></label>
+          <div class="actions wide" style="margin-top:0"><button class="primary" type="submit">Save numbers</button>
+            <button type="button" id="numbers-cancel">Cancel</button></div>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
