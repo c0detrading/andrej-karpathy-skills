@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prime Timber USA | Oak &amp; Ash Hardwood Panels, Hollywood FL</title>
+<meta name="description" content="Oak and ash glued hardwood panels direct from the manufacturer. In stock in Hollywood, FL for wholesale and retail orders, from one panel to a full container.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600..900&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400..800&display=swap">
+<style>
+/* Layout: a spec-sheet site. Dark kiln hero with a drawn panel you can switch between species and construction,
+   then catalog, reasons, applications with real customer projects, production figures, ordering steps and the quote form.
+   Single deliberate light look with dark bands; colours come from Prime Timber's existing brand (warm black, moss, sage). */
+:root {
+  --kiln: #1E1A16;
+  --kiln-2: #29241F;
+  --on-kiln: #F3F0EA;
+  --on-kiln-soft: rgba(243, 240, 234, .72);
+  --kiln-line: rgba(243, 240, 234, .15);
+  --paper: #FBFAF9;
+  --stone: #F1EEE8;
+  --card: #FFFFFF;
+  --ink: #1E1A16;
+  --muted: #645E55;
+  --line: #E4DFD6;
+  --moss: #3B5124;
+  --sage: #9DB96F;
+  --sage-light: #B4C893;
+  --sage-pale: #DDE4D2;
+
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  --wrap: 1240px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --radius: 10px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, canvas { max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 2px solid var(--moss); outline-offset: 3px; }
+.dark :focus-visible { outline-color: var(--sage); }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.eyebrow { font: 500 .74rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--moss); }
+.dark .eyebrow { color: var(--sage); }
+.h-display { font-family: var(--display); font-weight: 800; text-transform: uppercase; letter-spacing: .005em; line-height: .92; }
+.h2 { font-size: clamp(2.3rem, 4.8vw, 3.9rem); }
+.lede { max-width: 40rem; font-size: 1.1rem; color: var(--muted); }
+.dark { background: var(--kiln); color: var(--on-kiln); }
+.dark .lede { color: var(--on-kiln-soft); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  min-height: 48px;
+  padding: .75em 1.35em;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  font: 700 .95rem/1.1 var(--body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .15s ease, transform .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-quote { background: var(--sage); color: var(--kiln); }
+.btn-quote:hover { background: var(--sage-light); }
+.btn-line { background: transparent; color: inherit; border-color: currentColor; }
+.btn-ink { background: var(--ink); color: var(--paper); }
+.btn-small { min-height: 40px; padding: .5em 1em; font-size: .88rem; }
+
+/* Concept notice */
+.concept-bar { padding: .5rem var(--gutter); background: var(--sage-pale); color: var(--ink); font: 500 .72rem/1.4 var(--mono); letter-spacing: .04em; text-align: center; }
+
+/* Header */
+.site-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 1.1rem; }
+.logo { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; }
+.logo svg { width: 34px; height: 28px; flex: none; }
+.logo-word { font-family: var(--display); font-weight: 800; font-size: 1.45rem; letter-spacing: .04em; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+.logo-word small { font-size: .62em; color: var(--sage); letter-spacing: .12em; margin-left: .15em; }
+.nav { display: flex; align-items: center; gap: 1.6rem; font-size: .92rem; font-weight: 600; }
+.nav a { text-decoration: none; color: var(--on-kiln-soft); }
+.nav a:hover { color: var(--on-kiln); }
+.header-actions { display: flex; align-items: center; gap: 1rem; }
+.header-phone { font: 500 .85rem var(--mono); text-decoration: none; color: var(--on-kiln); white-space: nowrap; }
+@media (max-width: 1060px) { .nav { display: none; } }
+@media (max-width: 620px) { .header-phone { display: none; } }
+
+/* Hero */
+.hero { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: center; padding-block: clamp(2rem, 5vw, 4.5rem) clamp(2.5rem, 5vw, 4rem); }
+.hero > * { min-width: 0; }
+@media (min-width: 1000px) { .hero { grid-template-columns: minmax(0, .95fr) minmax(0, 1.1fr); } }
+.hero h1 { margin-top: 1.1rem; font-size: clamp(2.3rem, 8.5vw, 5rem); overflow-wrap: break-word; }
+@media (min-width: 1000px) { .hero h1 { font-size: clamp(3.4rem, 5.8vw, 5rem); } }
+.hero h1 em { font-style: normal; color: var(--sage); }
+.hero .lede { margin-top: 1.4rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.hero-actions .btn-line { font-family: var(--mono); font-weight: 500; }
+
+.panel-fig { margin: 0; display: grid; gap: 1rem; }
+.dim {
+  position: relative;
+  display: flex; justify-content: center;
+  height: 1rem;
+  border-inline: 1px solid var(--on-kiln-soft);
+}
+.dim::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--on-kiln-soft); }
+.dim span { position: relative; align-self: center; padding: 0 .8em; background: var(--kiln); font: 500 .72rem/1 var(--mono); letter-spacing: .04em; color: var(--on-kiln); white-space: nowrap; }
+.panel-canvas { display: block; width: 100%; aspect-ratio: 2.4 / 1; border-radius: 3px; }
+.panel-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; }
+.panel-name { font-weight: 700; font-size: 1.02rem; }
+.thick { display: flex; align-items: flex-end; gap: 1.1rem; font: 500 .72rem/1 var(--mono); color: var(--on-kiln-soft); }
+.thick span { display: inline-flex; align-items: flex-end; gap: .45rem; }
+.thick i { display: block; width: 34px; border-radius: 1px; background: linear-gradient(90deg, #B98A55, #A57645); }
+.thick .t1 i { height: 6px; }
+.thick .t2 i { height: 12px; }
+.panel-controls { display: flex; flex-wrap: wrap; gap: .75rem; }
+.seg { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--kiln-line); border-radius: 8px; }
+.seg button {
+  padding: .5em .95em;
+  border: 0; border-radius: 6px;
+  background: transparent;
+  color: var(--on-kiln-soft);
+  font: 600 .86rem/1.2 var(--body);
+  cursor: pointer;
+}
+.seg button:hover { color: var(--on-kiln); }
+.seg button[aria-pressed="true"] { background: var(--on-kiln); color: var(--kiln); }
+
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--kiln-line); }
+@media (min-width: 900px) { .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.fact { display: grid; gap: .35rem; align-content: start; padding: 1.4rem 1.25rem 1.8rem 0; }
+.fact + .fact { padding-left: 1.25rem; border-left: 1px solid var(--kiln-line); }
+@media (max-width: 899px) {
+  .fact:nth-child(3) { padding-left: 0; border-left: 0; }
+  .fact:nth-child(n+3) { border-top: 1px solid var(--kiln-line); }
+}
+.fact dt { order: 2; font-size: .86rem; color: var(--on-kiln-soft); }
+.fact dd { order: 1; margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1; letter-spacing: .01em; font-variant-numeric: tabular-nums; }
+
+/* Sections */
+.section { padding-block: clamp(4rem, 8vw, 6.5rem); }
+.section-stone { background: var(--stone); }
+.section-head { display: grid; gap: 1rem; max-width: 50rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+/* Catalog */
+.builds { display: grid; gap: 1rem 2.5rem; margin: 0 0 2rem; max-width: 60rem; }
+@media (min-width: 760px) { .builds { grid-template-columns: 1fr 1fr; } }
+.builds div { padding-top: .9rem; border-top: 2px solid var(--ink); }
+.builds dt { font-weight: 800; }
+.builds dd { margin: .25rem 0 0; color: var(--muted); font-size: .96rem; }
+.products { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 740px) { .products { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.product { display: grid; gap: 1.2rem; align-content: start; padding: 1rem 1rem 1.4rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.swatch { display: block; width: 100%; aspect-ratio: 16 / 6; border-radius: 4px; }
+.product-body { display: grid; gap: 1rem; padding-inline: .4rem; }
+.product h3 { margin-top: .3rem; font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; }
+.spec { display: grid; grid-template-columns: auto 1fr; gap: .45rem 1.5rem; margin: 0; padding-block: .9rem; border-block: 1px solid var(--line); font-size: .95rem; }
+.spec dt { font: 500 .7rem/1.9 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.spec dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.product-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+.product-foot .note { color: var(--muted); font-size: .88rem; }
+.request {
+  display: grid; gap: 1.25rem; align-items: center;
+  margin-top: 1.25rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+}
+@media (min-width: 760px) { .request { grid-template-columns: 1fr auto; } }
+.request h3 { font-size: 1.2rem; font-weight: 800; }
+.request p { margin-top: .3rem; color: var(--muted); }
+
+/* Reasons */
+.reasons { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+@media (min-width: 820px) { .reasons { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; } }
+.reason { display: grid; gap: .7rem; align-content: start; padding-top: 1.2rem; border-top: 2px solid var(--ink); }
+.reason h3 { font-size: 1.25rem; font-weight: 800; }
+.reason p { color: var(--muted); }
+.wood {
+  display: grid; gap: 2rem;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.wood > * { min-width: 0; }
+@media (min-width: 900px) { .wood { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 3.5rem; align-items: center; } }
+.wood h3 { margin-top: .8rem; font-size: clamp(1.9rem, 3.4vw, 2.7rem); }
+.checks { display: grid; gap: .9rem 2rem; margin: 0; padding: 0; list-style: none; font-weight: 600; }
+@media (min-width: 560px) { .checks { grid-template-columns: 1fr 1fr; } }
+.checks li { position: relative; padding-left: 1.8rem; }
+.checks li::before {
+  content: ""; position: absolute; left: .2rem; top: .42em;
+  width: .75rem; height: .4rem;
+  border-left: 2.5px solid var(--moss); border-bottom: 2.5px solid var(--moss);
+  transform: rotate(-45deg);
+}
+.wood .btn { margin-top: 1.75rem; }
+
+/* Applications */
+.tabs { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin-bottom: 2.25rem; border-bottom: 1px solid var(--line); }
+.tab {
+  margin-bottom: -1px;
+  padding: .85em 0;
+  border: 0; border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: 700 .98rem/1.2 var(--body);
+  cursor: pointer;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--moss); }
+.app { display: grid; gap: 2.5rem; }
+.app > * { min-width: 0; }
+.app-intro { display: grid; gap: 1rem 3.5rem; align-items: start; }
+@media (min-width: 900px) {
+  .app-intro { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .app-intro .checks { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+}
+.app h3 { font-size: clamp(1.9rem, 3.2vw, 2.5rem); }
+.app-text { max-width: 34rem; color: var(--muted); }
+.app .checks { grid-template-columns: 1fr; margin-top: .5rem; font-size: .96rem; }
+.app-label { margin-bottom: 1rem; }
+.cases { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .cases { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.case { display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.case-strip { display: block; width: 100%; aspect-ratio: 16 / 4.5; }
+.case-body { display: grid; gap: .65rem; padding: 1.1rem 1.15rem 1.35rem; }
+.case-tag { font: 500 .66rem/1.5 var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--moss); }
+.case h4 { font-size: 1rem; font-weight: 800; line-height: 1.35; }
+.case blockquote { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.55; }
+.case cite { font-style: normal; font-weight: 700; font-size: .85rem; }
+
+/* Production */
+.stats { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--kiln-line); }
+@media (min-width: 700px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.stat { display: grid; gap: .5rem; align-content: start; padding: 1.6rem 1.5rem 1.9rem 0; border-bottom: 1px solid var(--kiln-line); }
+.stat dt { order: 2; color: var(--on-kiln-soft); font-size: .95rem; max-width: 22rem; }
+.stat dd { order: 1; margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(2.2rem, 4.4vw, 3.4rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat dd small { font-size: .45em; letter-spacing: .06em; margin-left: .2em; color: var(--sage); }
+.stat-text dd { font-size: clamp(1.5rem, 2.6vw, 2rem); text-transform: uppercase; }
+
+/* Ordering */
+.steps { display: grid; grid-template-columns: 1fr; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 900px) { .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.75rem; } }
+.step { display: grid; gap: .6rem; align-content: start; padding-block: 1.3rem; border-top: 1px solid var(--line); }
+.step:first-child { border-top: 2px solid var(--ink); }
+@media (min-width: 900px) { .step, .step:first-child { padding-bottom: 0; border-top: 2px solid var(--ink); } }
+.step-num { font-family: var(--display); font-weight: 800; font-size: 2.4rem; line-height: 1; color: var(--moss); }
+.step h3 { font-size: 1.15rem; font-weight: 800; }
+.step p { color: var(--muted); font-size: .96rem; }
+.step a { font-family: var(--mono); font-weight: 500; }
+
+/* Quote and contact */
+.quote { display: grid; gap: 2.5rem; }
+.quote > * { min-width: 0; }
+@media (min-width: 1000px) { .quote { grid-template-columns: minmax(0, 1.55fr) minmax(0, .8fr); gap: 3.5rem; align-items: start; } }
+.form { display: grid; gap: 1.3rem; padding: clamp(1.25rem, 3vw, 2.25rem); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.row-2 { display: grid; gap: 1.3rem; }
+@media (min-width: 580px) { .row-2 { grid-template-columns: 1fr 1fr; } }
+.field { display: grid; gap: .45rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+.field > label, .field legend { padding: 0; font-size: .9rem; font-weight: 700; }
+.field legend { margin-bottom: .55rem; }
+.field input:not([type="radio"]), .field select, .field textarea {
+  width: 100%; min-width: 0;
+  padding: .75em .9em;
+  font: inherit; font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.field textarea { min-height: 8rem; resize: vertical; }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline-offset: 1px; border-color: var(--moss); }
+.pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pill { position: relative; font-weight: 500; }
+.pill input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.pill span { display: inline-block; padding: .55em 1em; font-size: .93rem; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+.pill input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pill input:focus-visible + span { outline: 2px solid var(--moss); outline-offset: 2px; }
+.form-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+.form-foot p { color: var(--muted); font-size: .85rem; }
+.form-status { padding: 1rem 1.1rem; background: var(--sage-pale); border-radius: 6px; font-size: .94rem; }
+.contact-card { display: grid; gap: 1.5rem; padding: clamp(1.5rem, 3vw, 2rem); border-radius: var(--radius); }
+.contact-card dl { display: grid; gap: 1.25rem; margin: 0; }
+.contact-card dt { font: 500 .7rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sage); }
+.contact-card dd { margin: .3rem 0 0; font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
+.contact-card dd a { text-decoration-color: var(--kiln-line); text-underline-offset: .25em; }
+.contact-card dd a:hover { text-decoration-color: currentColor; }
+.contact-card .small { font-size: .88rem; font-weight: 500; color: var(--on-kiln-soft); }
+
+/* Footer */
+.site-footer { padding-block: 3rem 2.5rem; }
+.foot { display: grid; gap: 2rem; }
+@media (min-width: 860px) { .foot { grid-template-columns: 1.2fr 1fr 1fr; align-items: start; } }
+.foot p, .foot li { color: var(--on-kiln-soft); font-size: .92rem; }
+.foot-about { max-width: 22rem; margin-top: 1rem; }
+.foot ul { display: grid; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+.foot a { text-decoration: none; }
+.foot a:hover { color: var(--on-kiln); text-decoration: underline; text-underline-offset: .25em; }
+.foot-legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--kiln-line); font-size: .85rem; color: var(--on-kiln-soft); }
+</style>
+</head>
+<body>
+
+<p class="concept-bar">Redesign concept by VOLSTRO · Not the official Prime Timber USA website</p>
+
+<div class="dark">
+  <div class="wrap">
+    <header class="site-header">
+      <a class="logo" href="#top" id="top" aria-label="Prime Timber USA, back to top">
+        <svg viewBox="0 0 91 76" aria-hidden="true"><path d="M45.5 45.2L0 22.6 45.5 0 91 22.6 45.5 45.2Z" fill="#B4C893"/><path d="M45.5 51.9L8.6 33.6 0 37.8l45.5 22.6L91 37.8l-8.6-4.2-36.9 18.3Z" fill="#B4C893"/><path d="M45.5 75.5L0 52.9l8.6-4.2 36.9 18.3 36.9-18.3 8.6 4.2-45.5 22.6Z" fill="#B4C893"/></svg>
+        <span class="logo-word">Prime Timber<small>USA</small></span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#products">Products</a>
+        <a href="#applications">Applications</a>
+        <a href="#production">Production</a>
+        <a href="#ordering">Ordering</a>
+        <a href="#quote">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="header-phone" href="tel:+17868794425">+1 786 879 4425</a>
+        <a class="btn btn-quote btn-small" href="#quote">Get a quote</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Manufacturer direct · Hollywood, FL</p>
+        <h1 class="h-display"><em>Oak &amp; Ash</em> glued panels, direct from the manufacturer</h1>
+        <p class="lede">In stock in our Florida warehouse for wholesale and retail orders. Any size and any quantity, from a single panel to a full container load.</p>
+        <div class="hero-actions">
+          <a class="btn btn-quote" href="#quote" id="hero-quote" data-product="Mongolian Oak, Full Stave Panel">Get a quote</a>
+          <a class="btn btn-line" href="tel:+17868794425">+1 786 879 4425</a>
+        </div>
+      </div>
+
+      <figure class="panel-fig">
+        <div class="dim"><span>Lengths 2′ 11″ – 13′ 9″</span></div>
+        <canvas class="panel-canvas" id="hero-panel" data-species="oak" data-build="full" data-staves="7" data-seed="11" data-break="1" role="img" aria-label="Drawing of a Mongolian Oak full stave panel"></canvas>
+        <figcaption class="panel-caption">
+          <span class="panel-name" id="hero-name">Mongolian Oak · Full Stave Panel</span>
+          <span class="thick" aria-label="Available in 3/4 inch and 1 1/2 inch thicknesses"><span class="t1"><i></i>3/4″</span><span class="t2"><i></i>1 1/2″</span></span>
+        </figcaption>
+        <div class="panel-controls">
+          <div class="seg" role="group" aria-label="Species">
+            <button type="button" data-species="oak" aria-pressed="true">Oak</button>
+            <button type="button" data-species="ash" aria-pressed="false">Ash</button>
+          </div>
+          <div class="seg" role="group" aria-label="Construction">
+            <button type="button" data-build="full" aria-pressed="true">Full stave</button>
+            <button type="button" data-build="finger" aria-pressed="false">Finger-jointed</button>
+          </div>
+        </div>
+      </figure>
+    </section>
+
+    <dl class="facts">
+      <div class="fact"><dt>In stock in Hollywood, FL</dt><dd>34,000+ bd ft</dd></div>
+      <div class="fact"><dt>Panel thicknesses</dt><dd>3/4″ &amp; 1 1/2″</dd></div>
+      <div class="fact"><dt>Panel lengths</dt><dd>2′ 11″ – 13′ 9″</dd></div>
+      <div class="fact"><dt>Minimum order, up to full container loads</dt><dd>1 panel</dd></div>
+    </dl>
+  </div>
+</div>
+
+<main>
+  <section class="section" id="products">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Catalog</p>
+        <h2 class="h-display h2">Four panels. Two species, two constructions.</h2>
+        <p class="lede">Every panel is kiln-dried and made from precision-calibrated staves, bonded on industrial machinery for a flat, stable, defect-free surface.</p>
+      </div>
+      <dl class="builds">
+        <div><dt>Full stave</dt><dd>Each stave runs the full length of the panel with no end joints, for long, continuous grain.</dd></div>
+        <div><dt>Finger-jointed</dt><dd>Staves are built from shorter lengths joined end to end with interlocking finger joints.</dd></div>
+      </dl>
+
+      <div class="products">
+        <article class="product">
+          <canvas class="swatch" data-species="oak" data-build="full" data-staves="5" data-seed="21" role="img" aria-label="Mongolian Oak full stave panel"></canvas>
+          <div class="product-body">
+            <div><p class="eyebrow">Mongolian Oak</p><h3>Full Stave Panel</h3></div>
+            <dl class="spec"><dt>Thickness</dt><dd>3/4″ · 1 1/2″</dd><dt>Length</dt><dd>2′ 11″ – 13′ 9″</dd></dl>
+            <div class="product-foot"><span class="note">Order from 1 panel</span><a class="btn btn-ink btn-small" href="#quote" data-product="Mongolian Oak, Full Stave Panel">Get a quote</a></div>
+          </div>
+        </article>
+        <article class="product">
+          <canvas class="swatch" data-species="oak" data-build="finger" data-staves="5" data-seed="22" role="img" aria-label="Mongolian Oak finger-jointed panel"></canvas>
+          <div class="product-body">
+            <div><p class="eyebrow">Mongolian Oak</p><h3>Finger-Jointed Panel</h3></div>
+            <dl class="spec"><dt>Thickness</dt><dd>3/4″ · 1 1/2″</dd><dt>Length</dt><dd>2′ 11″ – 13′ 9″</dd></dl>
+            <div class="product-foot"><span class="note">Order from 1 panel</span><a class="btn btn-ink btn-small" href="#quote" data-product="Mongolian Oak, Finger-Jointed Panel">Get a quote</a></div>
+          </div>
+        </article>
+        <article class="product">
+          <canvas class="swatch" data-species="ash" data-build="full" data-staves="5" data-seed="23" role="img" aria-label="Manchurian Ash full stave panel"></canvas>
+          <div class="product-body">
+            <div><p class="eyebrow">Manchurian Ash</p><h3>Full Stave Panel</h3></div>
+            <dl class="spec"><dt>Thickness</dt><dd>3/4″ · 1 1/2″</dd><dt>Length</dt><dd>2′ 11″ – 13′ 9″</dd></dl>
+            <div class="product-foot"><span class="note">Order from 1 panel</span><a class="btn btn-ink btn-small" href="#quote" data-product="Manchurian Ash, Full Stave Panel">Get a quote</a></div>
+          </div>
+        </article>
+        <article class="product">
+          <canvas class="swatch" data-species="ash" data-build="finger" data-staves="5" data-seed="24" role="img" aria-label="Manchurian Ash finger-jointed panel"></canvas>
+          <div class="product-body">
+            <div><p class="eyebrow">Manchurian Ash</p><h3>Finger-Jointed Panel</h3></div>
+            <dl class="spec"><dt>Thickness</dt><dd>3/4″ · 1 1/2″</dd><dt>Length</dt><dd>2′ 11″ – 13′ 9″</dd></dl>
+            <div class="product-foot"><span class="note">Order from 1 panel</span><a class="btn btn-ink btn-small" href="#quote" data-product="Manchurian Ash, Finger-Jointed Panel">Get a quote</a></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="request">
+        <div>
+          <h3>Can't find what you're looking for?</h3>
+          <p>We supply high-quality materials on request and continuously expand our product range.</p>
+        </div>
+        <a class="btn btn-line" href="#quote" data-product="Something else / not sure">Send us a request</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-stone" id="benefits">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why Prime Timber</p>
+        <h2 class="h-display h2">3 reasons to order from Prime Timber USA</h2>
+      </div>
+      <div class="reasons">
+        <article class="reason">
+          <h3>Consistent supply</h3>
+          <p>We deliver nationwide across the US from our FL warehouse, with supply available from retail quantities to full container loads.</p>
+        </article>
+        <article class="reason">
+          <h3>Uniform grain, free of defects</h3>
+          <p>Precision-bonded calibrated staves on industrial machinery. Kiln-dried and stored in a warm, dry environment for flat, durable panels.</p>
+        </article>
+        <article class="reason">
+          <h3>Manufacturer direct</h3>
+          <p>As a direct manufacturer, we control the entire production process and offer competitive pricing.</p>
+        </article>
+      </div>
+
+      <div class="wood">
+        <div>
+          <p class="eyebrow">Our wood</p>
+          <h3 class="h-display">Ash and oak offer an optimal balance of quality and price</h3>
+        </div>
+        <div>
+          <ul class="checks">
+            <li>Beautiful natural wood color</li>
+            <li>Perfectly uniform grain pattern</li>
+            <li>Precision calibrated staves</li>
+            <li>Free of knots, sapwood, cracks and visible marks</li>
+          </ul>
+          <a class="btn btn-quote" href="#quote">Get a quote</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="applications">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Applications</p>
+        <h2 class="h-display h2">One panel. Multiple applications.</h2>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Applications">
+        <button class="tab" type="button" role="tab" id="tab-tops" aria-controls="app-tops" aria-selected="true">Countertops &amp; Tabletops</button>
+        <button class="tab" type="button" role="tab" id="tab-millwork" aria-controls="app-millwork" aria-selected="false" tabindex="-1">Architectural Millwork</button>
+        <button class="tab" type="button" role="tab" id="tab-stairs" aria-controls="app-stairs" aria-selected="false" tabindex="-1">Stairs</button>
+        <button class="tab" type="button" role="tab" id="tab-diy" aria-controls="app-diy" aria-selected="false" tabindex="-1">Woodworking &amp; DIY</button>
+      </div>
+
+      <div class="app" role="tabpanel" id="app-tops" aria-labelledby="tab-tops">
+        <div class="app-intro">
+          <h3 class="h-display">Countertops &amp; Tabletops</h3>
+          <p class="app-text">Extra-long full stave panels for seamless countertops, tabletops and bar tops.</p>
+          <ul class="checks">
+            <li>Natural grain and warmth for high-end interiors</li>
+            <li>Long panels that avoid seams along a run</li>
+            <li>Order quantities starting from just one panel</li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow app-label">Built by our customers</p>
+          <div class="cases">
+            <figure class="case">
+              <canvas class="case-strip" data-species="oak" data-build="finger" data-staves="3" data-seed="31" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Oak · Finger-jointed · A/B grade</p>
+                <h4>An oak countertop that follows the flow of the kitchen</h4>
+                <blockquote>“The long panels helped us avoid seams along the main run. After cutting and finishing, the sections came together as one continuous, coordinated surface.”</blockquote>
+                <cite>Chris B.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="ash" data-build="full" data-staves="3" data-seed="32" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Ash · Full stave · A/B grade</p>
+                <h4>An ash kitchen island made to be the focal point</h4>
+                <blockquote>“The island needed to look clean from every angle. The panel was flat, well calibrated, and gave us a broad natural wood surface with very little visual interruption.”</blockquote>
+                <cite>Nina H.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="oak" data-build="full" data-staves="3" data-seed="33" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Oak · Full stave · A/B grade</p>
+                <h4>A large oak conference table with grain that runs the full length</h4>
+                <blockquote>“On a tabletop this large, the long staves make a real difference. The grain stays calm and continuous, and the finished table looks substantial rather than pieced together.”</blockquote>
+                <cite>Daniela A.</cite>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+
+      <div class="app" role="tabpanel" id="app-millwork" aria-labelledby="tab-millwork" hidden>
+        <div class="app-intro">
+          <h3 class="h-display">Architectural Millwork</h3>
+          <p class="app-text">Precision-calibrated panels for cabinetry, furniture, wall and ceiling paneling, moldings, trim, shelving and custom interior woodwork.</p>
+          <ul class="checks">
+            <li>Available in 3/4″ and 1 1/2″ thicknesses</li>
+            <li>Full-length staves with no end joints</li>
+            <li>Predictable thickness for repeated elements</li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow app-label">Built by our customers</p>
+          <div class="cases">
+            <figure class="case">
+              <canvas class="case-strip" data-species="oak" data-build="finger" data-staves="3" data-seed="41" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Oak · Finger-jointed · A/B grade</p>
+                <h4>Feature wall that ties the entire restaurant interior together</h4>
+                <blockquote>“We were building multiple elements for the same space, so predictable thickness and machining made a big difference. Everything fit together cleanly and the wood stayed visually consistent throughout.”</blockquote>
+                <cite>Brian M.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="ash" data-build="full" data-staves="3" data-seed="42" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Ash · Full stave · A/B grade</p>
+                <h4>Ash coffered ceiling for a private club lounge</h4>
+                <blockquote>“There were a lot of repeated sections in this ceiling, so consistent milling was critical. The ash machined cleanly, took stain evenly, and gave the entire lounge a very cohesive finish.”</blockquote>
+                <cite>Rafael D.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="oak" data-build="full" data-staves="3" data-seed="43" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Oak · Full stave · A/B grade</p>
+                <h4>Oak wall paneling for a residential primary bathroom</h4>
+                <blockquote>“We wanted the bathroom to feel warm and calm without making the walls visually busy. The long staves created a clean, continuous look across the panels.”</blockquote>
+                <cite>Camila R.</cite>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+
+      <div class="app" role="tabpanel" id="app-stairs" aria-labelledby="tab-stairs" hidden>
+        <div class="app-intro">
+          <h3 class="h-display">Stairs</h3>
+          <p class="app-text">Stable, kiln-dried panels for treads, risers, landings and custom stair fabrication, with consistent thickness and flatness.</p>
+          <ul class="checks">
+            <li>Full-length staves with no end joints</li>
+            <li>1 1/2″ thickness available</li>
+            <li>Flat, calibrated panels for a predictable install</li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow app-label">Built by our customers</p>
+          <div class="cases">
+            <figure class="case">
+              <canvas class="case-strip" data-species="ash" data-build="full" data-staves="3" data-seed="51" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Ash · Full stave · A/B grade</p>
+                <h4>Ash stair treads for a statement floating staircase</h4>
+                <blockquote>“This staircase was meant to be a focal point, so the finished faces had to look sharp from every angle. The panels gave us a strong, clean appearance and held up beautifully in a very exposed design.”</blockquote>
+                <cite>Sandra M.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="oak" data-build="full" data-staves="3" data-seed="52" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Oak · Full stave · A/B grade</p>
+                <h4>Oak stair treads for a light-filled open-riser staircase</h4>
+                <blockquote>“This staircase needed to feel clean and open, not visually heavy. The long faces kept the treads looking consistent from landing to landing and gave the whole project a refined finish.”</blockquote>
+                <cite>Alex P.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="ash" data-build="full" data-staves="3" data-seed="53" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Ash · Full stave · A/B grade</p>
+                <h4>Ash stair treads for a modern straight-run staircase</h4>
+                <blockquote>“On a staircase like this, flatness and consistent thickness make the install much more predictable. The treads finished evenly and gave the whole run a clean, solid feel.”</blockquote>
+                <cite>Kevin R.</cite>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+
+      <div class="app" role="tabpanel" id="app-diy" aria-labelledby="tab-diy" hidden>
+        <div class="app-intro">
+          <h3 class="h-display">Woodworking &amp; DIY</h3>
+          <p class="app-text">A wide range of sizes for shelves, benches, small furniture, home décor and custom builds.</p>
+          <ul class="checks">
+            <li>Lengths from 2′ 11″, in 3/4″ and 1 1/2″ thicknesses</li>
+            <li>Flat, finished panels that skip the glue-up</li>
+            <li>Order as little as one panel</li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow app-label">Built by our customers</p>
+          <div class="cases">
+            <figure class="case">
+              <canvas class="case-strip" data-species="oak" data-build="full" data-staves="3" data-seed="61" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Oak · Full stave · A/B grade</p>
+                <h4>Oak side tables made in small batches by a local maker</h4>
+                <blockquote>“I build these a few at a time, so repeatability matters. I can cut several tops from the panels, machine them the same way, and skip a lot of the prep I’d have with rough lumber.”</blockquote>
+                <cite>Andre C.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="ash" data-build="full" data-staves="3" data-seed="62" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Ash · Full stave · A/B grade</p>
+                <h4>A carved ash wall light shaped one pass at a time</h4>
+                <blockquote>“Most of the work on this piece is CNC carving, so clean material makes a huge difference. The ash machined beautifully and let me cut deep profiles without constantly working around defects.”</blockquote>
+                <cite>Luis M.</cite>
+              </div>
+            </figure>
+            <figure class="case">
+              <canvas class="case-strip" data-species="ash" data-build="finger" data-staves="3" data-seed="63" aria-hidden="true"></canvas>
+              <div class="case-body">
+                <p class="case-tag">Ash · Finger-jointed · A/B grade</p>
+                <h4>An ash bar top built for a backyard cooking space</h4>
+                <blockquote>“This was a DIY build for our covered patio. Starting with a finished panel saved me a ton of glue-up and flattening, and it was easy to cut the top to fit around the brickwork.”</blockquote>
+                <cite>Chris D.</cite>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark" id="production">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Production</p>
+        <h2 class="h-display h2">We manufacture oak and ash products at our own production facility</h2>
+      </div>
+      <dl class="stats">
+        <div class="stat"><dt>Production facility</dt><dd>38,750<small>sq ft</small></dd></div>
+        <div class="stat"><dt>Single-load capacity of our SECAL atmospheric kilns, made in Italy</dt><dd>61,800<small>cu ft</small></dd></div>
+        <div class="stat"><dt>In stock at our warehouse in Hollywood, FL</dt><dd>34,000+<small>bd ft</small></dd></div>
+        <div class="stat stat-text"><dt>Modern equipment from leading European manufacturers</dt><dd>European machinery</dd></div>
+        <div class="stat stat-text"><dt>Quality inspection at every stage, from raw material to finished product</dt><dd>End-to-end QC</dd></div>
+        <div class="stat stat-text"><dt>Stored in a warm, dry environment for flat, durable panels</dt><dd>Kiln-dried</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" id="ordering">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Ordering</p>
+        <h2 class="h-display h2">How to place your order</h2>
+        <p class="lede">Any volume you need, from one panel to a shipping container. We deliver nationwide across the US from our Florida warehouse.</p>
+      </div>
+      <ol class="steps">
+        <li class="step"><span class="step-num">01</span><h3>Request</h3><p>Fill out the request form or call us at <a href="tel:+17868794425">+1 786 879 4425</a>.</p></li>
+        <li class="step"><span class="step-num">02</span><h3>Quote and inventory check</h3><p>We quote you a price and check inventory to make sure your items are in stock.</p></li>
+        <li class="step"><span class="step-num">03</span><h3>Invoice and order preparation</h3><p>We send an invoice and prepare your order, with a second quality control check to make sure it's assembled correctly.</p></li>
+        <li class="step"><span class="step-num">04</span><h3>Delivery or pickup</h3><p>Pick up your order in Hollywood, FL, or we schedule delivery to the location of your choice.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-stone" id="quote">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Contact</p>
+        <h2 class="h-display h2">Get your quote today</h2>
+        <p class="lede">Tell us what you need. We'll quote a price and check that your panels are in stock.</p>
+      </div>
+      <div class="quote">
+        <form class="form" id="quote-form">
+          <div class="row-2">
+            <div class="field"><label for="q-name">Name</label><input id="q-name" name="name" type="text" autocomplete="name" required></div>
+            <div class="field"><label for="q-company">Company</label><input id="q-company" name="company" type="text" autocomplete="organization"></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label for="q-email">Email</label><input id="q-email" name="email" type="email" autocomplete="email" required></div>
+            <div class="field"><label for="q-phone">Phone</label><input id="q-phone" name="phone" type="tel" autocomplete="tel"></div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label for="q-product">Product</label>
+              <select id="q-product" name="product">
+                <option>Mongolian Oak, Full Stave Panel</option>
+                <option>Mongolian Oak, Finger-Jointed Panel</option>
+                <option>Manchurian Ash, Full Stave Panel</option>
+                <option>Manchurian Ash, Finger-Jointed Panel</option>
+                <option>Something else / not sure</option>
+              </select>
+            </div>
+            <div class="field"><label for="q-qty">Quantity</label><input id="q-qty" name="quantity" type="text" placeholder="e.g. 6 panels or a full container"></div>
+          </div>
+          <fieldset class="field">
+            <legend>Thickness</legend>
+            <div class="pills">
+              <label class="pill"><input type="radio" name="thickness" id="q-t1" value="3/4 in"><span>3/4″</span></label>
+              <label class="pill"><input type="radio" name="thickness" id="q-t2" value="1 1/2 in"><span>1 1/2″</span></label>
+              <label class="pill"><input type="radio" name="thickness" id="q-t3" value="Not sure"><span>Not sure</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="field">
+            <legend>Delivery or pickup</legend>
+            <div class="pills">
+              <label class="pill"><input type="radio" name="fulfilment" id="q-f1" value="Delivery"><span>Delivery</span></label>
+              <label class="pill"><input type="radio" name="fulfilment" id="q-f2" value="Pickup in Hollywood, FL"><span>Pickup in Hollywood, FL</span></label>
+            </div>
+          </fieldset>
+          <div class="field"><label for="q-details">Project details</label><textarea id="q-details" name="details" placeholder="Lengths, application and delivery ZIP code"></textarea></div>
+          <div class="form-foot">
+            <button class="btn btn-quote" type="submit">Get a quote</button>
+            <p>By submitting this form, you agree to our <a href="https://primetimberusa.com/privacy_policy">Privacy Policy</a>.</p>
+          </div>
+          <p class="form-status" id="quote-status" role="status" hidden>This is a design concept, so nothing was sent. On the live site, this form would go to hello@primetimberusa.com.</p>
+        </form>
+
+        <aside class="contact-card dark" aria-label="Contact details">
+          <dl>
+            <div><dt>Address</dt><dd>3009 Greene Street<br>Hollywood, FL 33020<br><a class="small" href="https://www.google.com/maps/search/?api=1&amp;query=3009+Greene+Street+Hollywood+FL+33020">Get directions →</a></dd></div>
+            <div><dt>Phone</dt><dd><a href="tel:+17868794425">+1 786 879 4425</a></dd></div>
+            <div><dt>Email</dt><dd><a href="mailto:hello@primetimberusa.com">hello@primetimberusa.com</a></dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer dark">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top" aria-label="Prime Timber USA, back to top">
+          <svg viewBox="0 0 91 76" aria-hidden="true"><path d="M45.5 45.2L0 22.6 45.5 0 91 22.6 45.5 45.2Z" fill="#B4C893"/><path d="M45.5 51.9L8.6 33.6 0 37.8l45.5 22.6L91 37.8l-8.6-4.2-36.9 18.3Z" fill="#B4C893"/><path d="M45.5 75.5L0 52.9l8.6-4.2 36.9 18.3 36.9-18.3 8.6 4.2-45.5 22.6Z" fill="#B4C893"/></svg>
+          <span class="logo-word">Prime Timber<small>USA</small></span>
+        </a>
+        <p class="foot-about">Oak and ash glued panels, direct from the manufacturer. In stock in Hollywood, FL.</p>
+      </div>
+      <ul>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#applications">Applications</a></li>
+        <li><a href="#production">Production</a></li>
+        <li><a href="#ordering">Ordering</a></li>
+      </ul>
+      <ul>
+        <li>3009 Greene Street, Hollywood, FL 33020</li>
+        <li><a href="tel:+17868794425">+1 786 879 4425</a></li>
+        <li><a href="mailto:hello@primetimberusa.com">hello@primetimberusa.com</a></li>
+      </ul>
+    </div>
+    <div class="foot-legal">
+      <span>© 2026 Prime Timber USA</span>
+      <a href="https://primetimberusa.com/privacy_policy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Procedural wood panels: staves stacked across the width, grain running along the length.
+  // Finger-jointed staves are split into shorter pieces with zigzag joints. Seeds keep each drawing stable.
+  const WOODS = {
+    oak: { h: 31, s: 46, l: 55, grain: [25, 48, 33], contrast: .3, wave: 1 },
+    ash: { h: 38, s: 36, l: 72, grain: [30, 32, 50], contrast: .34, wave: .45 }
+  };
+  const rand = seed => { let s = (seed * 2654435761) >>> 0 || 1; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; };
+
+  function drawPanel(canvas) {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const species = canvas.dataset.species, build = canvas.dataset.build;
+    const wood = WOODS[species], r = rand(+canvas.dataset.seed || 1);
+    const staves = +canvas.dataset.staves || 5, sh = h / staves;
+    const teeth = 6, amp = Math.max(2.5, sh * .1);
+
+    const zig = (x, y0, down) => {
+      const pts = [];
+      for (let k = 0; k <= teeth; k++) pts.push([x + (k % 2 ? amp : -amp), y0 + (down ? k : teeth - k) * sh / teeth]);
+      return pts;
+    };
+    const trace = (pts, start) => pts.forEach(([x, y], k) => (k === 0 && start ? ctx.moveTo(x, y) : ctx.lineTo(x, y)));
+
+    for (let i = 0; i < staves; i++) {
+      const y0 = i * sh;
+      const cuts = [0];
+      if (build === "finger") {
+        let x = w * (.08 + r() * .22);
+        while (x < w * .9) { cuts.push(x); x += w * (.16 + r() * .24); }
+      }
+      cuts.push(w);
+
+      for (let j = 0; j < cuts.length - 1; j++) {
+        const a = cuts[j], b = cuts[j + 1], first = j === 0, last = j === cuts.length - 2;
+        ctx.save();
+        ctx.beginPath();
+        if (first) { ctx.moveTo(a, y0 + sh); ctx.lineTo(a, y0); } else trace(zig(a, y0, false), true);
+        if (last) { ctx.lineTo(b, y0); ctx.lineTo(b, y0 + sh); } else trace(zig(b, y0, true), false);
+        ctx.closePath();
+        ctx.clip();
+
+        const dl = (r() - .5) * 10, dh = (r() - .5) * 5;
+        ctx.fillStyle = `hsl(${wood.h + dh} ${wood.s}% ${wood.l + dl}%)`;
+        ctx.fillRect(a - amp - 2, y0, b - a + amp * 2 + 4, sh);
+
+        const lines = Math.max(4, Math.round(sh / 2.4));
+        for (let k = 0; k < lines; k++) {
+          const gy = y0 + r() * sh;
+          const A = sh * (.03 + r() * .1) * wood.wave;
+          const f = Math.PI * 2 / (w * (.2 + r() * .6));
+          const ph = r() * 6.28;
+          ctx.beginPath();
+          for (let x = a - amp - 4; x <= b + amp + 4; x += 5) {
+            const y = gy + A * Math.sin(x * f + ph) + A * .35 * Math.sin(x * f * 3.1 + ph * 2);
+            x === a - amp - 4 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          }
+          ctx.strokeStyle = `hsl(${wood.grain[0]} ${wood.grain[1]}% ${wood.grain[2] + dl * .6}% / ${.1 + r() * wood.contrast})`;
+          ctx.lineWidth = .5 + r() * 1.1;
+          ctx.stroke();
+        }
+        if (species === "oak") {
+          for (let k = 0; k < (b - a) / 16; k++) {
+            ctx.fillStyle = `hsl(36 52% 78% / ${.08 + r() * .14})`;
+            ctx.fillRect(a + r() * (b - a), y0 + r() * sh, 3 + r() * 9, .7 + r() * .8);
+          }
+        }
+        ctx.restore();
+
+        if (!first) {
+          ctx.beginPath();
+          trace(zig(a, y0, true), true);
+          ctx.strokeStyle = "rgba(58, 38, 18, .5)";
+          ctx.lineWidth = .8;
+          ctx.stroke();
+        }
+      }
+      if (i > 0) { ctx.fillStyle = "rgba(58, 38, 18, .28)"; ctx.fillRect(0, y0 - .5, w, 1); }
+    }
+
+    const sheen = ctx.createLinearGradient(0, 0, w, h);
+    sheen.addColorStop(0, "rgba(255, 255, 255, .1)");
+    sheen.addColorStop(.5, "rgba(255, 255, 255, 0)");
+    sheen.addColorStop(1, "rgba(0, 0, 0, .08)");
+    ctx.fillStyle = sheen;
+    ctx.fillRect(0, 0, w, h);
+
+    // Drawing break: a long panel shown shortened, as on a shop drawing.
+    if (canvas.dataset.break) {
+      const x0 = w * .6, bw = Math.max(10, w * .03), n = 10, zz = 5;
+      const edge = (x, down) => Array.from({ length: n + 1 }, (_, k) => [x + (k % 2 ? zz : -zz), (down ? k : n - k) * h / n]);
+      ctx.beginPath();
+      trace(edge(x0, true), true);
+      trace(edge(x0 + bw, false), false);
+      ctx.closePath();
+      ctx.fillStyle = getComputedStyle(canvas.parentElement).getPropertyValue("--kiln").trim() || "#1E1A16";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(243, 240, 234, .45)";
+      ctx.lineWidth = 1;
+      [x0, x0 + bw].forEach(x => { ctx.beginPath(); trace(edge(x, true), true); ctx.stroke(); });
+    }
+  }
+
+  const canvases = document.querySelectorAll("canvas[data-species]");
+  if ("ResizeObserver" in window) {
+    const ro = new ResizeObserver(entries => entries.forEach(e => drawPanel(e.target)));
+    canvases.forEach(c => ro.observe(c));
+  } else {
+    canvases.forEach(drawPanel);
+  }
+
+  // Hero controls switch the drawn panel between the four products.
+  const hero = document.getElementById("hero-panel");
+  const heroName = document.getElementById("hero-name");
+  const heroQuote = document.getElementById("hero-quote");
+  const NAMES = { oak: "Mongolian Oak", ash: "Manchurian Ash", full: "Full Stave Panel", finger: "Finger-Jointed Panel" };
+  document.querySelectorAll(".panel-controls button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.species ? "species" : "build";
+      btn.parentElement.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+      hero.dataset[key] = btn.dataset[key];
+      const name = NAMES[hero.dataset.species] + ", " + NAMES[hero.dataset.build];
+      heroName.textContent = name.replace(", ", " · ");
+      hero.setAttribute("aria-label", "Drawing of a " + name.replace(",", ""));
+      heroQuote.dataset.product = name;
+      drawPanel(hero);
+    });
+  });
+
+  // Quote buttons preselect the product in the form.
+  const productSelect = document.getElementById("q-product");
+  document.querySelectorAll("[data-product]").forEach(link => {
+    link.addEventListener("click", () => { productSelect.value = link.dataset.product; });
+  });
+
+  // Application tabs.
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const select = tab => tabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", on);
+    t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+  });
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => select(tab));
+    tab.addEventListener("keydown", e => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      select(next);
+      next.focus();
+      e.preventDefault();
+    });
+  });
+
+  // Concept only: the form doesn't send anywhere.
+  document.getElementById("quote-form").addEventListener("submit", e => {
+    e.preventDefault();
+    document.getElementById("quote-status").hidden = false;
+  });
+})();
+</script>
+</body>
+</html>
