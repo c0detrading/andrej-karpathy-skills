@@ -1,182 +1,67 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Work | VOLSTRO</title>
-<meta name="description" content="A selection of digital experiences created by VOLSTRO, a London digital design studio.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Funnel+Display:wght@400..800&family=Funnel+Sans:wght@400..700&family=Martian+Mono:wght@400..600&display=swap">
+<meta name="description" content="VOLSTRO creates modern, purposeful websites for ambitious businesses. London digital design, ecommerce and website care, working across the UK.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="wrap">
-  <header class="site-header">
-    <a class="wordmark" href="index.html">VOLSTRO</a>
-    <nav class="nav" aria-label="Main">
-      <a class="nav-link" href="work.html" aria-current="page">Work</a>
-      <a class="nav-link" href="services.html">Services</a>
-      <a class="btn btn-solid btn-small" href="contact.html">Start a project</a>
-    </nav>
-  </header>
+<a class="skip" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="nav">
+  <a class="brand" href="index.html" aria-label="VOLSTRO home">VOLSTRO<span class="brand-period">.</span></a>
+  <nav class="navlinks" aria-label="Main navigation">
+    <a href="work.html" aria-current="page">Work</a>
+    <div class="services-menu">
+      <button class="services-trigger" type="button" aria-expanded="false" aria-controls="services-dropdown" data-state="closed" data-active="false">Services <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="services-dropdown" id="services-dropdown" hidden>
+        <a data-slot="navigation-menu-link" href="services.html"><span>Website Design</span><small>Websites &amp; ecommerce</small></a>
+        <a data-slot="navigation-menu-link" href="website-care.html"><span>Website Care</span><small>Ongoing support &amp; updates</small></a>
+      </div>
+    </div>
+    <a class="nav-cta" href="contact.html">Start a project <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main id="main" class="work-page"><span id="top"></span>
+<header class="page-hero"><div class="hero-meta"><span class="meta">SELECTED WORK</span><span class="meta">02 / WORK</span></div><h1><span class="line-mask"><span>Work that</span></span><span class="line-mask"><span>speaks for itself.</span></span></h1><p>A selection of digital experiences created by VOLSTRO.</p></header>
+<div class="work-projects">
+<article class="project project-0 immersive" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">01</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>Pharaoh Blends</h3><p class="project-industry">Premium barbering · London</p><p class="project-desc">A premium digital experience designed around brand positioning, services and appointment conversion.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-barber" type="button" aria-haspopup="dialog" aria-label="View Pharaoh Blends — concept project" data-reveal data-open-project><div class="artwork barber-art" aria-label="Pharaoh Blends concept website composition"><div class="barber-photo" data-parallax><img src="images/barber.jpg" alt="Dark wood and leather barber shop reference interior" loading="lazy"></div><div class="art-nav"><span>PHARAOH BLENDS</span><span>THE STUDIO &nbsp; SERVICES &nbsp; BOOK</span></div><div class="barber-title"><small>PREMIUM BARBERING · LONDON</small><span>PHARAOH<br><i>BLENDS.</i></span></div><div class="art-bottom"><span>A cut above.</span><span>Discover the studio ↗</span></div></div><span class="art-caption"><span>VOLSTRO / 01</span><span>CONCEPT PROJECT</span></span></button>
+</article>
+<article class="project project-1 immersive" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">02</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>24/7 Powerup Electrical</h3><p class="project-industry">Electrical services · London</p><p class="project-desc">A conversion-focused website concept designed around emergency services, trust and quote generation.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-electrical" type="button" aria-haspopup="dialog" aria-label="View 24/7 Powerup Electrical — concept project" data-reveal data-open-project><div class="artwork electrical-art" aria-label="Powerup Electrical concept website composition"><div class="art-nav"><span>POWERUP</span><span>ELECTRICAL SERVICES / LONDON</span></div><div class="electrical-grid"><div class="electric-type"><span class="electric-kicker">WHEN YOU NEED US.</span><strong>POWER.<br>ON.</strong><span class="electric-cta">Request a quote ↗</span></div><div class="electric-photo" data-parallax><img src="images/architecture.jpg" alt="London architectural reference detail" loading="lazy"><strong>24/7</strong></div></div><div class="electrical-footer"><span>EMERGENCY SERVICES</span><span>INSTALLATIONS</span><span>REPAIRS</span></div></div><span class="art-caption"><span>VOLSTRO / 02</span><span>CONCEPT PROJECT</span></span></button>
+</article>
+<article class="project project-2 immersive" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">03</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>London Interior Studio</h3><p class="project-industry">Interior design · London</p><p class="project-desc">A refined portfolio experience designed to showcase projects and establish a premium digital presence.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-interior" type="button" aria-haspopup="dialog" aria-label="View London Interior Studio — concept project" data-reveal data-open-project><div class="artwork interior-art" aria-label="London Interior Studio concept website composition"><div class="interior-photo" data-parallax><img src="images/interior.jpg" alt="Sculptural furniture and natural finishes as an interior design reference" loading="lazy"></div><div class="art-nav"><span>LONDON<br>INTERIOR STUDIO</span><span>SPACES &nbsp; STUDIO &nbsp; ENQUIRE</span></div><div class="interior-title">Spaces to live<br><i>beautifully.</i></div><div class="interior-strip"><span>Considered spaces.<br>A personal perspective.</span><span>EXPLORE THE PORTFOLIO ↗</span></div></div><span class="art-caption"><span>VOLSTRO / 03</span><span>CONCEPT PROJECT</span></span></button>
+</article>
+<article class="project project-3 immersive" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">04</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>North London Plumbing</h3><p class="project-industry">Home services · London</p><p class="project-desc">A local-service website focused on trust, service clarity and generating enquiries.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-plumbing" type="button" aria-haspopup="dialog" aria-label="View North London Plumbing — concept project" data-reveal data-open-project><div class="artwork plumbing-art" aria-label="North London Plumbing concept website composition"><div class="art-nav"><span>NORTH LONDON<br>PLUMBING</span><span>OUR SERVICES &nbsp; GET IN TOUCH</span></div><div class="plumber-grid"><div><small>YOUR LOCAL PLUMBING SERVICE</small><strong>Good hands.<br>Close to home.</strong><span class="plumber-cta">Make an enquiry ↗</span></div><div class="plumber-photo" data-parallax><img src="images/architecture.jpg" alt="London building facade reference" loading="lazy"></div></div><div class="plumber-bottom"><span>01 / REPAIRS</span><span>02 / INSTALLATIONS</span><span>03 / MAINTENANCE</span></div></div><span class="art-caption"><span>VOLSTRO / 04</span><span>CONCEPT PROJECT</span></span></button>
+</article>
 </div>
-
-<main>
-  <section class="page-hero wrap">
-    <h1>Work that speaks for itself.</h1>
-    <p class="lede">A selection of digital experiences created by VOLSTRO.</p>
-  </section>
-
-  <section class="section">
-    <div class="wrap projects">
-
-      <article class="project" id="pharaoh-blends">
-        <div class="mock mock--pharaoh" role="img" aria-label="Concept homepage design for Pharaoh Blends">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-page">
-            <div class="mk-nav"><span class="mk-logo">Pharaoh Blends</span><span class="mk-links"><span>Services</span><span>Prices</span><span>Gallery</span></span><span class="mk-cta">Book now</span></div>
-            <div class="mk-hero">
-              <div>
-                <span class="mk-kicker">Premium barbering · London</span>
-                <span class="mk-title">The art of the <em>premium</em> cut.</span>
-                <span class="mk-text">Precision cuts, fades and beard work in a calm, private studio.</span>
-                <span class="mk-btn">Book an appointment</span>
-              </div>
-              <span class="mk-arch"></span>
-            </div>
-            <div class="mk-strip"><span>Cuts</span><span>Fades</span><span>Beard sculpting</span><span>Hot towel shave</span></div>
-          </div>
-        </div>
-        <div class="project-meta">
-          <div>
-            <div class="project-kicker"><span class="work-num">Project 01</span><span class="tag">Concept project</span></div>
-            <h2>Pharaoh Blends</h2>
-            <p class="project-sector">Premium barbering · London</p>
-          </div>
-          <div>
-            <p class="project-desc">A premium digital experience designed around brand positioning, services and appointment conversion.</p>
-            <a class="arrow-link">View project → <span class="soon">Coming soon</span></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="project" id="powerup-electrical">
-        <div class="mock mock--powerup" role="img" aria-label="Concept homepage design for 24/7 Powerup Electrical">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-page">
-            <div class="mk-alert">24/7 emergency callouts across London</div>
-            <div class="mk-nav"><span class="mk-logo"><b class="mk-bolt"></b>Powerup Electrical</span><span class="mk-links"><span>Services</span><span>Areas</span><span>Contact</span></span><span class="mk-cta">Get a quote</span></div>
-            <div class="mk-hero">
-              <div>
-                <span class="mk-kicker">Electrical services · London</span>
-                <span class="mk-title">Power back on. Day or night.</span>
-                <span class="mk-text">Fast, safe electrical repairs, installations and emergency callouts for homes and businesses.</span>
-                <span class="mk-btns"><span class="mk-btn">Get a free quote</span><span class="mk-btn mk-btn--ghost">Emergency callout</span></span>
-              </div>
-              <span class="mk-panel"><b class="mk-bolt"></b><span class="mk-247">24/7</span></span>
-            </div>
-            <div class="mk-strip"><span>Rewiring</span><span>Fuse boards</span><span>EV chargers</span><span>Lighting</span></div>
-          </div>
-        </div>
-        <div class="project-meta">
-          <div>
-            <div class="project-kicker"><span class="work-num">Project 02</span><span class="tag">Concept project</span></div>
-            <h2>24/7 Powerup Electrical</h2>
-            <p class="project-sector">Electrical services · London</p>
-          </div>
-          <div>
-            <p class="project-desc">A conversion-focused website concept designed around emergency services, trust and quote generation.</p>
-            <a class="arrow-link">View project → <span class="soon">Coming soon</span></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="project" id="london-interior-studio">
-        <div class="mock mock--interior" role="img" aria-label="Concept homepage design for London Interior Studio">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-page">
-            <div class="mk-nav"><span class="mk-logo">London Interior Studio</span><span class="mk-links"><span>Projects</span><span>Studio</span><span>Journal</span><span>Contact</span></span></div>
-            <div class="mk-hero">
-              <div>
-                <span class="mk-kicker">Interior design · London</span>
-                <span class="mk-title">Interiors with a quiet sense of calm.</span>
-                <span class="mk-text">Considered interiors for homes and workspaces across London.</span>
-                <span class="mk-btn">View projects</span>
-              </div>
-              <span class="mk-rooms"><i class="r1"></i><i class="r2"></i><i class="r3"></i></span>
-            </div>
-          </div>
-        </div>
-        <div class="project-meta">
-          <div>
-            <div class="project-kicker"><span class="work-num">Project 03</span><span class="tag">Concept project</span></div>
-            <h2>London Interior Studio</h2>
-            <p class="project-sector">Interior design · London</p>
-          </div>
-          <div>
-            <p class="project-desc">A refined portfolio experience designed to showcase projects and establish a premium digital presence.</p>
-            <a class="arrow-link">View project → <span class="soon">Coming soon</span></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="project" id="north-london-plumbing">
-        <div class="mock mock--plumbing" role="img" aria-label="Concept homepage design for North London Plumbing">
-          <div class="mock-bar"><i></i><i></i><i></i></div>
-          <div class="mock-page">
-            <div class="mk-nav"><span class="mk-logo">North London Plumbing</span><span class="mk-links"><span>Services</span><span>Areas</span><span>About</span></span><span class="mk-cta">Get a quote</span></div>
-            <div class="mk-hero">
-              <div>
-                <span class="mk-kicker">Home services · London</span>
-                <span class="mk-title">Local plumbers you can rely on.</span>
-                <span class="mk-text">Leaks, boilers, bathrooms and repairs across North London, with clear pricing before any work starts.</span>
-                <span class="mk-btns"><span class="mk-btn">Get a free quote</span><span class="mk-btn mk-btn--ghost">Our services</span></span>
-              </div>
-              <span class="mk-form">
-                <span class="mk-form-title">Request a quote</span>
-                <span class="mk-input">Name</span>
-                <span class="mk-input">Postcode</span>
-                <span class="mk-input mk-input--tall">What do you need help with?</span>
-                <span class="mk-btn">Send request</span>
-              </span>
-            </div>
-            <div class="mk-strip"><span>Leaks</span><span>Boilers</span><span>Bathrooms</span><span>Drainage</span></div>
-          </div>
-        </div>
-        <div class="project-meta">
-          <div>
-            <div class="project-kicker"><span class="work-num">Project 04</span><span class="tag">Concept project</span></div>
-            <h2>North London Plumbing</h2>
-            <p class="project-sector">Home services · London</p>
-          </div>
-          <div>
-            <p class="project-desc">A local-service website focused on trust, service clarity and generating enquiries.</p>
-            <a class="arrow-link">View project → <span class="soon">Coming soon</span></a>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
+<section class="final-cta bleed" data-reveal><div class="cta-content"><span class="meta">START A PROJECT</span><h2>Ready to build<br><span>something better?</span></h2><div class="cta-bottom"><p>Tell us about your business and what you’re looking to achieve.</p><a class="link-large" href="contact.html">Start a project <span class="arrow" aria-hidden="true">→</span></a></div></div></section>
 </main>
-
-<footer class="site-footer">
-  <div class="wrap foot">
-    <a class="wordmark" href="index.html">VOLSTRO</a>
-    <div class="foot-meta">
-      <nav class="foot-nav" aria-label="Footer">
-        <a href="work.html">Work</a>
-        <a href="services.html">Services</a>
-        <a href="contact.html">Start a project</a>
-      </nav>
-      <p>London, UK · hello@volstro.co.uk</p>
-      <p>© 2026 VOLSTRO</p>
-    </div>
+<footer class="footer">
+  <div class="footer-top">
+    <a class="brand" href="index.html">VOLSTRO<span class="brand-period">.</span></a>
+    <p>London, UK<br>Working with businesses across the UK</p>
+    <div class="footer-nav"><a href="work.html">Work</a><a href="services.html">Services</a><a href="contact.html">Start a project</a></div>
   </div>
+  <div class="footer-bottom"><span>© <span data-year>2026</span> VOLSTRO</span><span class="meta">LONDON DIGITAL DESIGN STUDIO</span><a href="#top" aria-label="Back to top">Back to top ↑</a></div>
 </footer>
-
+</div>
+<dialog class="project-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+  <div class="dialog-heading"><span class="meta">CONCEPT PROJECT / <span class="dialog-number">01</span></span><h2 data-slot="dialog-title" id="dialog-title"></h2><p data-slot="dialog-description" id="dialog-description"></p></div>
+  <div class="dialog-art"></div>
+  <div class="dialog-footer"><a class="text-link" href="contact.html">Discuss your project <span class="arrow" aria-hidden="true">→</span></a><a href="image-credits.txt" target="_blank" rel="noreferrer">Reference photography credits</a></div>
+  <button class="dialog-close" type="button" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+</dialog>
 <script src="main.js"></script>
 </body>
 </html>

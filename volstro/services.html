@@ -1,235 +1,52 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Services | VOLSTRO</title>
-<meta name="description" content="Website design, ecommerce and website care from VOLSTRO, a London digital design studio. Websites from £350, care plans from £69 a month.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..800&family=Funnel+Sans:wght@400..700&family=Martian+Mono:wght@400..600&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Website Design &amp; Pricing | VOLSTRO</title>
+<meta name="description" content="VOLSTRO creates modern, purposeful websites for ambitious businesses. London digital design, ecommerce and website care, working across the UK.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="wrap">
-  <header class="site-header">
-    <a class="wordmark" href="index.html">VOLSTRO</a>
-    <nav class="nav" aria-label="Main">
-      <a class="nav-link" href="work.html">Work</a>
-      <a class="nav-link" href="services.html" aria-current="page">Services</a>
-      <a class="btn btn-solid btn-small" href="contact.html">Start a project</a>
-    </nav>
-  </header>
-</div>
-
-<main>
-  <section class="page-hero wrap">
-    <h1>Digital design built around your business.</h1>
-    <p class="lede">From focused business websites to complete ecommerce experiences, VOLSTRO creates digital solutions designed around your goals.</p>
-  </section>
-
-  <section class="section" id="website-design">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Website design</h2>
-      </div>
-      <div class="pkgs">
-        <article class="pkg">
-          <div>
-            <h3>Starter</h3>
-            <p class="pkg-price"><small class="pre">from</small>£350</p>
-            <p class="pkg-lede">For businesses that need a professional online presence.</p>
-          </div>
-          <ul class="ticks">
-            <li>1–4 pages</li>
-            <li>Custom visual design</li>
-            <li>Responsive mobile design</li>
-            <li>Contact links/forms</li>
-            <li>Social links</li>
-            <li>Basic SEO setup</li>
-            <li>Domain connection</li>
-            <li>2 revision rounds</li>
-            <li>Website launch</li>
-          </ul>
-          <a class="btn btn-solid" href="contact.html">Start a project</a>
-        </article>
-
-        <article class="pkg is-featured">
-          <div>
-            <h3>Professional</h3>
-            <p class="pkg-price"><small class="pre">from</small>£650</p>
-            <p class="pkg-lede">For businesses ready for a more complete digital experience.</p>
-          </div>
-          <ul class="ticks">
-            <li>1–7 pages</li>
-            <li>Custom UX/UI</li>
-            <li>Desktop, tablet &amp; mobile</li>
-            <li>Professional responsive layouts</li>
-            <li>Google Maps</li>
-            <li>Contact/enquiry functionality</li>
-            <li>Social integration</li>
-            <li>Basic SEO</li>
-            <li>2–4 revision rounds</li>
-            <li>Website launch</li>
-          </ul>
-          <a class="btn btn-solid" href="contact.html">Start a project</a>
-        </article>
-
-        <article class="pkg">
-          <div>
-            <h3>Premium</h3>
-            <p class="pkg-price"><small class="pre">from</small>£1,000</p>
-            <p class="pkg-lede">For businesses requiring a more advanced website.</p>
-          </div>
-          <ul class="ticks">
-            <li>7+ pages</li>
-            <li>Bespoke UX/UI</li>
-            <li>Advanced layouts</li>
-            <li>Interactive elements</li>
-            <li>Animations</li>
-            <li>CMS functionality where required</li>
-            <li>Advanced integrations</li>
-            <li>Enhanced SEO foundations</li>
-            <li>Extended design process</li>
-            <li>Launch support</li>
-          </ul>
-          <a class="btn btn-solid" href="contact.html">Discuss your project</a>
-        </article>
+<a class="skip" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="nav">
+  <a class="brand" href="index.html" aria-label="VOLSTRO home">VOLSTRO<span class="brand-period">.</span></a>
+  <nav class="navlinks" aria-label="Main navigation">
+    <a href="work.html">Work</a>
+    <div class="services-menu">
+      <button class="services-trigger" type="button" aria-expanded="false" aria-controls="services-dropdown" data-state="closed" data-active="true">Services <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="services-dropdown" id="services-dropdown" hidden>
+        <a data-slot="navigation-menu-link" href="services.html" data-active="true" aria-current="page"><span>Website Design</span><small>Websites &amp; ecommerce</small></a>
+        <a data-slot="navigation-menu-link" href="website-care.html"><span>Website Care</span><small>Ongoing support &amp; updates</small></a>
       </div>
     </div>
-  </section>
-
-  <section class="section" id="ecommerce">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Ecommerce</h2>
-      </div>
-      <div class="feature">
-        <div>
-          <p class="pkg-price"><small class="pre">from</small>£1,300</p>
-          <p class="pkg-lede">Ecommerce websites designed around your products, customers and sales journey.</p>
-          <p class="note">Ecommerce projects are quoted individually according to scope and functionality.</p>
-        </div>
-        <div>
-          <p class="eyebrow">Includes</p>
-          <ul class="ticks">
-            <li>Shopify setup</li>
-            <li>Custom design</li>
-            <li>Product structure</li>
-            <li>Category layouts</li>
-            <li>Responsive design</li>
-            <li>Checkout configuration</li>
-            <li>Payment setup</li>
-            <li>Essential ecommerce functionality</li>
-            <li>Launch support</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="care">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Website care</h2>
-      </div>
-      <div class="plans">
-        <article class="pkg">
-          <div>
-            <h3>Care</h3>
-            <p class="pkg-price">£69<small class="per">/month</small></p>
-          </div>
-          <ul class="ticks">
-            <li>Hosting/platform management</li>
-            <li>Basic analytics</li>
-            <li>Minor text changes</li>
-            <li>Minor image changes</li>
-            <li>Technical support</li>
-            <li>Troubleshooting</li>
-            <li>Email support</li>
-          </ul>
-        </article>
-
-        <article class="pkg">
-          <div>
-            <h3>Care+</h3>
-            <p class="pkg-price">£149<small class="per">/month</small></p>
-          </div>
-          <ul class="ticks">
-            <li class="carry">Everything in Care, plus:</li>
-            <li>More frequent website changes</li>
-            <li>Enhanced analytics</li>
-            <li>New sections</li>
-            <li>Landing page updates</li>
-            <li>CTA updates</li>
-            <li>Ongoing content support</li>
-            <li>Priority support</li>
-          </ul>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="additional-services">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Additional services</h2>
-      </div>
-      <ul class="invoice">
-        <li><span class="inv-name">Domain connection</span><span class="inv-lead"></span><span class="inv-amt">£15</span></li>
-        <li><span class="inv-name">Additional revision</span><span class="inv-lead"></span><span class="inv-amt">£25</span></li>
-        <li><span class="inv-name">Booking/calendar integration</span><span class="inv-lead"></span><span class="inv-amt"><small>from</small> £100</span></li>
-        <li><span class="inv-name">Additional pages</span><span class="inv-lead"></span><span class="inv-amt"><small>Quoted individually</small></span></li>
-        <li><span class="inv-name">Copywriting</span><span class="inv-lead"></span><span class="inv-amt"><small>Quoted individually</small></span></li>
-        <li><span class="inv-name">Advanced SEO</span><span class="inv-lead"></span><span class="inv-amt"><small>Quoted individually</small></span></li>
-        <li><span class="inv-name">Additional functionality/integrations</span><span class="inv-lead"></span><span class="inv-amt"><small>Quoted individually</small></span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="section" id="faq">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>FAQ</h2>
-      </div>
-      <dl class="faq">
-        <div class="faq-item">
-          <dt>How long does a website take?</dt>
-          <dd>Timelines depend on the size and complexity of the project. We'll agree a timeline before work begins.</dd>
-        </div>
-        <div class="faq-item">
-          <dt>Do you provide hosting?</dt>
-          <dd>Yes. Hosting/platform management can be included through VOLSTRO Care.</dd>
-        </div>
-        <div class="faq-item">
-          <dt>Can I update my website myself?</dt>
-          <dd>Depending on the platform, appropriate editing access can be provided. Alternatively, VOLSTRO can manage updates for you.</dd>
-        </div>
-        <div class="faq-item">
-          <dt>Do you work outside London?</dt>
-          <dd>Yes. VOLSTRO is based in London and works with businesses across the UK.</dd>
-        </div>
-      </dl>
-    </div>
-  </section>
+    <a class="nav-cta" href="contact.html">Start a project <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main id="main" class="services-page"><span id="top"></span>
+<header class="page-hero"><div class="hero-meta"><span class="meta">WEBSITE DESIGN &amp; PRICING</span><span class="meta">03 / SERVICES</span></div><h1><span class="line-mask"><span>Digital design built</span></span><span class="line-mask"><span>around your business.</span></span></h1><p>From focused business websites to complete ecommerce experiences, VOLSTRO creates digital solutions designed around your goals.</p></header>
+<nav class="services-switch" aria-label="Choose a service"><span class="meta">EXPLORE SERVICES</span><div><a href="services.html" aria-current="page"><span class="switch-number" aria-hidden="true">01</span>Website Design</a><a href="website-care.html"><span class="switch-number" aria-hidden="true">02</span>Website Care</a></div></nav>
+<section class="section pricing-section"><div class="section-heading"><span class="meta">01 / WEBSITE DESIGN</span><h2>Website Design</h2></div><div class="package-index">
+<article class="package-row grid" data-rule><div class="package-overview"><div class="package-title" data-reveal><span class="meta">01</span><h3>Starter</h3><div class="price"><small>from </small>£350</div></div><div class="package-summary" data-reveal><p>For businesses that need a professional online presence.</p><a href="contact.html?service=New%20website" class="text-link">Start a project <span class="arrow" aria-hidden="true">→</span></a></div></div><div class="package-inclusions" data-reveal><span class="meta">INCLUDED</span><ul class="feature-list"><li>1–4 pages</li><li>Custom visual design</li><li>Responsive mobile design</li><li>Contact links/forms</li><li>Social links</li><li>Basic SEO setup</li><li>Domain connection</li><li>2 revision rounds</li><li>Website launch</li></ul></div></article>
+<article class="package-row grid" data-rule><div class="package-overview"><div class="package-title" data-reveal><span class="meta">02</span><h3>Professional</h3><div class="price"><small>from </small>£650</div></div><div class="package-summary" data-reveal><p>For businesses ready for a more complete digital experience.</p><a href="contact.html?service=New%20website" class="text-link">Start a project <span class="arrow" aria-hidden="true">→</span></a></div></div><div class="package-inclusions" data-reveal><span class="meta">INCLUDED</span><ul class="feature-list"><li>1–7 pages</li><li>Custom UX/UI</li><li>Desktop, tablet &amp; mobile</li><li>Professional responsive layouts</li><li>Google Maps</li><li>Contact/enquiry functionality</li><li>Social integration</li><li>Basic SEO</li><li>2–4 revision rounds</li><li>Website launch</li></ul></div></article>
+<article class="package-row grid" data-rule><div class="package-overview"><div class="package-title" data-reveal><span class="meta">03</span><h3>Premium</h3><div class="price"><small>from </small>£1,000</div></div><div class="package-summary" data-reveal><p>For businesses requiring a more advanced website.</p><a href="contact.html?service=New%20website" class="text-link">Discuss your project <span class="arrow" aria-hidden="true">→</span></a></div></div><div class="package-inclusions" data-reveal><span class="meta">INCLUDED</span><ul class="feature-list"><li>7+ pages</li><li>Bespoke UX/UI</li><li>Advanced layouts</li><li>Interactive elements</li><li>Animations</li><li>CMS functionality where required</li><li>Advanced integrations</li><li>Enhanced SEO foundations</li><li>Extended design process</li><li>Launch support</li></ul></div></article>
+</div></section>
+<section class="ecommerce-section bleed"><div class="section-inner grid"><div class="ecommerce-intro" data-reveal><span class="meta">02 / ECOMMERCE</span><h2>Ecommerce</h2><div class="price"><small>From </small>£1,300</div><p>Ecommerce websites designed around your products, customers and sales journey.</p><a class="text-link" href="contact.html?service=Ecommerce">Discuss your project <span class="arrow" aria-hidden="true">→</span></a></div><div class="ecommerce-spec" data-reveal><span class="meta">INCLUDES</span><ul class="feature-list"><li>Shopify setup</li><li>Custom design</li><li>Product structure</li><li>Category layouts</li><li>Responsive design</li><li>Checkout configuration</li><li>Payment setup</li><li>Essential ecommerce functionality</li><li>Launch support</li></ul><p>Ecommerce projects are quoted individually according to scope and functionality.</p></div></div></section>
+<section class="section additional-section grid"><div class="index-title"><span class="meta">03 / ADDITIONAL SERVICES</span><h2>Additional<br>services</h2></div><div class="extras"><div class="extra" data-rule><span class="meta">01</span><span>Domain connection</span><span>£15</span></div><div class="extra" data-rule><span class="meta">02</span><span>Additional revision</span><span>£25</span></div><div class="extra" data-rule><span class="meta">03</span><span>Booking/calendar integration</span><span>from £100</span></div><div class="extra" data-rule><span class="meta">04</span><span>Additional pages</span><span>Quoted individually</span></div><div class="extra" data-rule><span class="meta">05</span><span>Copywriting</span><span>Quoted individually</span></div><div class="extra" data-rule><span class="meta">06</span><span>Advanced SEO</span><span>Quoted individually</span></div><div class="extra" data-rule><span class="meta">07</span><span>Additional functionality/integrations</span><span>Quoted individually</span></div></div></section>
+<section class="section faq-section grid"><div class="index-title"><span class="meta">04 / FAQ</span><h2>Questions<br>&amp; answers</h2></div><div class="faq" data-slot="accordion"><details data-slot="accordion-item" name="faq"><summary data-slot="accordion-trigger">How long does a website take?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div data-slot="accordion-content"><div>Timelines depend on the size and complexity of the project. We’ll agree a timeline before work begins.</div></div></details><details data-slot="accordion-item" name="faq"><summary data-slot="accordion-trigger">Do you provide hosting?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div data-slot="accordion-content"><div>Yes. Hosting/platform management can be included through VOLSTRO Care.</div></div></details><details data-slot="accordion-item" name="faq"><summary data-slot="accordion-trigger">Can I update my website myself?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div data-slot="accordion-content"><div>Depending on the platform, appropriate editing access can be provided. Alternatively, VOLSTRO can manage updates for you.</div></div></details><details data-slot="accordion-item" name="faq"><summary data-slot="accordion-trigger">Do you work outside London?<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div data-slot="accordion-content"><div>Yes. VOLSTRO is based in London and works with businesses across the UK.</div></div></details></div></section>
+<section class="final-cta bleed" data-reveal><div class="cta-content"><span class="meta">START A PROJECT</span><h2>Ready to build<br><span>something better?</span></h2><div class="cta-bottom"><p>Tell us about your business and what you’re looking to achieve.</p><a class="link-large" href="contact.html">Start a project <span class="arrow" aria-hidden="true">→</span></a></div></div></section>
 </main>
-
-<footer class="site-footer">
-  <div class="wrap foot">
-    <a class="wordmark" href="index.html">VOLSTRO</a>
-    <div class="foot-meta">
-      <nav class="foot-nav" aria-label="Footer">
-        <a href="work.html">Work</a>
-        <a href="services.html">Services</a>
-        <a href="contact.html">Start a project</a>
-      </nav>
-      <p>London, UK · hello@volstro.co.uk</p>
-      <p>© 2026 VOLSTRO</p>
-    </div>
+<footer class="footer">
+  <div class="footer-top">
+    <a class="brand" href="index.html">VOLSTRO<span class="brand-period">.</span></a>
+    <p>London, UK<br>Working with businesses across the UK</p>
+    <div class="footer-nav"><a href="work.html">Work</a><a href="services.html">Services</a><a href="contact.html">Start a project</a></div>
   </div>
+  <div class="footer-bottom"><span>© <span data-year>2026</span> VOLSTRO</span><span class="meta">LONDON DIGITAL DESIGN STUDIO</span><a href="#top" aria-label="Back to top">Back to top ↑</a></div>
 </footer>
-
+</div>
 <script src="main.js"></script>
 </body>
 </html>

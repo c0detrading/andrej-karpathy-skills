@@ -1,27 +1,38 @@
 # VOLSTRO
 
-Four-page website for VOLSTRO, a London digital design studio. Plain HTML, CSS and JavaScript: no build step, and the only outside dependency is Google Fonts.
-
-| File | Page |
-|---|---|
-| `index.html` | Home: hero, the problem, services preview, selected work, process, why VOLSTRO, final call to action |
-| `services.html` | Website design packages, ecommerce, website care, additional services, FAQ |
-| `work.html` | The four projects, each with a large website mockup |
-| `contact.html` | Enquiry form and contact details |
-| `styles.css` | Shared styles for every page |
-| `main.js` | Home hero demo, the contact form and the copy-email button |
+The VOLSTRO website as plain HTML, CSS and JavaScript. It's a static version of the React/Next.js site exported from ChatGPT, with the same design, content and pages. It needs no Node.js, no build step, no Cloudflare and no database.
 
 ## View it
 
-Open `index.html` in a browser.
+Open `index.html` in a browser. Keep all the files and folders together.
+
+## Put it online
+
+Upload the whole `volstro` folder to any static host: Netlify (drag the folder onto app.netlify.com/drop), Vercel, Cloudflare Pages, GitHub Pages, or a regular `public_html` upload.
+
+## Files
+
+| File | What it is |
+|---|---|
+| `index.html` | Home |
+| `work.html` | Work: the four concept projects |
+| `services.html` | Website Design and pricing |
+| `website-care.html` | Website Care plans |
+| `contact.html` | Start a project: enquiry form |
+| `styles.css` | All styling. Sections 1–3 are the original site's fonts and styles, unchanged; section 4 styles the menu, FAQ, form fields and project pop-up |
+| `main.js` | Scroll animations, services menu, FAQ, project pop-up and the enquiry form |
+| `fonts/` | Space Grotesk, self-hosted |
+| `images/` | Concept project photography |
+| `favicon.svg`, `image-credits.txt` | Site icon and photo credits |
+
+## Differences from the original
+
+- **Enquiry form.** The original saved enquiries to a Cloudflare D1 database (and sent no email). A static site has no server, so the form now opens the visitor's email app with the enquiry filled in, addressed to hello@volstro.co.uk. To receive submissions directly instead, connect a form service such as Formspree, or Netlify Forms if you host on Netlify.
+- **Project pop-up fixed.** In the original, the "View project" pop-up was squashed into narrow columns, because the site's own `.grid` class clashed with a Tailwind class on the pop-up. It now shows the project properly.
+- **Current page in the Services menu** is now highlighted, as the original CSS intended.
+- Links use file names (`services.html`, `website-care.html`) instead of `/services` and `/services/website-care`, so the site also works when opened straight from a folder.
 
 ## Before going live
 
-- **Email.** The site uses `hello@volstro.co.uk`. It won't receive mail until the domain and mailbox are set up. The address appears in every page footer, on the contact page and in the `EMAIL` constant in `main.js`.
-- **Contact form.** There's no backend yet, so the form opens the visitor's email app with the enquiry filled in. To receive enquiries directly, point the form at a form service such as Formspree or Netlify Forms.
-- **Instagram and LinkedIn** on the contact page are placeholders with no links. Add each profile URL as the `href` on its `<a>` in `contact.html`.
-- **Work.** All four projects are concepts and are labelled "Concept project". Their "View project" links show "Coming soon" until they have somewhere to go: add an `href` to each `arrow-link` in `work.html` and delete its `<span class="soon">`. When you have real clients, replace the concepts with client name, industry, challenge, solution and result.
-
-## Hosting
-
-Any static host works: Netlify, Vercel, GitHub Pages or Cloudflare Pages. Upload the whole `volstro` folder.
+- The concept projects use reference photos from other businesses' websites (listed in `image-credits.txt`). Replace them with your own or licensed images before launch.
+- Instagram and LinkedIn are marked "Coming soon" on the contact page.

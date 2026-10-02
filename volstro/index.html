@@ -1,245 +1,72 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>VOLSTRO | London digital design studio</title>
-<meta name="description" content="VOLSTRO creates modern, purposeful websites for ambitious businesses in London and across the UK.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Funnel+Display:wght@400..800&family=Funnel+Sans:wght@400..700&family=Martian+Mono:wght@400..600&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VOLSTRO — London Digital Design Studio</title>
+<meta name="description" content="VOLSTRO creates modern, purposeful websites for ambitious businesses. London digital design, ecommerce and website care, working across the UK.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="band">
-  <div class="wrap">
-    <header class="site-header">
-      <a class="wordmark" href="index.html" aria-current="page">VOLSTRO</a>
-      <nav class="nav" aria-label="Main">
-        <a class="nav-link" href="work.html">Work</a>
-        <a class="nav-link" href="services.html">Services</a>
-        <a class="btn btn-solid btn-small" href="contact.html">Start a project</a>
-      </nav>
-    </header>
-
-    <section class="hero">
-      <div>
-        <p class="eyebrow">London digital design studio</p>
-        <h1>Websites designed to move your business forward.</h1>
-        <p class="hero-lede">VOLSTRO creates modern, purposeful websites for ambitious businesses — combining thoughtful design, user experience and intelligent technology to create digital experiences that look exceptional and work hard.</p>
-        <div class="hero-actions">
-          <a class="btn btn-solid" href="contact.html">Start a project</a>
-          <a class="btn btn-line" href="work.html">View our work</a>
-        </div>
-        <p class="hero-note">London, UK · Working with businesses across the UK</p>
-      </div>
-
-      <div class="demo" aria-hidden="true">
-        <div class="demo-track">
-          <div class="demo-frame" data-mode="desktop">
-            <div class="demo-bar"><i></i><i></i><i></i><span class="demo-width">1440 px</span></div>
-            <div class="demo-page">
-              <div class="d-nav"><span class="d-logo"></span><span class="d-links"><i></i><i></i><i></i></span><span class="d-burger"></span></div>
-              <div class="d-hero">
-                <div class="d-copy"><span class="d-h"></span><span class="d-h short"></span><span class="d-p"></span><span class="d-p short"></span><span class="d-btn"></span></div>
-                <div class="d-img"></div>
-              </div>
-              <div class="d-cards"><i></i><i></i><i></i></div>
-            </div>
-          </div>
-        </div>
-        <div class="demo-legend"><span data-mode="desktop" class="is-on">Desktop</span><span data-mode="tablet">Tablet</span><span data-mode="mobile">Mobile</span></div>
-      </div>
-    </section>
-  </div>
-</div>
-
-<main>
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Your website should do more than exist.</h2>
-        <p>Your website is often the first interaction someone has with your business. We design digital experiences that make that interaction count — helping businesses communicate clearly, build trust and turn visitors into enquiries, bookings and customers.</p>
-      </div>
-      <div class="points">
-        <article class="point">
-          <p class="eyebrow">01 — Design</p>
-          <h3>Built around your business</h3>
-          <p>No generic templates. Every website is designed around your brand, audience and objectives.</p>
-        </article>
-        <article class="point">
-          <p class="eyebrow">02 — Experience</p>
-          <h3>Made for real people</h3>
-          <p>Clear structure, intuitive navigation and responsive design make it easy for customers to find what they need.</p>
-        </article>
-        <article class="point">
-          <p class="eyebrow">03 — Purpose</p>
-          <h3>Every element has a reason</h3>
-          <p>From the first impression to the final call-to-action, we design around what you want your website to achieve.</p>
-        </article>
+<a class="skip" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="nav">
+  <a class="brand" href="index.html" aria-label="VOLSTRO home">VOLSTRO<span class="brand-period">.</span></a>
+  <nav class="navlinks" aria-label="Main navigation">
+    <a href="work.html">Work</a>
+    <div class="services-menu">
+      <button class="services-trigger" type="button" aria-expanded="false" aria-controls="services-dropdown" data-state="closed" data-active="false">Services <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="services-dropdown" id="services-dropdown" hidden>
+        <a data-slot="navigation-menu-link" href="services.html"><span>Website Design</span><small>Websites &amp; ecommerce</small></a>
+        <a data-slot="navigation-menu-link" href="website-care.html"><span>Website Care</span><small>Ongoing support &amp; updates</small></a>
       </div>
     </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>What we do</h2>
-      </div>
-      <div class="services">
-        <article class="service">
-          <h3>Website Design</h3>
-          <p>Custom websites designed around your business.</p>
-        </article>
-        <article class="service">
-          <h3>Ecommerce</h3>
-          <p>Online stores designed to make browsing and purchasing simple.</p>
-        </article>
-        <article class="service">
-          <h3>Website Care</h3>
-          <p>Ongoing support, maintenance and updates.</p>
-        </article>
-        <article class="service">
-          <h3>Digital Growth</h3>
-          <p>Landing pages, content updates and ongoing optimisation.</p>
-        </article>
-      </div>
-      <div class="section-foot"><a class="btn btn-line" href="services.html">Explore services →</a></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Selected work</h2>
-      </div>
-      <div class="work-grid">
-        <a class="work-card" href="work.html#pharaoh-blends">
-          <div class="mock mock--pharaoh" role="img" aria-label="Concept homepage design for Pharaoh Blends">
-            <div class="mock-bar"><i></i><i></i><i></i></div>
-            <div class="mock-page">
-              <div class="mk-nav"><span class="mk-logo">Pharaoh Blends</span><span class="mk-links"><span>Services</span><span>Prices</span><span>Gallery</span></span><span class="mk-cta">Book now</span></div>
-              <div class="mk-hero">
-                <div>
-                  <span class="mk-kicker">Premium barbering · London</span>
-                  <span class="mk-title">The art of the <em>premium</em> cut.</span>
-                  <span class="mk-text">Precision cuts, fades and beard work in a calm, private studio.</span>
-                  <span class="mk-btn">Book an appointment</span>
-                </div>
-                <span class="mk-arch"></span>
-              </div>
-              <div class="mk-strip"><span>Cuts</span><span>Fades</span><span>Beard sculpting</span><span>Hot towel shave</span></div>
-            </div>
-          </div>
-          <div>
-            <div class="work-top"><span class="work-num">01</span><span class="tag">Concept project</span></div>
-            <h3>Pharaoh Blends</h3>
-            <p class="work-sector">Premium barbering · London</p>
-          </div>
-        </a>
-
-        <a class="work-card" href="work.html#powerup-electrical">
-          <div class="mock mock--powerup" role="img" aria-label="Concept homepage design for 24/7 Powerup Electrical">
-            <div class="mock-bar"><i></i><i></i><i></i></div>
-            <div class="mock-page">
-              <div class="mk-alert">24/7 emergency callouts across London</div>
-              <div class="mk-nav"><span class="mk-logo"><b class="mk-bolt"></b>Powerup Electrical</span><span class="mk-links"><span>Services</span><span>Areas</span><span>Contact</span></span><span class="mk-cta">Get a quote</span></div>
-              <div class="mk-hero">
-                <div>
-                  <span class="mk-kicker">Electrical services · London</span>
-                  <span class="mk-title">Power back on. Day or night.</span>
-                  <span class="mk-text">Fast, safe electrical repairs, installations and emergency callouts for homes and businesses.</span>
-                  <span class="mk-btns"><span class="mk-btn">Get a free quote</span><span class="mk-btn mk-btn--ghost">Emergency callout</span></span>
-                </div>
-                <span class="mk-panel"><b class="mk-bolt"></b><span class="mk-247">24/7</span></span>
-              </div>
-              <div class="mk-strip"><span>Rewiring</span><span>Fuse boards</span><span>EV chargers</span><span>Lighting</span></div>
-            </div>
-          </div>
-          <div>
-            <div class="work-top"><span class="work-num">02</span><span class="tag">Concept project</span></div>
-            <h3>24/7 Powerup Electrical</h3>
-            <p class="work-sector">Electrical services · London</p>
-          </div>
-        </a>
-
-        <a class="work-card" href="work.html#london-interior-studio">
-          <div class="mock mock--interior" role="img" aria-label="Concept homepage design for London Interior Studio">
-            <div class="mock-bar"><i></i><i></i><i></i></div>
-            <div class="mock-page">
-              <div class="mk-nav"><span class="mk-logo">London Interior Studio</span><span class="mk-links"><span>Projects</span><span>Studio</span><span>Journal</span><span>Contact</span></span></div>
-              <div class="mk-hero">
-                <div>
-                  <span class="mk-kicker">Interior design · London</span>
-                  <span class="mk-title">Interiors with a quiet sense of calm.</span>
-                  <span class="mk-text">Considered interiors for homes and workspaces across London.</span>
-                  <span class="mk-btn">View projects</span>
-                </div>
-                <span class="mk-rooms"><i class="r1"></i><i class="r2"></i><i class="r3"></i></span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="work-top"><span class="work-num">03</span><span class="tag">Concept project</span></div>
-            <h3>London Interior Studio</h3>
-            <p class="work-sector">Interior design · London</p>
-          </div>
-        </a>
-      </div>
-      <div class="section-foot"><a class="btn btn-line" href="work.html">View all work →</a></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>From idea to launch.</h2>
-      </div>
-      <ol class="steps">
-        <li class="step"><span class="step-num">01</span><h3>Discover</h3><p>Understand your business, audience and objectives.</p></li>
-        <li class="step"><span class="step-num">02</span><h3>Design</h3><p>Create the visual direction and user experience.</p></li>
-        <li class="step"><span class="step-num">03</span><h3>Build</h3><p>Develop the website across desktop, tablet and mobile.</p></li>
-        <li class="step"><span class="step-num">04</span><h3>Launch</h3><p>Test, connect your domain and take your website live.</p></li>
-        <li class="step"><span class="step-num">05</span><h3>Support</h3><p>Continue with <a href="services.html#care">VOLSTRO Care</a> if you need ongoing support.</p></li>
-      </ol>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap why">
-      <div>
-        <h2>Designed with purpose. Built with intelligence.</h2>
-        <p>We combine professional digital design with modern technology and AI-assisted workflows to create high-quality websites efficiently.</p>
-      </div>
-      <p class="pull">Technology helps us move faster. Design thinking determines where we're going.</p>
-    </div>
-  </section>
-
-  <section class="band cta">
-    <div class="wrap cta-inner">
-      <h2>Ready to build something better?</h2>
-      <p>Tell us about your business and what you're looking to achieve.</p>
-      <a class="btn btn-solid" href="contact.html">Start a project</a>
-    </div>
-  </section>
+    <a class="nav-cta" href="contact.html">Start a project <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main id="main"><span id="top"></span>
+<section class="home-hero">
+  <div class="hero-meta"><span class="meta">LONDON DIGITAL DESIGN STUDIO</span><span class="meta">01 / HOME</span></div>
+  <h1 aria-label="Websites designed to move your business forward."><span class="line-mask"><span>Websites designed</span></span><span class="line-mask"><span>to <em>move</em> your business</span></span><span class="line-mask"><span>forward.</span></span></h1>
+  <div class="hero-lower grid"><div class="hero-actions"><a class="button primary" href="contact.html">Start a project <span class="arrow" aria-hidden="true">→</span></a><a class="text-link" href="work.html">View our work <span class="arrow" aria-hidden="true">→</span></a></div><p>VOLSTRO creates modern, purposeful websites for ambitious businesses — combining thoughtful design, user experience and intelligent technology to create digital experiences that look exceptional and work hard.</p></div>
+  <div class="hero-foot" data-rule><span class="meta">LONDON, UK</span><span>Working with businesses across the UK</span><span class="meta" aria-hidden="true">SCROLL TO EXPLORE ↓</span></div>
+</section>
+<section class="problem-section bleed"><div class="section-inner grid"><span class="meta section-label">01 / WHY IT MATTERS</span><h2 data-reveal>Your website<br>should do more<br>than <span class="serif">exist.</span></h2><p class="problem-intro" data-reveal>Your website is often the first interaction someone has with your business. We design digital experiences that make that interaction count — helping businesses communicate clearly, build trust and turn visitors into enquiries, bookings and customers.</p><div class="principles"><article data-reveal data-rule style="--stagger:0ms"><span class="meta">01 — DESIGN</span><h3>Built around your business</h3><p>No generic templates. Every website is designed around your brand, audience and objectives.</p></article><article data-reveal data-rule style="--stagger:90ms"><span class="meta">02 — EXPERIENCE</span><h3>Made for real people</h3><p>Clear structure, intuitive navigation and responsive design make it easy for customers to find what they need.</p></article><article data-reveal data-rule style="--stagger:180ms"><span class="meta">03 — PURPOSE</span><h3>Every element has a reason</h3><p>From the first impression to the final call-to-action, we design around what you want your website to achieve.</p></article></div></div></section>
+<section class="section services-preview"><div class="section-heading" data-reveal><span class="meta">02 / SERVICES</span><h2>What we do</h2><a class="text-link" href="services.html">Explore services <span class="arrow" aria-hidden="true">→</span></a></div><div class="service-rows"><a class="service-row" href="services.html" data-rule><span class="meta">01</span><h3>Website Design</h3><p>Custom websites designed around your business.</p><span class="arrow" aria-hidden="true">→</span></a><a class="service-row" href="services.html" data-rule><span class="meta">02</span><h3>Ecommerce</h3><p>Online stores designed to make browsing and purchasing simple.</p><span class="arrow" aria-hidden="true">→</span></a><a class="service-row" href="website-care.html" data-rule><span class="meta">03</span><h3>Website Care</h3><p>Ongoing support, maintenance and updates.</p><span class="arrow" aria-hidden="true">→</span></a><a class="service-row" href="website-care.html" data-rule><span class="meta">04</span><h3>Digital Growth</h3><p>Landing pages, content updates and ongoing optimisation.</p><span class="arrow" aria-hidden="true">→</span></a></div></section>
+<section class="section selected-section"><div class="section-heading" data-reveal><span class="meta">03 / SELECTED WORK</span><h2>Selected work</h2><span class="meta">INDEPENDENT CONCEPTS</span></div><div class="projects">
+<article class="project project-0" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">01</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>Pharaoh Blends</h3><p class="project-industry">Premium barbering · London</p><p class="project-desc">A premium digital experience designed around brand positioning, services and appointment conversion.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-barber" type="button" aria-haspopup="dialog" aria-label="View Pharaoh Blends — concept project" data-reveal data-open-project><div class="artwork barber-art" aria-label="Pharaoh Blends concept website composition"><div class="barber-photo" data-parallax><img src="images/barber.jpg" alt="Dark wood and leather barber shop reference interior" loading="lazy"></div><div class="art-nav"><span>PHARAOH BLENDS</span><span>THE STUDIO &nbsp; SERVICES &nbsp; BOOK</span></div><div class="barber-title"><small>PREMIUM BARBERING · LONDON</small><span>PHARAOH<br><i>BLENDS.</i></span></div><div class="art-bottom"><span>A cut above.</span><span>Discover the studio ↗</span></div></div><span class="art-caption"><span>VOLSTRO / 01</span><span>CONCEPT PROJECT</span></span></button>
+</article>
+<article class="project project-1" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">02</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>24/7 Powerup Electrical</h3><p class="project-industry">Electrical services · London</p><p class="project-desc">A conversion-focused website concept designed around emergency services, trust and quote generation.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-electrical" type="button" aria-haspopup="dialog" aria-label="View 24/7 Powerup Electrical — concept project" data-reveal data-open-project><div class="artwork electrical-art" aria-label="Powerup Electrical concept website composition"><div class="art-nav"><span>POWERUP</span><span>ELECTRICAL SERVICES / LONDON</span></div><div class="electrical-grid"><div class="electric-type"><span class="electric-kicker">WHEN YOU NEED US.</span><strong>POWER.<br>ON.</strong><span class="electric-cta">Request a quote ↗</span></div><div class="electric-photo" data-parallax><img src="images/architecture.jpg" alt="London architectural reference detail" loading="lazy"><strong>24/7</strong></div></div><div class="electrical-footer"><span>EMERGENCY SERVICES</span><span>INSTALLATIONS</span><span>REPAIRS</span></div></div><span class="art-caption"><span>VOLSTRO / 02</span><span>CONCEPT PROJECT</span></span></button>
+</article>
+<article class="project project-2" data-rule>
+  <div class="project-copy" data-reveal><span class="project-number">03</span><div class="project-info"><span class="meta concept">CONCEPT PROJECT</span><h3>London Interior Studio</h3><p class="project-industry">Interior design · London</p><p class="project-desc">A refined portfolio experience designed to showcase projects and establish a premium digital presence.</p><button class="text-link" type="button" aria-haspopup="dialog" data-open-project>View project <span class="arrow" aria-hidden="true">→</span></button></div></div>
+  <button class="project-art art-interior" type="button" aria-haspopup="dialog" aria-label="View London Interior Studio — concept project" data-reveal data-open-project><div class="artwork interior-art" aria-label="London Interior Studio concept website composition"><div class="interior-photo" data-parallax><img src="images/interior.jpg" alt="Sculptural furniture and natural finishes as an interior design reference" loading="lazy"></div><div class="art-nav"><span>LONDON<br>INTERIOR STUDIO</span><span>SPACES &nbsp; STUDIO &nbsp; ENQUIRE</span></div><div class="interior-title">Spaces to live<br><i>beautifully.</i></div><div class="interior-strip"><span>Considered spaces.<br>A personal perspective.</span><span>EXPLORE THE PORTFOLIO ↗</span></div></div><span class="art-caption"><span>VOLSTRO / 03</span><span>CONCEPT PROJECT</span></span></button>
+</article>
+</div><div class="section-end"><a class="text-link" href="work.html">View all work <span class="arrow" aria-hidden="true">→</span></a></div></section>
+<section class="section process-section"><div class="section-heading" data-reveal><span class="meta">04 / PROCESS</span><h2>From idea to launch.</h2></div><div class="process-timeline" data-timeline><div class="timeline-track" aria-hidden="true"><span></span></div><article data-reveal style="--stagger:0ms"><span class="meta">01</span><h3>Discover</h3><p>Understand your business, audience and objectives.</p></article><article data-reveal style="--stagger:75ms"><span class="meta">02</span><h3>Design</h3><p>Create the visual direction and user experience.</p></article><article data-reveal style="--stagger:150ms"><span class="meta">03</span><h3>Build</h3><p>Develop the website across desktop, tablet and mobile.</p></article><article data-reveal style="--stagger:225ms"><span class="meta">04</span><h3>Launch</h3><p>Test, connect your domain and take your website live.</p></article><article data-reveal style="--stagger:300ms"><span class="meta">05</span><h3>Support</h3><p>Continue with VOLSTRO Care if you need ongoing support.</p></article></div></section>
+<section class="section why-section grid"><span class="meta section-label">05 / WHY VOLSTRO</span><h2 data-reveal>Designed with purpose.<br><span class="serif">Built with intelligence.</span></h2><p class="why-copy" data-reveal>We combine professional digital design with modern technology and AI-assisted workflows to create high-quality websites efficiently.</p><p class="editorial-statement" data-reveal>Technology helps us move faster.<br><span>Design thinking determines<br>where we’re going.</span></p></section>
+<section class="final-cta bleed" data-reveal><div class="cta-content"><span class="meta">START A PROJECT</span><h2>Ready to build<br><span>something better?</span></h2><div class="cta-bottom"><p>Tell us about your business and what you’re looking to achieve.</p><a class="link-large" href="contact.html">Start a project <span class="arrow" aria-hidden="true">→</span></a></div></div></section>
 </main>
-
-<footer class="site-footer">
-  <div class="wrap foot">
-    <a class="wordmark" href="index.html">VOLSTRO</a>
-    <div class="foot-meta">
-      <nav class="foot-nav" aria-label="Footer">
-        <a href="work.html">Work</a>
-        <a href="services.html">Services</a>
-        <a href="contact.html">Start a project</a>
-      </nav>
-      <p>London, UK · hello@volstro.co.uk</p>
-      <p>© 2026 VOLSTRO</p>
-    </div>
+<footer class="footer">
+  <div class="footer-top">
+    <a class="brand" href="index.html">VOLSTRO<span class="brand-period">.</span></a>
+    <p>London, UK<br>Working with businesses across the UK</p>
+    <div class="footer-nav"><a href="work.html">Work</a><a href="services.html">Services</a><a href="contact.html">Start a project</a></div>
   </div>
+  <div class="footer-bottom"><span>© <span data-year>2026</span> VOLSTRO</span><span class="meta">LONDON DIGITAL DESIGN STUDIO</span><a href="#top" aria-label="Back to top">Back to top ↑</a></div>
 </footer>
-
+</div>
+<dialog class="project-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+  <div class="dialog-heading"><span class="meta">CONCEPT PROJECT / <span class="dialog-number">01</span></span><h2 data-slot="dialog-title" id="dialog-title"></h2><p data-slot="dialog-description" id="dialog-description"></p></div>
+  <div class="dialog-art"></div>
+  <div class="dialog-footer"><a class="text-link" href="contact.html">Discuss your project <span class="arrow" aria-hidden="true">→</span></a><a href="image-credits.txt" target="_blank" rel="noreferrer">Reference photography credits</a></div>
+  <button class="dialog-close" type="button" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+</dialog>
 <script src="main.js"></script>
 </body>
 </html>
