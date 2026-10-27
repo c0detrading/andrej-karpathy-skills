@@ -4,12 +4,18 @@ A local web dashboard that gives a **BULLISH / BEARISH** bias for gold (`GC=F`),
 Nasdaq 100 (`NQ=F`) and Bitcoin (`BTC-USD`) on six timeframes, combines them into an overall daily bias, adjusts it
 with live news, and pops up a browser notification when the bias changes.
 
-- **Left panel:** bias per symbol for 1m, 5m, 15m, 1h, 4h and 1D, the indicator readings behind
-  each one, and the headlines currently pushing the bias.
-- **Right panel:** Forex Factory economic calendar (USD, high/medium impact), a live news feed
-  from FinancialJuice and Yahoo Finance with each headline's gold/Nasdaq/Bitcoin impact, and an alert log.
+The dashboard has two views, switched at the top: **Markets** and **Stock finder**. It follows your
+computer's light or dark mode.
+
+- **Markets, left:** one card per asset with its price, overall bias, a plain-English read, the
+  score on 1m, 5m, 15m, 1h, 4h and 1D, and a chart. **Details** under each card opens its key levels,
+  the headlines pushing the bias and the indicator readings.
+- **Markets, right:** tabs for the live **News** feed (FinancialJuice, Yahoo Finance, the Fed and
+  CoinDesk, with each headline's gold/Nasdaq/Bitcoin impact), the Forex Factory economic **Calendar**
+  (USD, high/medium impact), the **Alerts** log and the daily **Briefing**.
   Every timestamp shows the full date and time in your computer's time zone, and the dot in
   front of each headline shows its relevance: grey = no effect, yellow → red = weak → strong.
+- **Stock finder:** the S&P 500 screen described [below](#stock-finder).
 
 ## Run
 
@@ -79,6 +85,8 @@ one strong headline.
 
 ## What each card shows
 
+Hover a timeframe for its hit rate, edge and model; the rest is under **Details**.
+
 - **Hit rate and edge per timeframe**: the bias is replayed over the last ~1000 bars and checked
   against the price a few bars later (1m: 15 bars, 5m: 12, 15m: 16, 1h: 8, 4h: 6, 1D: 1).
   *Edge* is the average % move in the bias direction per call, which matters more than the hit
@@ -89,17 +97,16 @@ one strong headline.
   overall bias is saved to `data/bias_log.jsonl` and graded against that day's close.
 - **Plain-English read** of how the timeframes line up (for example "pullback in an uptrend"),
   plus volatility: how much of the daily ATR today's range has used (quiet / normal / active / wild).
-- **Chart** of the selected timeframe (click a timeframe tile) with EMA 20/50/200 and Bollinger Bands.
+- **Chart** of the selected timeframe (click a timeframe) with EMA 20/50/200 and Bollinger Bands.
 - **Key levels**: previous day high/low/close, weekly open and (futures) overnight high/low,
   highlighted when price is within a quarter of the 1h ATR.
 
-The right panel also has a **daily briefing** (sent at the time set in Settings, or on demand),
-the calendar with each asset's **15-minute reaction** after high-impact releases, and news from
-FinancialJuice, Yahoo Finance, the Federal Reserve (policy releases and speeches) and CoinDesk.
+The **Calendar** tab shows each asset's **15-minute reaction** after high-impact releases, and the
+**Briefing** tab the daily briefing (sent at the time set in Settings, or on demand).
 
 ## Stock finder
 
-Below the bias cards, the **Stock finder** lists S&P 500 companies that are growing, profitable and
+The **Stock finder** view lists S&P 500 companies that are growing, profitable and
 fairly priced, and whose long-term uptrend has cooled off rather than run hot. It scans once per
 weekday after the US close (16:15 New York) and when ONYX starts with no scan since the last close.
 **Scan now** runs one on demand. New names on the list are sent as an alert (and to Telegram).

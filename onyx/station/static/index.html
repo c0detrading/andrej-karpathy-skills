@@ -3,57 +3,72 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
   <title>ONYX</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>ONYX <span class="sub" id="subtitle"></span></h1>
-    <div class="header-right">
-      <span id="clock" class="muted"></span>
-      <span id="status" class="status">connecting…</span>
-      <span id="features"></span>
-      <button id="alerts-btn">Enable alerts</button>
-      <a class="btn" href="settings.html">Settings</a>
+  <header class="top">
+    <div class="brand">ONYX</div>
+    <nav class="views" id="views">
+      <a href="#markets" data-view="markets" class="on">Markets</a>
+      <a href="#finder" data-view="finder">Stock finder</a>
+    </nav>
+    <div class="top-right">
+      <span id="clock" class="clock"></span>
+      <span id="status" class="status" title="">connecting…</span>
+      <button id="alerts-btn" class="link">Enable alerts</button>
+      <a class="link" href="settings.html">Settings</a>
     </div>
   </header>
   <div id="event-risk" class="event-risk" hidden></div>
-  <main>
-    <section class="panel left">
-      <h2>Macro <span class="muted">dollar and yields: rising pressures gold and risk assets</span></h2>
+
+  <main id="view-markets" class="markets">
+    <section class="assets">
       <div id="macro" class="macro"></div>
-      <h2>Bias</h2>
       <div id="symbols"></div>
-      <h2>Stock finder <span class="muted">S&amp;P 500 · growing, profitable, fairly priced, in an uptrend that has cooled off</span>
-        <button id="scan-btn">Scan now</button></h2>
-      <div id="finder-status" class="empty"></div>
-      <div id="finder" class="table-wrap"></div>
     </section>
-    <section class="panel right">
-      <h2>Briefing <button id="brief-btn">Generate now</button></h2>
-      <pre id="briefing" class="briefing"></pre>
-      <h2>Economic calendar <span class="muted">Forex Factory · USD · reaction = move 15 min after release</span></h2>
-      <ul id="calendar" class="calendar"></ul>
-      <h2 class="news-head">
-        News
-        <span class="legend" title="How strongly a headline moves gold, Nasdaq or Bitcoin">
-          <i class="rel" style="background:var(--rel-none)"></i>none
-          <i class="rel" style="background:hsl(46 90% 55%)"></i>low
-          <i class="rel" style="background:hsl(0 90% 55%)"></i>high</span>
-        <span class="filters" id="filters">
+    <aside class="feed">
+      <nav class="tabs" id="tabs">
+        <button data-tab="news" class="on">News</button>
+        <button data-tab="calendar">Calendar</button>
+        <button data-tab="alerts">Alerts</button>
+        <button data-tab="briefing">Briefing</button>
+      </nav>
+      <div data-pane="news">
+        <div class="filters" id="filters">
           <button data-src="" class="on">All</button>
+          <button data-src="scored" title="Headlines the news rules scored as moving gold, Nasdaq or Bitcoin">Market-moving</button>
           <button data-src="FinancialJuice">FinancialJuice</button>
           <button data-src="Yahoo Finance">Yahoo</button>
           <button data-src="Fed">Fed</button>
           <button data-src="CoinDesk">CoinDesk</button>
-          <button data-src="scored">Market-moving</button>
-        </span>
-      </h2>
-      <div id="tz-note" class="empty"></div>
-      <ul id="news" class="news"></ul>
-      <h2>Alerts</h2>
-      <ul id="alerts" class="alerts"></ul>
-    </section>
+        </div>
+        <ul id="news" class="list news"></ul>
+      </div>
+      <div data-pane="calendar" hidden>
+        <p class="note">Forex Factory · USD high and medium impact · reaction = move 15 minutes after the release</p>
+        <ul id="calendar" class="list calendar"></ul>
+      </div>
+      <div data-pane="alerts" hidden><ul id="alerts" class="list alerts"></ul></div>
+      <div data-pane="briefing" hidden>
+        <button id="brief-btn" class="quiet">Generate now</button>
+        <pre id="briefing" class="briefing"></pre>
+      </div>
+      <p id="tz-note" class="note"></p>
+    </aside>
+  </main>
+
+  <main id="view-finder" class="finder-view" hidden>
+    <div class="finder-head">
+      <div>
+        <h1>Stock finder</h1>
+        <p class="lede">S&amp;P 500 companies that are growing, profitable and fairly priced, in an uptrend that has cooled off.</p>
+      </div>
+      <button id="scan-btn" class="quiet">Scan now</button>
+    </div>
+    <p id="finder-status" class="note"></p>
+    <div id="finder" class="table-wrap"></div>
   </main>
   <div id="chart-tip" class="chart-tip" hidden></div>
   <script src="app.js"></script>
