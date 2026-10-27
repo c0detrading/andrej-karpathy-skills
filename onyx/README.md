@@ -97,6 +97,46 @@ The right panel also has a **daily briefing** (sent at the time set in Settings,
 the calendar with each asset's **15-minute reaction** after high-impact releases, and news from
 FinancialJuice, Yahoo Finance, the Federal Reserve (policy releases and speeches) and CoinDesk.
 
+## Stock finder
+
+Below the bias cards, the **Stock finder** lists S&P 500 companies that are growing, profitable and
+fairly priced, and whose long-term uptrend has cooled off rather than run hot. It scans once per
+weekday after the US close (16:15 New York) and when ONYX starts with no scan since the last close.
+**Scan now** runs one on demand. New names on the list are sent as an alert (and to Telegram).
+
+To turn it on, enter your name and email in **Settings → Stock finder**. SEC asks every program
+that reads its data to identify itself, and the finder refuses to run without it.
+
+How it works (`station/finder.py`), built on the trader skills in `.claude/skills/`:
+
+1. **Universe:** today's S&P 500 list ([datasets/s-and-p-500-companies](https://github.com/datasets/s-and-p-500-companies)),
+   with the last good copy kept in `data/sp500.csv`.
+2. **Fundamentals:** each company's own SEC filings (XBRL company facts), read by the
+   **trader-analyst** skill: trailing-12-month EPS, revenue and EPS growth against the same quarter a
+   year earlier, and net margin. They are cached for 7 days in `data/finder_fundamentals.json`, since
+   they only change when a company files.
+3. **Timing:** daily Yahoo prices, scored with ONYX's indicators: % above the 200-day EMA, the 50-day
+   EMA against the 200-day, RSI 14 and the distance from the 52-week high.
+4. **Screen and rank** with the **trader-screener** skill. A company must pass every rule:
+
+   | Rule | Why |
+   |---|---|
+   | TTM EPS > 0 and net margin ≥ 5% | profitable |
+   | Net margin ≤ 100% | above 100%, the revenue SEC tags misses part of the business (common for banks and REITs) |
+   | Net income not above operating income | otherwise one-off gains (investment marks, tax items) inflate EPS and flatter the P/E |
+   | Revenue growth ≥ 5% year on year | still growing |
+   | P/E ≤ 40 | not priced for perfection |
+   | Latest quarter ended ≤ 200 days ago | the numbers are recent (SEC's facts API sometimes lags a company's latest 10-Q by a quarter or more) |
+   | Price above the 200-day EMA, 50-day EMA above the 200-day | in an uptrend |
+   | RSI 14 between 35 and 60 | cooled off: not overbought, not collapsing |
+
+   Passing companies are ranked on revenue growth (×2), earnings yield (×2), EPS growth, net
+   margin and a lower RSI, and the top 25 are shown. Hover a row to see the exact rules it passed.
+   The rules and weights are `FINDER_RULES` in `station/config.py`.
+
+A full first scan takes several minutes (about 500 SEC and 500 Yahoo requests, paced well under
+SEC's limit); later scans mostly fetch prices only. Results are kept in `data/finder.json`.
+
 ## Settings
 
 Open **Settings** (top right) to:
@@ -105,7 +145,8 @@ Open **Settings** (top right) to:
 - connect **Telegram** so alerts reach your phone (step-by-step instructions on the page);
 - turn on **Claude news scoring** with an Anthropic API key. Claude re-scores market-relevant
   headlines (at most 200 a day), catching nuance the keyword rules miss;
-- set the **daily briefing** time.
+- set the **daily briefing** time;
+- enter your name and email for SEC to turn on the **stock finder**.
 
 - add an **OANDA** API token for **real-time prices** (a free practice account works). Assets
   OANDA carries switch to OANDA; the rest stay on Yahoo. Each card shows its price source;
@@ -123,6 +164,7 @@ computer. That folder is never uploaded to GitHub.
 - High-impact USD calendar events 15 minutes before release. A banner shows while one is within 30 minutes.
 - Each asset's move 15 minutes after a high-impact release.
 - The daily briefing.
+- New stock finder candidates after each scan.
 
 With Telegram set up, every alert is also sent to your chat.
 
@@ -171,5 +213,9 @@ need HTTPS, which Caddy provides automatically.
   rule tags it matched so you can see why.
 - The last, still-forming bar is included in scoring (as on TradingView), so intraday biases
   move with price.
+- **Stock finder data lags.** Fundamentals are as of each company's last 10-Q or 10-K (up to a
+  quarter old) and Yahoo's daily prices are delayed. Banks and insurers often don't report revenue
+  in a form the analyst can read, so most of them can't pass the growth rule. A company on the list
+  passed a filter; it is not a recommendation to buy.
 
 This is a decision-support tool, not financial advice.

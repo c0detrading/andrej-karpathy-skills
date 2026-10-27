@@ -177,6 +177,14 @@ async def retune(request: Request):
     return await asyncio.to_thread(station.retune)
 
 
+@app.post("/api/finder/scan")
+async def finder_scan(request: Request):
+    await _json_body(request)
+    if not station.settings["sec_user_agent"]:
+        raise HTTPException(400, "Add your name and email for SEC in Settings first")
+    return {"started": station.start_scan()}
+
+
 @app.post("/api/shutdown")
 async def shutdown(request: Request):
     """Stop ONYX (used by the Stop button when it runs in the background)."""
