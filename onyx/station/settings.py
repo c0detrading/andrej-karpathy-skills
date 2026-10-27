@@ -22,6 +22,7 @@ DEFAULTS = {
     "use_tuning": True,           # use the walk-forward tuned model per asset/timeframe
     "oanda_token": "",            # real-time prices from OANDA when set
     "oanda_env": "practice",      # "practice" (free demo account) or "live"
+    "sec_user_agent": "",         # "Name email" SEC asks every program to send; turns on the stock finder
 }
 
 
@@ -98,6 +99,11 @@ def update(current: dict, changes: dict) -> dict:
         elif k == "oanda_env":
             if v not in ("practice", "live"):
                 raise ValueError("OANDA account must be practice or live")
+            new[k] = v
+        elif k == "sec_user_agent":
+            v = str(v).strip()
+            if v and not re.fullmatch(r"\S.*\s\S+@\S+\.\w+", v):
+                raise ValueError("SEC contact must be your name and email, e.g. Jane Doe jane@example.com")
             new[k] = v
         elif k in ("claude_scoring", "use_tuning"):
             new[k] = bool(v)

@@ -19,7 +19,7 @@ function renderAssets() {
 }
 
 function fillForm() {
-  for (const k of ["telegram_token", "telegram_chat_id", "anthropic_api_key", "briefing_time", "oanda_token", "oanda_env"]) $(k).value = settings[k] || "";
+  for (const k of ["telegram_token", "telegram_chat_id", "anthropic_api_key", "briefing_time", "oanda_token", "oanda_env", "sec_user_agent"]) $(k).value = settings[k] || "";
   $("claude_scoring").checked = settings.claude_scoring;
   $("use_tuning").checked = settings.use_tuning;
 }
@@ -67,6 +67,7 @@ async function save() {
     oanda_token: $("oanda_token").value,
     oanda_env: $("oanda_env").value,
     use_tuning: $("use_tuning").checked,
+    sec_user_agent: $("sec_user_agent").value,
   };
   settings = { ...settings, ...(await post("/api/settings", body)) };
   chosen = [...settings.assets];

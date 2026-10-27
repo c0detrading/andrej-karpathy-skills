@@ -57,6 +57,8 @@ h2 .muted { text-transform: none; letter-spacing: 0; }
 .details th { color: var(--muted); font-weight: 500; }
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin: 0 1px; }
 .dot.bull { background: var(--bull); } .dot.bear { background: var(--bear); }
+.details.finder th:nth-child(2), .details.finder td:nth-child(2) { text-align: left; white-space: normal; min-width: 140px; }
+.details.finder td div { font-size: 11px; }
 
 .drivers { margin: 10px 0 0; padding: 0; list-style: none; font-size: 12px; }
 .drivers li { display: flex; gap: 8px; padding: 3px 0; } .drivers .pts { min-width: 44px; font-weight: 700; font-variant-numeric: tabular-nums; }

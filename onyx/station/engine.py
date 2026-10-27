@@ -11,7 +11,7 @@ import httpx
 import pandas as pd
 
 from . import config as cfg
-from . import livelog, llm, settings as settings_mod, telegram
+from . import finder, livelog, llm, settings as settings_mod, telegram
 from .analysis import alignment, key_levels, reaction, volatility
 from .bias import MIN_BARS, VARIANT_LABELS, accuracy, indicator_frame, next_bias, score_frame, score_timeframe, tune
 from .market import fetch_bars, fetch_oanda, resample
@@ -64,6 +64,9 @@ class Station:
         self._briefed_on = None
         self._claude_used = (None, 0)  # (date, headlines scored that day)
         self.tuning = self._load_tuning()  # {asset: {tf: tune() result}}
+        self.finder = finder.load_results()  # the last stock finder scan, or None
+        self.finder_status = {"running": False, "done": 0, "total": None, "error": None}
+        self._finder_task = None
         self.version = 0          # bumped after every tick; the live stream waits on it
         self.updated = asyncio.Event()
 
@@ -427,6 +430,42 @@ class Station:
         self.briefing = self.build_briefing(now)
         self._notify("briefing", "ONYX morning briefing", self.briefing["text"])
 
+    # ---- stock finder -----------------------------------------------------
+
+    def start_scan(self) -> bool:
+        """Start a stock finder scan in the background; False if one is already running."""
+        if self._finder_task:
+            return False
+        self.fetched_at["finder"] = time.monotonic()
+        self._finder_task = asyncio.create_task(self._scan())
+        return True
+
+    def _maybe_scan(self, now: datetime):
+        last = self.finder and self.finder["time"]
+        if self.settings["sec_user_agent"] and self._due("finder", cfg.FINDER_RETRY_SECONDS) and finder.due(last, now):
+            self.start_scan()
+
+    async def _scan(self):
+        self.finder_status = {"running": True, "done": 0, "total": None, "error": None}
+
+        def progress(done, total):
+            self.finder_status.update(done=done, total=total)
+
+        try:
+            result = await finder.run(self.settings["sec_user_agent"], progress)
+            new = finder.new_picks(self.finder, result)
+            self.finder = result
+            self.errors.pop("Stock finder", None)
+            if new:
+                body = "; ".join(finder.describe(p) for p in new[:5]) + ". A screen, not financial advice."
+                self._notify("finder", f"Stock finder: {len(new)} new candidate{'s' if len(new) > 1 else ''}", body)
+        except Exception as e:
+            log.exception("stock finder scan failed")
+            self.finder_status["error"] = self.errors["Stock finder"] = str(e)[:200]
+        finally:
+            self.finder_status["running"] = False
+            self._finder_task = None
+
     # ---- notifications ----------------------------------------------------
 
     def _notify(self, kind: str, title: str, body: str):
@@ -471,6 +510,7 @@ class Station:
         self._live_log(now)
         self._maybe_brief(now)
         self._maybe_tune()
+        self._maybe_scan(now)
         await self._flush_telegram(client)
         self.version += 1
         self.updated.set()
@@ -515,6 +555,11 @@ class Station:
                          for e in self.calendar],
             "event_risk": risk and {**risk, "time": risk["time"].isoformat()},
             "briefing": self.briefing,
+            "finder": {
+                **self.finder_status,
+                "enabled": bool(self.settings["sec_user_agent"]),
+                "result": self.finder and {**self.finder, "failed": len(self.finder["failed"])},
+            },
             "notifications": self.notifications,
             "errors": self.errors,
             "timeframes": list(cfg.TIMEFRAMES),

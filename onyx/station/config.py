@@ -115,3 +115,36 @@ REACTION_MINUTES = 15
 CLAUDE_MODEL = "claude-opus-5"
 CLAUDE_BATCH_SIZE = 25
 CLAUDE_DAILY_HEADLINE_CAP = 200
+
+# Stock finder (station/finder.py): S&P 500 companies with solid SEC-reported numbers whose
+# long-term uptrend has cooled off. Needs your name and email for SEC in Settings.
+FINDER_UNIVERSE_URL = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
+FINDER_SCAN_TIME_NY = (16, 15)          # scan once per weekday after the US close
+FINDER_RETRY_SECONDS = 3600             # after a failed scan, wait this long before trying again
+FINDER_FUNDAMENTALS_MAX_AGE_DAYS = 7    # SEC numbers only change when a company files
+FINDER_SEC_PAUSE = 0.15                 # SEC allows 10 requests a second; stay well under
+FINDER_YAHOO_PAUSE = 0.2
+FINDER_TOP = 25
+# trader-screener rules (see .claude/skills/trader-screener/SKILL.md for the format).
+FINDER_RULES = {
+    "name": "Quality + timing",
+    "rules": [
+        {"metric": "eps_ttm", "op": ">", "value": 0},                  # profitable over the last 4 quarters
+        {"metric": "revenue_growth_yoy", "op": ">=", "value": 5},      # still growing
+        {"metric": "net_margin", "op": "between", "value": [5, 100]},  # over 100%: the revenue tag misses part of the business (banks, REITs)
+        {"metric": "one_off_gains", "op": "==", "value": False},       # net income above operating income inflates EPS
+        {"metric": "pe", "op": "<=", "value": 40},                     # not priced for perfection
+        {"metric": "fundamentals_age_days", "op": "<=", "value": 200},  # latest quarter is recent
+        {"metric": "pct_vs_ema200", "op": ">", "value": 0},            # above its 200-day trend
+        {"metric": "ema50_vs_ema200", "op": ">", "value": 0},          # and the trend is up
+        {"metric": "rsi14", "op": "between", "value": [35, 60]},       # cooled off, not overbought or collapsing
+    ],
+    "rank": [
+        {"metric": "revenue_growth_yoy", "order": "desc", "weight": 2},
+        {"metric": "earnings_yield", "order": "desc", "weight": 2},
+        {"metric": "eps_growth_yoy", "order": "desc", "weight": 1},
+        {"metric": "net_margin", "order": "desc", "weight": 1},
+        {"metric": "rsi14", "order": "asc", "weight": 1},
+    ],
+    "missing": "fail",
+}

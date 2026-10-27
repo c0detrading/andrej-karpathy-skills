@@ -243,6 +243,31 @@ function chartHover(asset, e) {
   tip.style.top = e.clientY + 14 + "px";
 }
 
+// ---- stock finder -------------------------------------------------------------
+
+function renderFinder() {
+  const f = state.finder, r = f.result;
+  const status = [];
+  if (!f.enabled) status.push(`Add your name and email for SEC in <a href="settings.html">Settings</a> to turn on the stock finder.`);
+  if (f.running) status.push(`Scanning ${f.total ? `${f.done} of ${f.total}` : "…"} (the first scan takes several minutes)`);
+  else if (r) status.push(`${r.passed} of ${r.scanned} companies pass · scanned ${esc(localDateTime(r.time))}` + (r.failed ? ` · ${r.failed} couldn't be read` : ""));
+  if (f.error) status.push(`<span class="bear">Last scan failed: ${esc(f.error)}</span>`);
+  status.push("A screen on SEC filings and delayed Yahoo prices, not financial advice. Hover a row for the rules it passed.");
+  setHTML($("finder-status"), status.join(" · "));
+  $("scan-btn").disabled = !f.enabled || f.running;
+  const picks = r ? r.picks : [];
+  setHTML($("finder"), picks.length ? `<table class="details finder"><thead><tr><th>#</th><th>Stock</th><th>Score</th><th>Price</th><th>P/E</th>
+      <th>Revenue YoY</th><th>EPS YoY</th><th>Net margin</th><th>RSI</th><th>vs 200 EMA</th><th>Off 52w high</th></tr></thead><tbody>
+    ${picks.map((p, i) => `<tr title="${esc(p.why.join("\n"))}"><td>${i + 1}</td>
+      <td><b>${esc(p.ticker)}</b><div class="muted">${esc(p.name)} · ${esc(p.sector)}</div></td>
+      <td><b>${p.score == null ? "–" : fmt(p.score * 100, 0)}</b></td><td>${price(p.price)}</td><td>${fmt(p.pe, 1)}</td>
+      <td class="${signCls(p.revenue_growth_yoy)}">${pct(p.revenue_growth_yoy, 1)}</td>
+      <td class="${signCls(p.eps_growth_yoy)}">${pct(p.eps_growth_yoy, 1)}</td>
+      <td>${fmt(p.net_margin, 1)}%</td><td>${fmt(p.rsi14, 0)}</td>
+      <td>${pct(p.pct_vs_ema200, 1)}</td><td>${pct(p.pct_from_high, 1)}</td></tr>`).join("")}</tbody></table>`
+    : r && !f.running ? `<div class="empty">No S&amp;P 500 company passes every rule today.</div>` : "");
+}
+
 // ---- right panel ----------------------------------------------------------
 
 function renderCalendar() {
@@ -334,7 +359,7 @@ function renderAlertsButton() {
 }
 
 function render() {
-  renderHeader(); renderMacro(); renderSymbols(); renderBriefing(); renderCalendar(); renderNews(); renderAlerts(); fireAlerts();
+  renderHeader(); renderMacro(); renderSymbols(); renderFinder(); renderBriefing(); renderCalendar(); renderNews(); renderAlerts(); fireAlerts();
   const errs = Object.keys(state.errors);
   $("status").className = "status " + (errs.length ? "err" : "ok");
   $("status").textContent = errs.length ? `${errs.length} source error(s)` : "live";
@@ -362,6 +387,7 @@ $("brief-btn").addEventListener("click", async () => {
   const res = await postJSON("/api/briefing");
   if (res.ok) $("briefing").textContent = (await res.json()).text;
 });
+$("scan-btn").addEventListener("click", () => { $("scan-btn").disabled = true; postJSON("/api/finder/scan"); });
 $("filters").addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
   newsFilter = b.dataset.src;
