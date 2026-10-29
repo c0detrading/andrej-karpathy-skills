@@ -46,6 +46,10 @@ Opening hours for the "open now" line live in `site/js/site.js`.
 node volstro/tattoobar/build/figma_export.js volstro/tattoobar/site volstro/tattoobar/figma-plugin
 ```
 
+## Client presentation
+
+`build/presentation/` makes the 16:9 PDF presentation of the site: `capture.js` takes the screens, `deck.js` lays out the slides. See the comments at the top of each file.
+
 ## Going live
 
 The site is static, so it runs on any static host (Netlify, Cloudflare Pages, GitHub Pages). Upload the `site` folder, then point the tattoo-bar.co.uk domain at the host instead of Tilda.
