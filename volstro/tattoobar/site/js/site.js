@@ -1,4 +1,4 @@
-// TattooBar: open-now status, enquiry form, menus.
+// TattooBar: open-now status, portfolio filter, enquiry form, menus.
 (function () {
   // Opening hours in minutes after midnight, London time. null = closed.
   var HOURS = {
@@ -41,6 +41,18 @@
     });
   }
   try { renderStatus(); setInterval(renderStatus, 60000); } catch (e) { /* hours stay as printed */ }
+
+  // Portfolio filter
+  var filters = document.querySelectorAll('.filter');
+  filters.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var style = btn.getAttribute('data-filter');
+      filters.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+      document.querySelectorAll('#more-work .work-grid li').forEach(function (li) {
+        li.hidden = style !== 'all' && li.getAttribute('data-style') !== style;
+      });
+    });
+  });
 
   // Enquiry form: opens the visitor's email app with the message filled in.
   document.querySelectorAll('form[data-enquiry]').forEach(function (form) {

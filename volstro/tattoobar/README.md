@@ -2,7 +2,7 @@
 
 A new website for TattooBar, the tattoo studio and cocktail bar at 5 Cunningham Avenue, Royal Wharf, London E16 2TN. It replaces the look of their current Tilda site at tattoo-bar.co.uk; every business detail comes from that site, their Linktree, Cademy and DesignMyNight pages (October 2026).
 
-Design: the approved "Cast" direction. Concrete, ink and one UV violet accent. Two fonts: Big Shoulders Display for the logo and big words, Albert Sans for everything else. 12-column grid, 24 px outside margins (20 px on phones), 80 px between every section (60 px on phones).
+Design: the approved "Cast" direction. Concrete, ink and one UV violet accent. Two fonts: Big Shoulders Display for the logo and big words, Albert Sans for everything else. A 4-column grid with 6 px gaps on every page, matching the homepage tiles: on the homepage, section titles sit in column 1 and content starts at column 2; on the other pages, titles take columns 1–2 and content sits in columns 3–4. 24 px outside margins (20 px on phones), 80 px between every section (60 px on phones).
 
 ## Pages
 
@@ -50,7 +50,7 @@ The enquiry forms open the visitor's email app with the message filled in. To re
 2. Happy hour on Fridays: their site says 12:00–18:00, but the bar opens at 15:00 on weekdays.
 3. Experience: their site says 20 years; the Cademy course page says over 24. The new site says "over 20 years".
 4. Menu fixes: "1644 Blanc" is shown as 1664 Blanc; the Pimm's description was a copy of the Whiskey Sour, so it was removed; the Limoncello Spritz has no ingredients listed.
-5. The community programme now uses the studio number 07747 744016, which the client confirmed as correct.
+5. Phone numbers: tattoos and piercing 07747 744016, bar 07737 744016, as confirmed in the markup round.
 6. TikTok links to @tattoobar._ (from Linktree). The old site linked to @vilma_tattoo.
 7. UTMA Fight Night and the UV glow sip & paint night are left out because they are past or unconfirmed. Add current events to `events.html` when known.
 8. Logo: the wordmark is set in Big Shoulders Display. Swap in their logo files if they have them.

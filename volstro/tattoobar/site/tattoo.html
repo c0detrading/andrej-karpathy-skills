@@ -18,40 +18,42 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;600&amp;family=Big+Shoulders+Display:wght@900&amp;display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="inner">
 <a class="skip" href="#main">Skip to content</a>
 <div class="page">
 <header class="head">
   <nav class="nav" aria-label="Main">
-    <a class="logo-small" href="index.html" aria-label="TattooBar home">Tattoo Bar</a>
-    <details class="drop menu">
-      <summary class="menu-btn">Menu</summary>
-      <div class="drop-panel menu-panel">
-        <a href="tattoo.html">Tattoo &amp; piercing</a>
-        <a href="bar.html">The bar</a>
-        <a href="events.html">Events</a>
-        <a href="learn.html">Learn</a>
-        <a href="art.html">The art</a>
-        <a href="tattoo.html#prices">Prices</a>
-      </div>
-    </details>
-    <ul class="nav-links">
-      <li><a href="tattoo.html" aria-current="page">Tattoo &amp; piercing</a></li>
-      <li><a href="bar.html">The bar</a></li>
-      <li><a href="events.html">Events</a></li>
-      <li><a href="learn.html">Learn</a></li>
-      <li><a href="art.html">The art</a></li>
-    </ul>
+    <div class="nav-main">
+      <a class="logo-small" href="index.html" aria-label="TattooBar home">Tattoo Bar</a>
+      <details class="drop menu">
+        <summary class="menu-btn">Menu</summary>
+        <div class="drop-panel menu-panel">
+          <a href="tattoo.html">Tattoo &amp; piercing</a>
+          <a href="bar.html">The bar</a>
+          <a href="events.html">Events</a>
+          <a href="learn.html">Learn</a>
+          <a href="art.html">The art</a>
+          <a href="tattoo.html#prices">Prices</a>
+        </div>
+      </details>
+      <ul class="nav-links">
+        <li><a href="tattoo.html" aria-current="page">Tattoo &amp; piercing</a></li>
+        <li><a href="bar.html">The bar</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="learn.html">Learn</a></li>
+        <li><a href="art.html">The art</a></li>
+      </ul>
+    </div>
     <div class="nav-actions">
-      <a class="btn ghost nav-prices" href="tattoo.html#prices">Prices</a>
+      <a class="btn ghost lg" href="tattoo.html#prices">Prices</a>
       <details class="drop">
-        <summary class="btn">Book</summary>
+        <summary class="btn lg">Book</summary>
         <div class="drop-panel">
-        <a href="https://book.heygoldie.com/c12bd355a12b" target="_blank" rel="noopener">A tattoo with Vilma<small>From £50</small></a>
-        <a href="https://book.heygoldie.com/c12bd355a12b" target="_blank" rel="noopener">A piercing<small>From £25</small></a>
-        <a href="https://app.squareup.com/appointments/book/gette9ktfugri6/LAPMY1HNKH1NQ/start" target="_blank" rel="noopener">A table at the bar<small>Mon–Sat</small></a>
-        <a href="https://www.designmynight.com/london/whats-on/sip-paint/sip-ink?t=tickets" target="_blank" rel="noopener">Sip &amp; Ink tickets<small>Fridays, 19:30</small></a>
-        <a href="https://tattoobar.cademy.io/3-day-beginner-tattoo-course" target="_blank" rel="noopener">The 3-day beginner course<small>£850</small></a>
+          <a href="https://book.heygoldie.com/c12bd355a12b" target="_blank" rel="noopener">A tattoo with Vilma<small>From £50</small></a>
+          <a href="https://book.heygoldie.com/c12bd355a12b" target="_blank" rel="noopener">A piercing<small>From £25</small></a>
+          <a href="https://app.squareup.com/appointments/book/gette9ktfugri6/LAPMY1HNKH1NQ/start" target="_blank" rel="noopener">A table at the bar<small>Mon–Sat</small></a>
+          <a href="https://www.designmynight.com/london/whats-on/sip-paint/sip-ink?t=tickets" target="_blank" rel="noopener">Sip &amp; Ink tickets<small>Fridays, 19:30</small></a>
+          <a href="https://tattoobar.cademy.io/3-day-beginner-tattoo-course" target="_blank" rel="noopener">The 3-day beginner course<small>£850</small></a>
         </div>
       </details>
     </div>
@@ -60,48 +62,56 @@
 <main id="main">
 <section class="page-head" aria-labelledby="page-title">
   <h1 class="big" id="page-title">Tattoo and piercing</h1>
-  <div class="head-actions"><a class="btn" href="https://book.heygoldie.com/c12bd355a12b" target="_blank" rel="noopener">Book</a></div>
   <ul class="work-grid head-media">
-      <li><img src="img/work-realism-back-piece.jpg" alt="Black and grey realism back piece with a skull-faced figure and a woman" width="800" height="999" loading="lazy"><span class="cap">Realism</span></li>
-      <li><img src="img/work-geometric-sleeve.jpg" alt="Geometric forearm tattoo of hexagons fading into dotwork" width="800" height="999" loading="lazy"><span class="cap">Geometric</span></li>
-      <li><img src="img/work-fine-line-flower.jpg" alt="Fine line flower tattoo on the shoulder" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
-      <li><img src="img/work-realism-cross.jpg" alt="Realism tattoo of a woman holding a cross over her face" width="900" height="1124" loading="lazy"><span class="cap">Realism</span></li>
+      <li data-style="realism"><img src="img/work-realism-back-piece.jpg" alt="Black and grey realism back piece with a skull-faced figure and a woman" width="800" height="999" loading="lazy"><span class="cap">Realism</span></li>
+      <li data-style="geometric"><img src="img/work-geometric-sleeve.jpg" alt="Geometric forearm tattoo of hexagons fading into dotwork" width="800" height="999" loading="lazy"><span class="cap">Geometric</span></li>
+      <li data-style="fine-line"><img src="img/work-fine-line-flower.jpg" alt="Fine line flower tattoo on the shoulder" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
+      <li data-style="realism"><img src="img/work-realism-cross.jpg" alt="Realism tattoo of a woman holding a cross over her face" width="900" height="1124" loading="lazy"><span class="cap">Realism</span></li>
   </ul>
 </section>
 
 <section class="split" id="vilma" aria-labelledby="vilma-title">
-  <div class="split-text">
+  <div class="split-text cell">
     <h2 class="big" id="vilma-title">Vilma</h2>
     <p class="lead">20 years of experience.</p>
     <p>Custom geometric, realism and fine line tattoos, and piercing, with the highest standards of hygiene.</p>
     <p><a class="link" href="art.html">The art and the place</a></p>
   </div>
-  <img src="img/hero-tattooing.jpg" alt="Vilma tattooing a client at TattooBar" width="1400" height="930" loading="lazy">
+  <div class="split-action"><a class="btn lg wide" href="https://book.heygoldie.com/c12bd355a12b" target="_blank" rel="noopener">Book a tattoo</a></div>
+  <img class="split-media" src="img/hero-tattooing.jpg" alt="Vilma tattooing a client at TattooBar" width="1400" height="930" loading="lazy">
 </section>
 
 <section class="sec stacked" id="prices" aria-labelledby="prices-title">
   <h2 class="sec-title big" id="prices-title">Prices</h2>
   <div class="sec-wide">
-    <div class="duo">
-      <div class="panel"><h3>Tattoo</h3><div class="rows"><span>Small<small>Up to 8 cm</small></span><span>from £50</span><span>Medium<small>Up to 15 cm</small></span><span>from £140</span><span>Large<small>Up to 25 cm</small></span><span>from £250</span><span>By the hour<small>Individual sketch</small></span><span>£85</span></div></div>
-      <div class="panel"><h3>Piercing</h3><div class="rows"><span>Ear lobe, single</span><span>£25</span><span>Ear lobe, pair</span><span>£40</span><span>Helix, rook or tragus</span><span>£35</span><span>Nostril or septum</span><span>£35</span><span>Lip</span><span>£35</span><span>Belly button</span><span>£35</span></div></div>
+    <div class="g4">
+      <div class="c12 panel"><h3>Tattoo</h3><div class="rows"><span>Small<small>Up to 8 cm</small></span><span>from £50</span><span>Medium<small>Up to 15 cm</small></span><span>from £140</span><span>Large<small>Up to 25 cm</small></span><span>from £250</span><span>By the hour<small>Individual sketch</small></span><span>£85</span></div></div>
+      <div class="c34 panel"><h3>Piercing</h3><div class="rows"><span>Ear lobe, single</span><span>£25</span><span>Ear lobe, pair</span><span>£40</span><span>Helix, rook or tragus</span><span>£35</span><span>Nostril or septum</span><span>£35</span><span>Lip</span><span>£35</span><span>Belly button</span><span>£35</span></div></div>
     </div>
     <p class="muted price-note">Tattoo prices are starting prices. Read <a class="link" href="aftercare.html">how to prepare and how to look after your tattoo</a>.</p>
   </div>
 </section>
 
-<section class="sec stacked ruled" id="more-work" aria-labelledby="more-title">
+<section class="sec ruled" id="more-work" aria-labelledby="more-title">
   <h2 class="sec-title big" id="more-title">More work</h2>
+  <div class="sec-body sec-body-end">
+    <div class="filters" role="group" aria-label="Filter by style">
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter" type="button" data-filter="geometric" aria-pressed="false">Geometric</button>
+      <button class="filter" type="button" data-filter="realism" aria-pressed="false">Realism</button>
+      <button class="filter" type="button" data-filter="fine-line" aria-pressed="false">Fine line</button>
+    </div>
+  </div>
   <div class="sec-wide">
     <ul class="work-grid">
-      <li><img src="img/work-fine-line-lotus.jpg" alt="Fine line lotus ornament on the wrist" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
-      <li><img src="img/work-geometric-shoulder.jpg" alt="Geometric shoulder tattoo with hexagons and dotwork" width="800" height="999" loading="lazy"><span class="cap">Geometric</span></li>
-      <li><img src="img/work-realism-skull-sleeve.jpg" alt="Black and grey sleeve with skulls" width="800" height="999" loading="lazy"><span class="cap">Realism</span></li>
-      <li><img src="img/work-fine-line-spine.jpg" alt="Fine line tattoo running down the spine" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
-      <li><img src="img/work-geometric-wrist.jpg" alt="Geometric band tattoo around the wrist" width="800" height="999" loading="lazy"><span class="cap">Geometric</span></li>
-      <li><img src="img/work-realism-portrait.jpg" alt="Realism tattoo of a woman&#x27;s face with clown make-up" width="800" height="999" loading="lazy"><span class="cap">Realism</span></li>
-      <li><img src="img/work-fine-line-forearm.jpg" alt="Fine line ornamental tattoo on the forearm" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
-      <li><img src="img/work-fine-line-sternum.jpg" alt="Fine line ornament on the sternum" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
+      <li data-style="fine-line"><img src="img/work-fine-line-lotus.jpg" alt="Fine line lotus ornament on the wrist" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
+      <li data-style="geometric"><img src="img/work-geometric-shoulder.jpg" alt="Geometric shoulder tattoo with hexagons and dotwork" width="800" height="999" loading="lazy"><span class="cap">Geometric</span></li>
+      <li data-style="realism"><img src="img/work-realism-skull-sleeve.jpg" alt="Black and grey sleeve with skulls" width="800" height="999" loading="lazy"><span class="cap">Realism</span></li>
+      <li data-style="fine-line"><img src="img/work-fine-line-spine.jpg" alt="Fine line tattoo running down the spine" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
+      <li data-style="geometric"><img src="img/work-geometric-wrist.jpg" alt="Geometric band tattoo around the wrist" width="800" height="999" loading="lazy"><span class="cap">Geometric</span></li>
+      <li data-style="realism"><img src="img/work-realism-portrait.jpg" alt="Realism tattoo of a woman&#x27;s face with clown make-up" width="800" height="999" loading="lazy"><span class="cap">Realism</span></li>
+      <li data-style="fine-line"><img src="img/work-fine-line-forearm.jpg" alt="Fine line ornamental tattoo on the forearm" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
+      <li data-style="fine-line"><img src="img/work-fine-line-sternum.jpg" alt="Fine line ornament on the sternum" width="800" height="999" loading="lazy"><span class="cap">Fine line</span></li>
     </ul>
     <p class="work-more"><a class="link" href="https://www.instagram.com/tattoobar.co.uk/" target="_blank" rel="noopener">See more work on Instagram</a></p>
   </div>
@@ -118,7 +128,7 @@
     <div>
       <h2>Call or email</h2>
       <a href="tel:+447747744016">Tattoos 07747 744016</a>
-      <a href="tel:+447786975194">Bar 07786 975194</a>
+      <a href="tel:+447737744016">Bar 07737 744016</a>
       <a href="mailto:vilma@tattoobar.co">vilma@tattoobar.co</a>
     </div>
     <div>
