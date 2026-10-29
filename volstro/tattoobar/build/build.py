@@ -138,7 +138,7 @@ def footer():
     <div>
       <h2>Opening hours</h2>
       <p>Tattoo studio: Mon–Sat 11:00–21:00</p>
-      <p>Bar: Mon–Fri 15:00–23:00, Sat 12:00–00:00</p>
+      <p>Bar: Mon–Fri 15:00–23:00<br>Sat 12:00–00:00</p>
       <p>Sundays: private events only</p>
     </div>
     <div>
@@ -185,12 +185,14 @@ def enquiry_form(topic='Tattoo', event=False, idp='q'):
       <div class="field"><label for="{idp}-date">Date</label><input id="{idp}-date" name="date" type="date"></div>
       <div class="field"><label for="{idp}-guests">Number of guests</label><input id="{idp}-guests" name="guests" type="number" min="1" inputmode="numeric"></div>''' if event else ''
     return f'''<form class="form" data-enquiry="{EMAIL}" novalidate>
+      <div class="form-grid">
       <div class="field"><label for="{idp}-name">Name</label><input id="{idp}-name" name="name" autocomplete="name" required></div>
       <div class="field"><label for="{idp}-email">Email</label><input id="{idp}-email" name="email" type="email" autocomplete="email" required></div>
       <div class="field"><label for="{idp}-phone">Phone (optional)</label><input id="{idp}-phone" name="phone" type="tel" autocomplete="tel"></div>
       <div class="field"><label for="{idp}-topic">What is it about?</label><select id="{idp}-topic" name="topic">{opts}</select></div>{event_fields}
-      <div class="field"><label for="{idp}-message">Message</label><textarea id="{idp}-message" name="message" required placeholder="{'Tell us about your event and what you need' if event else 'Your idea, size and placement, or your question'}"></textarea></div>
-      <div class="btns"><button class="btn" type="submit">Send enquiry</button></div>
+      <div class="field full"><label for="{idp}-message">Message</label><textarea id="{idp}-message" name="message" required placeholder="{'Tell us about your event and what you need' if event else 'Your idea, size and placement, or your question'}"></textarea></div>
+      </div>
+      <div class="g2"><button class="btn lg c1" type="submit">Send enquiry</button></div>
       <p class="form-note">This opens your email app with your message ready to send to {EMAIL}.</p>
       <p class="form-done" hidden>Your email app should now be open with your message. If nothing happened, email {EMAIL} or call {TEL_TATTOO[0]}.</p>
     </form>'''
@@ -365,7 +367,7 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
         <h3>Happy hour</h3>
         <p class="big">Any 2 cocktails £15</p>
         <p class="muted">Mon–Thu 15:00–19:00<br>Fri–Sat 12:00–18:00</p>
-        <div class="btns push"><a class="btn ghost" href="bar.html#menu">See the menu</a></div>
+        <div class="btns push"><a class="btn ghost lg" href="bar.html#menu">See the menu</a></div>
       </div>
       <div class="c23 panel tall">
         <h3>Bar hours</h3>
@@ -534,7 +536,7 @@ bar = head('The bar and menu | TattooBar',
     </div>''') + sec('menu', 'Menu', f'<p class="lead">Jump to a section.</p>{jump}', cls='wide-body') + ''.join(
     menu_section(i, t, g) for i, t, g in MENU) + sec(
     'hire', 'Private hire', f'''<p class="lead">Book the whole space for your celebration, from £25 a head.</p>
-    <div class="g2"><a class="btn lg c1" href="events.html#hire">Private hire details</a></div>''') + '</main>\n' + footer()
+    <div class="g3"><a class="btn lg c1" href="events.html#hire">Private hire details</a></div>''', cls='menu-sec wide-body') + '</main>\n' + footer()
 write('bar.html', bar)
 
 
@@ -551,14 +553,13 @@ events = head('Events and private hire | TattooBar',
       <div class="c2 cell"><h3 class="list-title">Included</h3>{ticks(['A glass of house wine or a pint of beer', 'All tattooing materials and equipment', 'Expert instruction in a relaxed, creative atmosphere'])}</div>
       {ext(SIPINK, 'Get tickets', 'btn lg c1')}
     </div>''') + sec(
-    'hire', 'Private hire', f'''<p class="lead">Send us the details of your event and the number of guests, and we will do everything we can to make your celebration unforgettable.</p>
-    <div class="g2">
-      <div class="c1 cell stack-sm"><h3 class="list-title">Minimum spend per person</h3>{rows([('Daytime', '11:00–17:00, for 2 hours', 'from £25'), ('Weekend evenings', '18:00–23:00, for 2 hours', 'from £35')])}
-        <p class="muted">Sundays are kept for private events.</p>
-        <p><a class="link" href="{EVENT_MENU}" target="_blank" rel="noopener">Event food and drinks menu</a></p>
-      </div>
-      <div class="c2 panel"><h3>Plan your event</h3>{enquiry_form('Event hire', True, 'e')}</div>
-    </div>''') + '</main>\n' + footer()
+    'hire', 'Private hire', f'''<div class="panel"><h3>Plan your event</h3>{enquiry_form('Event hire', True, 'e')}</div>''', extra=f'''
+  <div class="side-note wide stack-sm">
+    <p class="lead">Send us the details of your event and the number of guests, and we will do everything we can to make your celebration unforgettable.</p>
+    <div><h3 class="list-title">Minimum spend per person</h3>{rows([('Daytime', '11:00–17:00, for 2 hours', 'from £25'), ('Weekend evenings', '18:00–23:00, for 2 hours', 'from £35')])}</div>
+    <p class="muted">Sundays are kept for private events.</p>
+    <p><a class="link" href="{EVENT_MENU}" target="_blank" rel="noopener">Event food and drinks menu</a></p>
+  </div>''', cls='has-note') + '</main>\n' + footer()
 write('events.html', events)
 
 
@@ -613,7 +614,7 @@ after = head('Before and after your tattoo | TattooBar',
              'aftercare.html') + nav('aftercare', False) + '<main id="main">\n' + page_head(
     'Before and after',
     'How to get your skin ready for your session, and how to look after your new tattoo.') + sec(
-    'before', 'Before', ticks(['Get hydrated and moisturise', 'Shave and exfoliate', 'Eat before the session',
+    'before', 'Before the session', ticks(['Get hydrated and moisturise', 'Shave and exfoliate', 'Eat before the session',
                               'Wear comfortable, suitable clothes', 'Avoid drugs and certain products before the session'])) + sec(
     'aftercare', 'Aftercare', '''<ol class="steps">
       <li>Remove the bandage after 1 to 3 hours.</li>
