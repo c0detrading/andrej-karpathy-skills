@@ -59,6 +59,6 @@ The enquiry forms open the visitor's email app with the message filled in. To re
 3. Experience: their site says 20 years; the Cademy course page says over 24. The new site says "over 20 years".
 4. Menu fixes: "1644 Blanc" is shown as 1664 Blanc; the Pimm's description was a copy of the Whiskey Sour, so it was removed; the Limoncello Spritz has no ingredients listed.
 5. Phone numbers: tattoos and piercing 07747 744016, bar 07737 744016, as confirmed in the markup round.
-6. TikTok links to @tattoobar._ (from Linktree). The old site linked to @vilma_tattoo.
+6. Instagram links to @vilma_tattoo, as confirmed. TikTok links to @tattoobar._ (from Linktree).
 7. UTMA Fight Night and the UV glow sip & paint night are left out because they are past or unconfirmed. Add current events to `events.html` when known.
 8. Logo: the wordmark is set in Big Shoulders Display. Swap in their logo files if they have them.

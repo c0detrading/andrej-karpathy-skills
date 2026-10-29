@@ -20,8 +20,8 @@ COURSE = 'https://tattoobar.cademy.io/3-day-beginner-tattoo-course'
 COMMUNITY = 'https://tattoobar.cademy.io/tattoobar-community-program'
 EVENT_MENU = 'https://drive.google.com/file/d/1b_jLhJLdsS6knueKxkQjeogpOs86eWhY/view?usp=sharing'
 MAP = 'https://www.google.com/maps/search/?api=1&query=TattooBar%2C+5+Cunningham+Avenue%2C+London+E16+2TN'
-IG = 'https://www.instagram.com/tattoobar.co.uk/'
-IG_VILMA = 'https://www.instagram.com/vilmatattoo/'
+IG = 'https://www.instagram.com/vilma_tattoo/'
+IG_VILMA = IG
 TIKTOK = 'https://www.tiktok.com/@tattoobar._'
 FACEBOOK = 'https://www.facebook.com/profile.php?id=100063746405157'
 EMAIL = 'vilma@tattoobar.co'
@@ -47,7 +47,7 @@ BOOK_ITEMS = [
     (TATTOO, 'A tattoo with Vilma', 'From £50'),
     (PIERCING, 'A piercing', 'From £25'),
     (TABLE, 'A table at the bar', 'Mon–Sat'),
-    (SIPINK, 'Sip &amp; Ink tickets', 'Fridays, 19:30'),
+    (SIPINK, 'Sip &amp; Ink tickets', '2nd Friday of the month'),
     (COURSE, 'The 3-day beginner course', '£850'),
 ]
 NAV = [
@@ -332,7 +332,7 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
 
 <nav class="tiles" aria-label="Explore TattooBar">
   <a class="tile" href="bar.html"><img src="img/moon-room.jpg" alt="" width="1600" height="1200"><span class="cap">The bar</span></a>
-  <a class="tile uv" href="events.html#sip-and-ink"><span class="big">Sip &amp; Ink</span><p>Learn to tattoo on practice skin, drink included. Fridays 19:30–21:30, from £38.50.</p></a>
+  <a class="tile uv" href="events.html#sip-and-ink"><span class="big">Sip &amp; Ink</span><p>Learn to tattoo on practice skin, drink included. Second Friday of every month, 19:30–21:30, from £38.50.</p></a>
   <a class="tile" href="tattoo.html"><img src="img/work-realism-cross.jpg" alt="" width="900" height="1124"><span class="cap">Tattoos by Vilma</span></a>
   <a class="tile paper" href="bar.html#happy-hour"><span class="big">Happy hour</span><p>Any 2 cocktails for £15. Mon–Thu 15:00–19:00, Fri–Sat 12:00–18:00.</p></a>
   <a class="tile ink" href="{TATTOO}" target="_blank" rel="noopener"><span class="big">Book a tattoo</span><p>Small tattoos from £50. 20 years of experience.</p></a>
@@ -344,7 +344,7 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
 ''' + sec('vilma', 'Vilma', f'''
     <div class="g3">
       <img class="c1 photo" src="img/vilma.jpg" alt="Vilma, the tattoo artist at TattooBar" width="1200" height="1349" loading="lazy">
-      <div class="c23 cell prose top-align tile-inset">
+      <div class="c23 cell prose top-align tile-inset to-bottom">
         <p class="lead">Hey, I'm Vilma, and my main inspiration is you.</p>
         <p>20 years of tattooing, from geometric and realism to fine line, with every design made for the person wearing it.</p>
         <p>Vilma started at art school, painting angels, demons and fantasy worlds. A tattoo artist saw the talent in her hands and suggested she try tattooing, and she has never stopped.</p>
@@ -441,7 +441,7 @@ tattoo = head('Tattoo and piercing | TattooBar',
       <div class="c34 panel"><h3>Piercing</h3>{rows(PIERCING_PRICES)}</div>
       {ext(TATTOO, 'Book', 'btn lg call')}
     </div>
-    <p class="muted price-note">Tattoo prices are starting prices. Read <a class="link" href="aftercare.html">how to prepare and how to look after your tattoo</a>.</p>
+    <p class="muted price-note">Tattoo prices are starting prices. Read <a class="link" href="aftercare.html#before">how to prepare</a> and <a class="link" href="aftercare.html#aftercare">how to look after your tattoo</a>.</p>
   </div>
 </section>
 
@@ -529,7 +529,7 @@ bar = head('The bar and menu | TattooBar',
     "Cocktails, wine, beer and food in the tattoo studio, with Vilma's artwork on the walls.",
     ('cocktails.jpg', 'Three cocktails in front of the glowing Moon artwork', 1000, 1333, '50% 30%'),
     f'{status_block(("bar",))}<div class="g2">{ext(TABLE, "Book a table", "btn lg c1")}<a class="btn ghost lg c2" href="#menu">See the menu</a></div>') + sec(
-    'happy-hour', 'Happy hour', f'''<div class="g2">
+    'happy-hour', 'Happy hour', f'''<div class="g2 tight">
       <div class="c1 panel ink on-ink tall"><p class="big">Any 2 cocktails £15</p><p class="muted">Monday to Thursday<br>15:00–19:00</p><p class="muted">Friday and Saturday<br>12:00–18:00</p></div>
       <div class="c2 panel tall"><h3>Bar hours</h3>{rows(BAR_HOURS)}</div>
       {ext(TABLE, 'Book a table', 'btn lg call')}
@@ -542,14 +542,14 @@ write('bar.html', bar)
 
 # ---------- Events ----------
 events = head('Events and private hire | TattooBar',
-              'Sip & Ink on Fridays: learn to tattoo on practice skin with a drink in hand. Private hire of the TattooBar space from £25 a head.',
+              'Sip & Ink on the second Friday of every month: learn to tattoo on practice skin with a drink in hand. Private hire of the TattooBar space from £25 a head.',
               'events.html') + nav('events', False) + '<main id="main">\n' + page_head(
     'Events',
-    'Sip &amp; Ink on Fridays, and the whole space for your own celebration.',
+    'Sip &amp; Ink on the second Friday of every month, and the whole space for your own celebration.',
     ('workshop.jpg', 'A group practising tattooing on synthetic skin at long tables in TattooBar', 1600, 900, '50% 50%')) + sec(
     'sip-and-ink', 'Sip &amp; Ink', f'''<p class="lead">Ever wondered what it's like to be a tattoo artist? Learn to tattoo on practice skin, guided step by step by a professional tattoo artist. No experience needed.</p>
     <div class="g2">
-      <div class="c1 cell"><h3 class="list-title">The details</h3>{rows([('When', '', 'Fridays, 19:30–21:30'), ('Price', '', 'from £38.50'), ('Age', '', '18+')])}</div>
+      <div class="c1 cell"><h3 class="list-title">The details</h3>{rows([('When', 'Second Friday of every month', '19:30–21:30'), ('Price', '', 'from £38.50'), ('Age', '', '18+')])}</div>
       <div class="c2 cell"><h3 class="list-title">Included</h3>{ticks(['A glass of house wine or a pint of beer', 'All tattooing materials and equipment', 'Expert instruction in a relaxed, creative atmosphere'])}</div>
       {ext(SIPINK, 'Get tickets', 'btn lg c1')}
     </div>''') + sec(
@@ -603,7 +603,7 @@ learn = head('Learn to tattoo | TattooBar',
     <div class="g2">{ext(COMMUNITY, 'Register for a free place', 'btn lg c1')}<a class="btn ghost lg c2" href="mailto:{COMMUNITY_EMAIL}">Email us</a></div>
     <p class="muted">Places are limited to 10, so register early. Email <a class="link" href="mailto:{COMMUNITY_EMAIL}">{COMMUNITY_EMAIL}</a>.</p>''', extra=f'''
   <ul class="quotes side-note"><li class="panel"><blockquote>I started doing this free 12 week course with Vilma and I love it so much I even brought a friend and she enjoyed it too.</blockquote><p class="quote-by"><cite>Gabriella Dias</cite>{STARS}</p></li></ul>''', cls='has-note') + sec(
-    'sip', 'Just curious?', '''<p class="lead">Try Sip &amp; Ink on a Friday night: two hours tattooing practice skin, with a drink.</p>
+    'sip', 'Just curious?', '''<p class="lead">Try Sip &amp; Ink on the second Friday of the month: two hours tattooing practice skin, with a drink.</p>
     <div class="g2"><a class="btn ghost lg c1" href="events.html#sip-and-ink">About Sip &amp; Ink</a></div>''') + '</main>\n' + footer()
 write('learn.html', learn)
 
@@ -615,18 +615,18 @@ after = head('Before and after your tattoo | TattooBar',
     'Before and after',
     'How to get your skin ready for your session, and how to look after your new tattoo.') + sec(
     'before', 'Before the session', ticks(['Get hydrated and moisturise', 'Shave and exfoliate', 'Eat before the session',
-                              'Wear comfortable, suitable clothes', 'Avoid drugs and certain products before the session'])) + sec(
+                              'Wear comfortable, suitable clothes', 'Avoid drugs and certain products before the session']), cls='divided') + sec(
     'aftercare', 'Aftercare', '''<ol class="steps">
       <li>Remove the bandage after 1 to 3 hours.</li>
       <li>Wash with soap and water, using antibacterial soap.</li>
       <li>Apply a small amount of antibacterial ointment and pat dry with a towel.</li>
       <li>Do this at least 3 times a day for 3 days.</li>
       <li>After 3 days, use a non-perfumed hand lotion.</li>
-    </ol>''') + sec(
+    </ol>''', cls='divided') + sec(
     'healing', 'While it heals', ticks(["Don't swim or soak it in water", "Don't touch it except to wash it",
                                         "Don't let anyone else touch it", "Don't pick at any scabs",
-                                        'Keep it out of the sun for 2 weeks'], 'ticks dont')) + sec(
+                                        'Keep it out of the sun for 2 weeks'], 'ticks dont'), cls='divided') + sec(
     'dont-use', "Don't use", ticks(['Neosporin', 'Peroxide', 'Alcohol', 'Olive oil', 'Corn oil'], 'ticks dont') +
-    f'<p class="muted">Questions while it heals? Call the studio on <a class="link" href="tel:{TEL_TATTOO[1]}">{TEL_TATTOO[0]}</a>.</p>') + '</main>\n' + footer()
+    f'<p class="muted">Questions while it heals? Call the studio on <a class="link" href="tel:{TEL_TATTOO[1]}">{TEL_TATTOO[0]}</a>.</p>', cls='divided') + '</main>\n' + footer()
 write('aftercare.html', after)
 print('built', sorted(os.listdir(OUT)))

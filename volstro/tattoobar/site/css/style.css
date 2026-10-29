@@ -221,7 +221,9 @@ figure.head-media img { width: 100%; max-height: 70vh; object-fit: cover; filter
 .filters.fill .filter { min-height: 56px; font-size: 1rem; }
 .top-align > :first-child { margin-top: -.42em; }
 .tile-inset { padding-left: var(--tp); }
-.g4.tight { row-gap: var(--cg); }
+.g4.tight, .g3.tight, .g2.tight { row-gap: var(--cg); }
+.to-bottom { display: flex; flex-direction: column; }
+.to-bottom > .btns { margin-top: auto; padding-top: .5rem; }
 .menu-col .list-title { font-size: 1.375rem; margin-bottom: .25rem; }
 
 /* Sections whose content starts at column 2 on the inner pages */
@@ -235,7 +237,8 @@ figure.head-media img { width: 100%; max-height: 70vh; object-fit: cover; filter
 .side-note.wide { grid-column: 1 / 3; padding-right: 1.5rem; }
 
 /* Bar menu: title in column 1, drinks across columns 2-4, a divider above each section */
-.menu-sec { border-top: 1px solid var(--formwork); padding-top: var(--m); }
+.menu-sec, .divided { border-top: 1px solid var(--formwork); padding-top: var(--m); }
+.sec { scroll-margin-top: var(--m); }
 
 /* Learn: three days and the booking square in one row */
 .square { aspect-ratio: 1; }

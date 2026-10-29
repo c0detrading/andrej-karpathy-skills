@@ -1,5 +1,8 @@
 // TattooBar: open-now status, portfolio filter, enquiry form, menus.
 (function () {
+  // Start each page at the top, or at the section its link points to
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; if (!location.hash) window.scrollTo(0, 0); } catch (e) {}
+
   // Opening hours in minutes after midnight, London time. null = closed.
   var HOURS = {
     studio: { Mon: [660, 1260], Tue: [660, 1260], Wed: [660, 1260], Thu: [660, 1260], Fri: [660, 1260], Sat: [660, 1260], Sun: null },
