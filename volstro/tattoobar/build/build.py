@@ -205,9 +205,9 @@ def write(name, content):
         f.write(content)
 
 
-def sec(id_, title, body, extra=''):
+def sec(id_, title, body, extra='', cls=''):
     """A section: big title, then content. Its columns come from the page type (see the module docstring)."""
-    return f'''<section class="sec" id="{id_}" aria-labelledby="{id_}-title">
+    return f'''<section class="sec{' ' + cls if cls else ''}" id="{id_}" aria-labelledby="{id_}-title">
   <h2 class="sec-title big" id="{id_}-title">{title}</h2>
   <div class="sec-body">{body}</div>{extra}
 </section>
@@ -342,7 +342,7 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
 ''' + sec('vilma', 'Vilma', f'''
     <div class="g3">
       <img class="c1 photo" src="img/vilma.jpg" alt="Vilma, the tattoo artist at TattooBar" width="1200" height="1349" loading="lazy">
-      <div class="c23 cell prose">
+      <div class="c23 cell prose top-align">
         <p class="lead">Hey, I'm Vilma, and my main inspiration is you.</p>
         <p>20 years of tattooing, from geometric and realism to fine line, with every design made for the person wearing it.</p>
         <p>Vilma started at art school, painting angels, demons and fantasy worlds. A tattoo artist saw the talent in her hands and suggested she try tattooing, and she has never stopped.</p>
@@ -367,15 +367,11 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
         <p class="muted">Mon–Thu 15:00–19:00<br>Fri–Sat 12:00–18:00</p>
         <div class="btns push"><a class="btn ghost" href="bar.html#menu">See the menu</a></div>
       </div>
-      <div class="c2 panel tall">
+      <div class="c23 panel tall">
         <h3>Bar hours</h3>
         {rows(BAR_HOURS)}
-        <div class="btns push">{ext(TABLE, 'Book a table')}</div>
-      </div>
-      <div class="c3 panel tall">
-        <h3>Private hire</h3>
         <p class="muted">Book the whole space for your event, from £25 a head.</p>
-        <div class="btns push"><a class="btn ghost" href="events.html#hire">Hire the space</a></div>
+        <div class="g2 push">{ext(TABLE, 'Book a table', 'btn lg c1')}<a class="btn ghost lg c2" href="events.html#hire">Hire the space</a></div>
       </div>
     </div>
   ''') + sec('reviews', 'Reviews', f'''
@@ -407,7 +403,7 @@ write('index.html', home)
 
 
 # ---------- Tattoo and piercing ----------
-FILTERS = '''<div class="filters" role="group" aria-label="Filter by style">
+FILTERS = '''<div class="filters fill" role="group" aria-label="Filter by style">
       <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
       <button class="filter" type="button" data-filter="geometric" aria-pressed="false">Geometric</button>
       <button class="filter" type="button" data-filter="realism" aria-pressed="false">Realism</button>
@@ -441,6 +437,7 @@ tattoo = head('Tattoo and piercing | TattooBar',
     <div class="g4">
       <div class="c12 panel"><h3>Tattoo</h3>{rows(TATTOO_PRICES)}</div>
       <div class="c34 panel"><h3>Piercing</h3>{rows(PIERCING_PRICES)}</div>
+      {ext(TATTOO, 'Book', 'btn lg call')}
     </div>
     <p class="muted price-note">Tattoo prices are starting prices. Read <a class="link" href="aftercare.html">how to prepare and how to look after your tattoo</a>.</p>
   </div>
@@ -455,7 +452,7 @@ tattoo = head('Tattoo and piercing | TattooBar',
     <ul class="work-grid">
 {work_items(MORE)}
     </ul>
-    <p class="work-more"><a class="link" href="{IG}" target="_blank" rel="noopener">See more work on Instagram</a></p>
+    <p class="work-more big-link"><a class="link" href="{IG}" target="_blank" rel="noopener">See more work on Instagram</a></p>
   </div>
 </section>
 </main>
@@ -468,7 +465,7 @@ def artwork(id_, name, img, alt, w, h, title, lines, text):
     m = ''.join(f'<p class="m">{l}</p>' for l in lines)
     return f'''<section class="split art" id="{id_}" aria-labelledby="{id_}-title">
   <h2 class="split-text big" id="{id_}-title">{name}</h2>
-  <div class="split-action label"><p class="t">{title}</p>{m}<p>{text}</p></div>
+  <div class="split-action label wide-label"><p class="t">{title}</p>{m}<p>{text}</p></div>
   <img class="split-media" src="img/{img}" alt="{E(alt)}" width="{w}" height="{h}" loading="lazy">
 </section>
 '''
@@ -504,21 +501,22 @@ write('art.html', art)
 
 # ---------- The bar and menu ----------
 def menu_section(id_, title, groups):
-    """Menu lists sit in columns 3 and 4."""
+    """Title in column 1, the drinks in three columns across 2-4."""
+    cols, load = [[], [], []], [0, 0, 0]
     if len(groups) == 1 and not groups[0][0]:
         items = groups[0][2]
-        half = (len(items) + 1) // 2
-        left, right = [rows(items[:half])], [rows(items[half:])]
+        per = -(-len(items) // 3)
+        for i in range(3):
+            if items[i * per:(i + 1) * per]:
+                cols[i].append(rows(items[i * per:(i + 1) * per]))
     else:
-        left, right, lc, rc = [], [], 0, 0
         for gt, sizes, items in groups:
-            s = f'<p class="group-sizes">{E(sizes)}</p>' if sizes else ''
-            block = f'<div><h3 class="list-title">{E(gt)}</h3>{s}{rows(items)}</div>'
-            if lc <= rc:
-                left.append(block); lc += len(items) + 2
-            else:
-                right.append(block); rc += len(items) + 2
-    return sec(id_, title, f'<div class="g2"><div class="c1 cell menu-col">{"".join(left)}</div><div class="c2 cell menu-col">{"".join(right)}</div></div>')
+            sz = f'<p class="group-sizes">{E(sizes)}</p>' if sizes else ''
+            i = load.index(min(load))
+            cols[i].append(f'<div><h3 class="list-title">{E(gt)}</h3>{sz}{rows(items)}</div>')
+            load[i] += len(items) + 2
+    body = '<div class="g3">' + ''.join(f'<div class="c{i + 1} cell menu-col">{"".join(c)}</div>' for i, c in enumerate(cols)) + '</div>'
+    return sec(id_, title, body, cls='menu-sec')
 
 
 jump = '<ul class="jump">' + ''.join(f'<li><a href="#{i}">{t}</a></li>' for i, t, _ in MENU) + '</ul>'
@@ -532,7 +530,7 @@ bar = head('The bar and menu | TattooBar',
     'happy-hour', 'Happy hour', f'''<div class="g2">
       <div class="c1 panel ink on-ink tall"><p class="big">Any 2 cocktails £15</p><p class="muted">Monday to Thursday<br>15:00–19:00</p><p class="muted">Friday and Saturday<br>12:00–18:00</p></div>
       <div class="c2 panel tall"><h3>Bar hours</h3>{rows(BAR_HOURS)}</div>
-      {ext(TABLE, 'Book a table', 'btn lg c1')}
+      {ext(TABLE, 'Book a table', 'btn lg call')}
     </div>''') + sec('menu', 'Menu', f'<p class="lead">Jump to a section.</p>{jump}') + ''.join(
     menu_section(i, t, g) for i, t, g in MENU) + sec(
     'hire', 'Private hire', f'''<p class="lead">Book the whole space for your celebration, from £25 a head.</p>
@@ -570,7 +568,8 @@ DAYS = [
     ('Day 2: Technique', ['Shading techniques', 'Hand control', 'Fine line practice', 'Design placement', 'Real tattoo workflow']),
     ('Day 3: Professional practice', ['Full mini tattoo process', 'Client preparation', 'Aftercare guidance', 'Social media and branding', 'Portfolio content', 'Certificate ceremony']),
 ]
-days = '<div class="g3 sec-row c24">' + ''.join(f'<div class="c{i + 1} panel"><h3>{t}</h3>{ticks(items)}</div>' for i, (t, items) in enumerate(DAYS)) + '</div>'
+days = ('<div class="g4 call days">' + ''.join(f'<div class="c{i + 1} panel square"><h3>{t}</h3>{ticks(items)}</div>' for i, (t, items) in enumerate(DAYS))
+        + f'<a class="c4 tile uv square" href="{COURSE}" target="_blank" rel="noopener"><span class="big">Book the course</span><p>3 days with Vilma, £850.</p></a></div>')
 FAQ = [
     ('Do I need any experience?', 'No. This is a beginner course for complete newcomers with no tattooing experience.'),
     ('Will I tattoo real skin?', 'No. All practice is on synthetic practice skin, for training and safety.'),
@@ -593,10 +592,7 @@ learn = head('Learn to tattoo | TattooBar',
       <div class="c2 cell"><h3 class="list-title">Included</h3>{ticks(['All materials and equipment', 'Drinks and refreshments', 'Completion certificate', '30 days of support after the course'])}</div>
     </div>''', extra=f'''
   {days}
-  <div class="sec-body">
-    <div class="g2">{ext(COURSE, 'Book the course', 'btn lg c1')}</div>
-    {faq}
-  </div>''') + sec(
+  <div class="c23">{faq}</div>''') + sec(
     'community', 'Community programme', f'''<p class="lead">Creative Connections is a free 12-week programme for adults that brings people together through creativity, art and beginner tattoo design.</p>
     <p class="cell">Each week mixes creative wellbeing workshops with beginner tattoo design sessions. All practice is on paper and synthetic skin. Nobody gets tattooed.</p>
     <div class="g2">
