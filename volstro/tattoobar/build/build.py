@@ -51,11 +51,11 @@ BOOK_ITEMS = [
     (COURSE, 'The 3-day beginner course', '£850'),
 ]
 NAV = [
-    ('tattoo.html', 'Tattoo &amp; piercing', 'tattoo'),
-    ('bar.html', 'The bar', 'bar'),
+    ('tattoo.html', 'Tattoo &amp; Piercing', 'tattoo'),
+    ('bar.html', 'The Bar', 'bar'),
     ('events.html', 'Events', 'events'),
     ('learn.html', 'Learn', 'learn'),
-    ('art.html', 'The art', 'art'),
+    ('art.html', 'The Art', 'art'),
 ]
 
 
@@ -342,7 +342,7 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
 ''' + sec('vilma', 'Vilma', f'''
     <div class="g3">
       <img class="c1 photo" src="img/vilma.jpg" alt="Vilma, the tattoo artist at TattooBar" width="1200" height="1349" loading="lazy">
-      <div class="c23 cell prose top-align">
+      <div class="c23 cell prose top-align tile-inset">
         <p class="lead">Hey, I'm Vilma, and my main inspiration is you.</p>
         <p>20 years of tattooing, from geometric and realism to fine line, with every design made for the person wearing it.</p>
         <p>Vilma started at art school, painting angels, demons and fantasy worlds. A tattoo artist saw the talent in her hands and suggested she try tattooing, and she has never stopped.</p>
@@ -434,7 +434,7 @@ tattoo = head('Tattoo and piercing | TattooBar',
 <section class="sec stacked" id="prices" aria-labelledby="prices-title">
   <h2 class="sec-title big" id="prices-title">Prices</h2>
   <div class="sec-wide">
-    <div class="g4">
+    <div class="g4 tight">
       <div class="c12 panel"><h3>Tattoo</h3>{rows(TATTOO_PRICES)}</div>
       <div class="c34 panel"><h3>Piercing</h3>{rows(PIERCING_PRICES)}</div>
       {ext(TATTOO, 'Book', 'btn lg call')}
@@ -516,7 +516,7 @@ def menu_section(id_, title, groups):
             cols[i].append(f'<div><h3 class="list-title">{E(gt)}</h3>{sz}{rows(items)}</div>')
             load[i] += len(items) + 2
     body = '<div class="g3">' + ''.join(f'<div class="c{i + 1} cell menu-col">{"".join(c)}</div>' for i, c in enumerate(cols)) + '</div>'
-    return sec(id_, title, body, cls='menu-sec')
+    return sec(id_, title, body, cls='menu-sec wide-body')
 
 
 jump = '<ul class="jump">' + ''.join(f'<li><a href="#{i}">{t}</a></li>' for i, t, _ in MENU) + '</ul>'
@@ -531,7 +531,7 @@ bar = head('The bar and menu | TattooBar',
       <div class="c1 panel ink on-ink tall"><p class="big">Any 2 cocktails £15</p><p class="muted">Monday to Thursday<br>15:00–19:00</p><p class="muted">Friday and Saturday<br>12:00–18:00</p></div>
       <div class="c2 panel tall"><h3>Bar hours</h3>{rows(BAR_HOURS)}</div>
       {ext(TABLE, 'Book a table', 'btn lg call')}
-    </div>''') + sec('menu', 'Menu', f'<p class="lead">Jump to a section.</p>{jump}') + ''.join(
+    </div>''') + sec('menu', 'Menu', f'<p class="lead">Jump to a section.</p>{jump}', cls='wide-body') + ''.join(
     menu_section(i, t, g) for i, t, g in MENU) + sec(
     'hire', 'Private hire', f'''<p class="lead">Book the whole space for your celebration, from £25 a head.</p>
     <div class="g2"><a class="btn lg c1" href="events.html#hire">Private hire details</a></div>''') + '</main>\n' + footer()
@@ -598,10 +598,10 @@ learn = head('Learn to tattoo | TattooBar',
     <div class="g2">
       <div class="c1 cell"><h3 class="list-title">The details</h3>{rows([('Cost', '', 'Free'), ('When', 'Tuesdays and Fridays', '15:00–17:00'), ('Length', '', '12 weeks'), ('Group', '', 'Up to 10 people'), ('Age', '', '18+')])}</div>
       <div class="c2 cell"><h3 class="list-title">Included</h3>{ticks(['Creative wellbeing workshops', 'Beginner tattoo design classes', 'Drawing and illustration techniques', 'Practice on synthetic skin', 'Guidance from a professional artist', 'Certificate of participation'])}</div>
-      <ul class="c1 quotes"><li class="panel"><blockquote>I started doing this free 12 week course with Vilma and I love it so much I even brought a friend and she enjoyed it too.</blockquote><p class="quote-by"><cite>Gabriella Dias</cite>{STARS}</p></li></ul>
     </div>
     <div class="g2">{ext(COMMUNITY, 'Register for a free place', 'btn lg c1')}<a class="btn ghost lg c2" href="mailto:{COMMUNITY_EMAIL}">Email us</a></div>
-    <p class="muted">Places are limited to 10, so register early. Email <a class="link" href="mailto:{COMMUNITY_EMAIL}">{COMMUNITY_EMAIL}</a>.</p>''') + sec(
+    <p class="muted">Places are limited to 10, so register early. Email <a class="link" href="mailto:{COMMUNITY_EMAIL}">{COMMUNITY_EMAIL}</a>.</p>''', extra=f'''
+  <ul class="quotes side-note"><li class="panel"><blockquote>I started doing this free 12 week course with Vilma and I love it so much I even brought a friend and she enjoyed it too.</blockquote><p class="quote-by"><cite>Gabriella Dias</cite>{STARS}</p></li></ul>''', cls='has-note') + sec(
     'sip', 'Just curious?', '''<p class="lead">Try Sip &amp; Ink on a Friday night: two hours tattooing practice skin, with a drink.</p>
     <div class="g2"><a class="btn ghost lg c1" href="events.html#sip-and-ink">About Sip &amp; Ink</a></div>''') + '</main>\n' + footer()
 write('learn.html', learn)
