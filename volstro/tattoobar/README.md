@@ -38,6 +38,14 @@ python3 -I volstro/tattoobar/build/build.py volstro/tattoobar/site
 
 Opening hours for the "open now" line live in `site/js/site.js`.
 
+## Figma
+
+`figma-plugin/` is a Figma plugin that draws every page, desktop and phone, into a Figma file as editable layers with the 4-column layout grid and colour styles. See `figma-plugin/README.md` for how to import it. After changing the site, regenerate it with:
+
+```bash
+node volstro/tattoobar/build/figma_export.js volstro/tattoobar/site volstro/tattoobar/figma-plugin
+```
+
 ## Going live
 
 The site is static, so it runs on any static host (Netlify, Cloudflare Pages, GitHub Pages). Upload the `site` folder, then point the tattoo-bar.co.uk domain at the host instead of Tilda.
