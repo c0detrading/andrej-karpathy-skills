@@ -43,13 +43,11 @@ BOOK_ITEMS = [
     (COURSE, 'The 3-day beginner course', '£850'),
 ]
 NAV = [
-    ('index.html#work', 'Tattoos', 'work'),
-    ('index.html#prices', 'Piercing', 'prices'),
+    ('tattoo.html', 'Tattoo &amp; piercing', 'tattoo'),
     ('bar.html', 'The bar', 'bar'),
     ('events.html', 'Events', 'events'),
     ('learn.html', 'Learn', 'learn'),
     ('art.html', 'The art', 'art'),
-    ('index.html#visit', 'Visit', 'visit'),
 ]
 
 
@@ -82,7 +80,7 @@ def nav(page, big_logo):
     cur = ' aria-current="page"'
     links = '\n'.join(
         f'      <li><a href="{h}"{cur if key == page else ""}>{t}</a></li>' for h, t, key in NAV)
-    menu_links = '\n'.join(f'        <a href="{h}">{t}</a>' for h, t, _ in NAV)
+    menu_links = '\n'.join(f'        <a href="{h}">{t}</a>' for h, t, _ in NAV + [('tattoo.html#prices', 'Prices', '')])
     book_links = '\n'.join(
         f'        <a href="{u}" target="_blank" rel="noopener">{t}<small>{s}</small></a>' for u, t, s in BOOK_ITEMS)
     left = '' if big_logo else '    <a class="logo-small" href="index.html" aria-label="TattooBar home">Tattoo Bar</a>\n'
@@ -98,12 +96,15 @@ def nav(page, big_logo):
     <ul class="nav-links">
 {links}
     </ul>
-    <details class="drop">
-      <summary class="btn">Book</summary>
-      <div class="drop-panel">
+    <div class="nav-actions">
+      <a class="btn ghost nav-prices" href="tattoo.html#prices">Prices</a>
+      <details class="drop">
+        <summary class="btn">Book</summary>
+        <div class="drop-panel">
 {book_links}
-      </div>
-    </details>
+        </div>
+      </details>
+    </div>
   </nav>
 </header>
 '''
@@ -213,9 +214,21 @@ WORK = [
 ]
 SIZES = {'work-realism-cross': (900, 1124)}
 
-work_items = '\n'.join(
-    f'      <li data-style="{s}"><img src="img/{f}.jpg" alt="{E(a)}" width="{SIZES.get(f, (800, 999))[0]}" height="{SIZES.get(f, (800, 999))[1]}" loading="lazy"><span class="cap">{c}</span></li>'
-    for s, f, c, a in WORK)
+FEATURED = ['work-realism-back-piece', 'work-geometric-sleeve', 'work-fine-line-flower', 'work-realism-cross']
+
+
+def work_items(names, href=None):
+    out = []
+    for s, f, c, a in sorted((w for w in WORK if w[1] in names), key=lambda w: names.index(w[1])):
+        w, h = SIZES.get(f, (800, 999))
+        img = f'<img src="img/{f}.jpg" alt="{E(a)}" width="{w}" height="{h}" loading="lazy"><span class="cap">{c}</span>'
+        if href:
+            img = f'<a href="{href}">{img}</a>'
+        out.append(f'      <li>{img}</li>')
+    return '\n'.join(out)
+
+
+MORE = [w[1] for w in WORK if w[1] not in FEATURED]
 
 REVIEWS = [
     ('I would recommend this 100%! Piercing done to perfection! A very warm welcome! A big thank you!', 'Ilona'),
@@ -286,7 +299,7 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
 <nav class="tiles" aria-label="Explore TattooBar">
   <a class="tile" href="bar.html"><img src="img/moon-room.jpg" alt="" width="1600" height="1200"><span class="cap">The bar</span></a>
   <a class="tile uv" href="events.html#sip-and-ink"><span class="big">Sip &amp; Ink</span><p>Learn to tattoo on practice skin, drink included. Fridays 19:30–21:30, from £38.50.</p></a>
-  <a class="tile" href="#work"><img src="img/work-realism-cross.jpg" alt="" width="900" height="1124"><span class="cap">Tattoos by Vilma</span></a>
+  <a class="tile" href="tattoo.html"><img src="img/work-realism-cross.jpg" alt="" width="900" height="1124"><span class="cap">Tattoos by Vilma</span></a>
   <a class="tile paper" href="bar.html#happy-hour"><span class="big">Happy hour</span><p>Any 2 cocktails for £15. Mon–Thu 15:00–19:00, Fri–Sat 12:00–18:00.</p></a>
   <a class="tile ink" href="{TATTOO}" target="_blank" rel="noopener"><span class="big">Book a tattoo</span><p>Small tattoos from £50. Over 20 years of experience.</p></a>
   <a class="tile" href="art.html#counter"><img src="img/counter.jpg" alt="" width="1600" height="1200"><span class="cap">24 machines, 20 years</span></a>
@@ -301,44 +314,17 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
       <img src="img/vilma.jpg" alt="Vilma, the tattoo artist at TattooBar" width="1200" height="1349" loading="lazy">
       <div class="prose">
         <p class="lead">Hey, I'm Vilma, and my main inspiration is you.</p>
-        <p>Vilma started at art school, painting angels, demons and fantasy worlds. A tattoo artist saw the talent in her hands and suggested she try tattooing. She has been tattooing for over 20 years since, creating unique, personal designs for every client.</p>
-        <p>She keeps to the highest standards of hygiene, and keeps learning through courses, workshops and conventions.</p>
-        <p>The idea for TattooBar came from her clients. After a tattoo, they wanted a cocktail as a reward for the pain. So she put a bar in the studio.</p>
-        <p><a class="link" href="art.html">The art and the place</a></p>
+        <p>20 years of tattooing, from geometric and realism to fine line, with every design made for the person wearing it.</p>
+        <div class="btns"><a class="btn" href="tattoo.html">See Vilma's work</a></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="sec" id="work" aria-labelledby="work-title">
-  <h2 class="sec-title big" id="work-title">Work</h2>
-  <div class="sec-body">
-    <p class="lead">Geometric, realism and fine line, all by Vilma.</p>
-    <div class="filters" role="group" aria-label="Filter by style">
-      <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
-      <button class="filter" type="button" data-filter="geometric" aria-pressed="false">Geometric</button>
-      <button class="filter" type="button" data-filter="realism" aria-pressed="false">Realism</button>
-      <button class="filter" type="button" data-filter="fine-line" aria-pressed="false">Fine line</button>
-    </div>
-  </div>
-  <div class="sec-wide">
-    <ul class="work-grid">
-{work_items}
-    </ul>
-    <p class="work-more"><a class="link" href="{IG}" target="_blank" rel="noopener">See more work on Instagram</a></p>
-  </div>
-</section>
-
-<section class="sec" id="prices" aria-labelledby="prices-title">
-  <h2 class="sec-title big" id="prices-title">Prices</h2>
-  <div class="sec-body">
-    <div class="cols">
-      <div><h3 class="list-title">Tattoo</h3>{rows(TATTOO_PRICES)}</div>
-      <div><h3 class="list-title">Piercing</h3>{rows(PIERCING_PRICES)}</div>
-    </div>
-    <div class="btns">{ext(TATTOO, 'Book a tattoo')}{ext(PIERCING, 'Book a piercing', 'btn ghost')}</div>
-    <p class="muted">Tattoo prices are starting prices. Read <a class="link" href="aftercare.html">how to prepare and how to look after your tattoo</a>.</p>
-  </div>
+<section aria-label="Recent work">
+  <ul class="work-grid">
+{work_items(FEATURED, 'tattoo.html')}
+  </ul>
 </section>
 
 <section class="sec" id="the-bar" aria-labelledby="bar-title">
@@ -371,8 +357,8 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
   </div>
 </section>
 
-<section class="sec" id="visit" aria-labelledby="visit-title">
-  <h2 class="sec-title big" id="visit-title">Visit</h2>
+<section class="sec" id="info" aria-labelledby="info-title">
+  <h2 class="sec-title big" id="info-title">Info</h2>
   <div class="sec-body">
     <div class="duo">
       <div class="contact">
@@ -381,6 +367,8 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
           <div><h3 class="list-title">Tattoo studio</h3>{rows([('Monday to Saturday', '', '11:00–21:00'), ('Sunday', '', 'Closed')])}</div>
           <div><h3 class="list-title">Bar</h3>{rows([('Monday to Friday', '', '15:00–23:00'), ('Saturday', '', '12:00–00:00'), ('Sunday', '', 'Private events only')])}</div>
         </div>
+      </div>
+      <div class="contact">
         <dl class="contact">
           <div><dt>Address</dt><dd>5 Cunningham Avenue, Royal Wharf, London E16 2TN</dd></div>
           <div><dt>Nearest station</dt><dd>Pontoon Dock (DLR)</dd></div>
@@ -389,10 +377,6 @@ home = head('TattooBar | Tattoo studio and cocktail bar, Royal Wharf, London E16
           <div><dt>Email</dt><dd><a href="mailto:{EMAIL}">{EMAIL}</a></dd></div>
         </dl>
         <div class="btns">{ext(MAP, 'Get directions', 'btn ghost')}</div>
-      </div>
-      <div class="panel">
-        <h3>Send an enquiry</h3>
-        {enquiry_form()}
       </div>
     </div>
   </div>
@@ -427,6 +411,53 @@ def sec(id_, title, body, long=False, wide=''):
 
 def ticks(items, cls='ticks'):
     return f'<ul class="{cls}">' + ''.join(f'<li>{i}</li>' for i in items) + '</ul>'
+
+
+# ---------- Tattoo and piercing ----------
+tattoo = head('Tattoo and piercing | TattooBar',
+              'Custom tattoos and piercing by Vilma at TattooBar, Royal Wharf, London E16. Small tattoos from £50, piercing from £25.',
+              'tattoo.html') + nav('tattoo', False) + f'''<main id="main">
+<section class="page-head" aria-labelledby="page-title">
+  <h1 class="big" id="page-title">Tattoo and piercing</h1>
+  <div class="head-actions">{ext(TATTOO, 'Book')}</div>
+  <ul class="work-grid head-media">
+{work_items(FEATURED)}
+  </ul>
+</section>
+
+<section class="split" id="vilma" aria-labelledby="vilma-title">
+  <div class="split-text">
+    <h2 class="big" id="vilma-title">Vilma</h2>
+    <p class="lead">20 years of experience.</p>
+    <p>Custom geometric, realism and fine line tattoos, and piercing, with the highest standards of hygiene.</p>
+    <p><a class="link" href="art.html">The art and the place</a></p>
+  </div>
+  <img src="img/hero-tattooing.jpg" alt="Vilma tattooing a client at TattooBar" width="1400" height="930" loading="lazy">
+</section>
+
+<section class="sec stacked" id="prices" aria-labelledby="prices-title">
+  <h2 class="sec-title big" id="prices-title">Prices</h2>
+  <div class="sec-wide">
+    <div class="duo">
+      <div class="panel"><h3>Tattoo</h3>{rows(TATTOO_PRICES)}</div>
+      <div class="panel"><h3>Piercing</h3>{rows(PIERCING_PRICES)}</div>
+    </div>
+    <p class="muted price-note">Tattoo prices are starting prices. Read <a class="link" href="aftercare.html">how to prepare and how to look after your tattoo</a>.</p>
+  </div>
+</section>
+
+<section class="sec stacked ruled" id="more-work" aria-labelledby="more-title">
+  <h2 class="sec-title big" id="more-title">More work</h2>
+  <div class="sec-wide">
+    <ul class="work-grid">
+{work_items(MORE)}
+    </ul>
+    <p class="work-more"><a class="link" href="{IG}" target="_blank" rel="noopener">See more work on Instagram</a></p>
+  </div>
+</section>
+</main>
+''' + footer()
+write('tattoo.html', tattoo)
 
 
 # ---------- The art ----------
@@ -502,7 +533,8 @@ bar = head('The bar and menu | TattooBar',
     'happy-hour', 'Happy hour', f'''<div class="duo">
       <div class="panel ink on-ink"><p class="big">Any 2 cocktails £15</p><p class="muted">Monday to Thursday 15:00–19:00<br>Friday and Saturday 12:00–18:00</p></div>
       <div class="panel"><h3>Bar hours</h3>{rows([('Monday to Friday', '', '15:00–23:00'), ('Saturday', '', '12:00–00:00'), ('Sunday', '', 'Private events only')])}</div>
-    </div>''') + sec('menu', 'Menu', f'<p class="lead">Jump to a section.</p>{jump}') + ''.join(
+    </div>
+    <div class="btns">{ext(TABLE, 'Book a table')}</div>''') + sec('menu', 'Menu', f'<p class="lead">Jump to a section.</p>{jump}') + ''.join(
     menu_section(i, t, g) for i, t, g in MENU) + sec(
     'hire', 'Private hire', f'''<p class="lead">Book the whole space for your celebration, from £25 a head.</p>
     <div class="btns"><a class="btn" href="events.html#hire">Private hire details</a></div>''', long=True) + '</main>\n' + footer()

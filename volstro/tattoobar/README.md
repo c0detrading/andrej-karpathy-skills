@@ -8,7 +8,8 @@ Design: the approved "Cast" direction. Concrete, ink and one UV violet accent. T
 
 | File | Page |
 | --- | --- |
-| `site/index.html` | Home: logo, hero, tiles, Vilma, work, prices, the bar, reviews, visit and enquiry form |
+| `site/index.html` | Home: logo, hero, tiles, Vilma, 4 work photos, the bar, reviews and info |
+| `site/tattoo.html` | Tattoo and piercing: work, Vilma, prices and more work. The Prices button in the header links to its prices section |
 | `site/art.html` | The art and the place: Vilma's story, the Guardian, the counter, the Moon |
 | `site/bar.html` | The bar: happy hour, hours and the full drinks and food menu |
 | `site/events.html` | Sip & Ink and private hire, with an event enquiry form |

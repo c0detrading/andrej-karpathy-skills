@@ -93,7 +93,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .nav-links a { text-decoration: none; padding-block: .5rem; display: inline-block; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { text-decoration: underline; text-underline-offset: .3em; text-decoration-thickness: 2px; }
 .logo-small { font: 900 2.25rem/.9 var(--display); text-transform: uppercase; text-decoration: none; white-space: nowrap; }
-.nav > .drop:last-child { margin-left: auto; }
+.nav-actions { margin-left: auto; display: flex; align-items: center; gap: .5rem; }
 
 /* Disclosure menus (no script needed) */
 .drop { position: relative; }
@@ -163,17 +163,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .vilma img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1); }
 
 /* Work */
-.filters { display: flex; flex-wrap: wrap; gap: .5rem; }
-.filter {
-  min-height: 44px; padding: .55rem 1rem; border: 0; cursor: pointer; font-weight: 600; font-size: .9375rem;
-  background: transparent; box-shadow: inset 0 0 0 1px var(--ink);
-}
-.filter[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .work-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; list-style: none; padding: 0; }
 .work-grid li { position: relative; min-width: 0; }
 .work-grid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1); }
 .work-grid .cap { position: absolute; left: 8px; bottom: 8px; background: var(--ink); color: var(--paper); font-size: .75rem; font-weight: 600; padding: .25rem .5rem; }
-.work-grid li[hidden] { display: none; }
+.work-grid a { display: block; }
+.work-grid a:hover .cap, .work-grid a:focus-visible .cap { background: var(--uv); color: var(--uv-ink); }
 .work-more { margin-top: 1rem; }
 
 /* Price and menu lists */
@@ -236,6 +231,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .head-media img { width: 100%; max-height: 70vh; object-fit: cover; filter: grayscale(1); }
 .head-meta { grid-column: 8 / -1; display: grid; gap: 1rem; }
 
+.head-actions { grid-column: 8 / -1; justify-self: end; align-self: start; }
+
+/* Tattoo page: text beside a large photo, stacked sections, a rule above more work */
+.split { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); row-gap: 1.5rem; align-items: start; }
+.split-text { grid-column: 1 / span 5; display: grid; gap: 1rem; align-content: start; }
+.split-text h2 { font-size: clamp(3rem, 6.5vw, 6.5rem); }
+.split > img { grid-column: 6 / -1; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(1); }
+.sec.stacked .sec-title { grid-column: 1 / -1; }
+.sec.ruled { border-top: 1px solid var(--ink); padding-top: var(--m); }
+.price-note { margin-top: 1rem; }
+
 /* Wall labels for the artworks */
 .artwork { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr); gap: var(--gut); align-items: end; }
 .artwork img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(1); }
@@ -284,6 +290,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .sec-title, .sec-title.long { grid-column: 1 / -1; }
   .sec-body { grid-column: 1 / -1; }
   .page-head h1, .page-head .lead, .head-meta { grid-column: 1 / -1; }
+  .head-actions { grid-column: 1 / -1; justify-self: start; }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .days { grid-template-columns: minmax(0, 1fr); }
 }
@@ -295,6 +302,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .tile p { font-size: .8125rem; }
   .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cols, .duo, .quotes, .vilma, .artwork, .field-row { grid-template-columns: minmax(0, 1fr); }
+  .split-text, .split > img { grid-column: 1 / -1; }
+  .nav { gap: .75rem; }
+  .nav-actions .btn, .nav-actions summary.btn { padding-inline: .8rem; }
   .band-photo { width: 34%; }
   .intro { padding: 1.25rem; }
   .book-bar {
