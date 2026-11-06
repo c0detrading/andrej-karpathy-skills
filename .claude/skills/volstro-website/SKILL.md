@@ -80,6 +80,14 @@ node volstro/tattoobar/build/presentation/deck.js volstro/<client>/site <deck di
 
 Slides: cover, what's new, the look, the grid, one slide per page (desktop screen, plus a phone where it helps), on your phone, where every booking button goes, a few things to check, next steps. Change the screen list in `capture.js` and the slide text in `deck.js`. Check every slide for overflow before sending.
 
+### 7. Portfolio PDF
+
+To show a finished site to potential clients, make the watermarked portfolio version: one long page in a VOLSTRO frame (charcoal, cream and sage, Space Grotesk, like the prospect previews). Desktop pages go on the left and phone pages on the right, in the site's menu order. "VOLSTRO" is burned into every screen, so it can't be removed from the PDF.
+
+```bash
+node .claude/skills/volstro-website/scripts/portfolio_pdf.js volstro/<client>/site <scratchpad>/VOLSTRO-<Client>-website.pdf "<Client>" "<what they are, where>"
+```
+
 ## Working with this user
 
 - They're a designer, not a developer. Keep deliverables to links and PDFs. Plain words, no setup steps.
